@@ -1,0 +1,11 @@
+# Hidden files and folders.
+.gradle/
+.vscode/
+.idea/
+*.iml
+
+# Output folders.
+build/
+bin/
+
+*.class
