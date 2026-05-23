@@ -55,4 +55,30 @@ public interface Piece {
      * (i.e. Advisor or Elephant, which protect the King).
      */
     public Boolean isDefensor();
+
+    /**
+     * Returns the strategic value of this piece, used by the AI scoring system.
+     * Each subclass defines its own value.
+     *
+     * Default values:
+     *   General          = 100
+     *   Chariot          = 9
+     *   Cannon           = 4.5
+     *   Horse            = 4
+     *   Advisor          = 2
+     *   Elephant         = 2
+     *   Soldier          = 1
+     *
+     * @return the piece value
+     */
+    public int getValue();
+
+    /**
+    * Updates the strategic value of this piece.
+    * Intended to be called by the AI (MoveCalculator) to adjust
+    * the value dynamically during the game (e.g. soldier crossing the river).
+    *
+    * @param value the new strategic value
+    */
+    public void setValue(final int new_value);
 }
