@@ -13,13 +13,11 @@ public class Soldier extends AbstractPiece{
 
     protected Soldier(PieceType type, Player owner, Position position, int value) {
         super(type, owner, position, value);
-        //TODO Auto-generated constructor stub
     }
 
     @Override
     public Piece createPiece(PieceType type, Player owner, Position startingPosition) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createPiece'");
+        return new Soldier(type, owner, startingPosition, 10);
     }
 
     @Override
