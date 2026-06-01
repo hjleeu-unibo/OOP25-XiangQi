@@ -15,7 +15,6 @@ public class MoveImpl implements Move {
     private final Position from;
     private final Position to;
     private final Piece piece;
-    private final Piece capturedPiece;
 
     /**
      * Creates a new move.
@@ -25,11 +24,10 @@ public class MoveImpl implements Move {
      * @param piece         the piece that is moving
      * @param capturedPiece the piece that is captured, or null if none
      */
-    public MoveImpl(final Position from, final Position to, final Piece piece, final Piece capturedPiece) {
+    public MoveImpl(final Position from, final Position to, final Piece piece) {
         this.from = from;
         this.to = to;
         this.piece = piece;
-        this.capturedPiece = capturedPiece;
     }
 
     @Override
@@ -45,16 +43,6 @@ public class MoveImpl implements Move {
     @Override
     public Piece getPiece() {
         return piece;
-    }
-
-    @Override
-    public Piece getCapturedPiece() {
-        return capturedPiece;
-    }
-
-    @Override
-    public boolean isCapture() {
-        return capturedPiece != null;
     }
 
     @Override
@@ -74,7 +62,6 @@ public class MoveImpl implements Move {
 
     @Override
     public String toString() {
-        return piece.getType() + ": " + from + " -> " + to
-            + (isCapture() ? " captures " + capturedPiece.getType() : "");
+        return piece.getType() + ": " + from + " -> " + to;
     }
 }
