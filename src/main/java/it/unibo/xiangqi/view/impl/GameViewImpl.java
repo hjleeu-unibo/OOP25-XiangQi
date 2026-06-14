@@ -9,9 +9,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.Position;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.view.api.GameView;
 
 public class GameViewImpl implements GameView{
@@ -34,7 +34,7 @@ public class GameViewImpl implements GameView{
         rootPanel.add(menuPanel, "MENU");
         rootPanel.add(boardPanel, "GAME");
         frame.setContentPane(rootPanel);
-        cardLayout.show(rootPanel, "MENU");
+        cardLayout.show(rootPanel, "GAME");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(screenSize.height * 0.7); 
@@ -50,6 +50,7 @@ public class GameViewImpl implements GameView{
 
     @Override
     public void updateBoard(Board board) {
+        boardPanel.updateBoard(board);
     }
 
     @Override

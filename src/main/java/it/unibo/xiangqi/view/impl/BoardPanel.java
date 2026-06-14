@@ -9,9 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
+import it.unibo.xiangqi.common.api.Position;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.Position;
+import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.view.api.BoardView;
 import it.unibo.xiangqi.view.api.HintView;
 import it.unibo.xiangqi.view.api.PlayerView;
@@ -23,6 +25,7 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
     private JButton hintButton;
     private JPanel boardGrid; 
     private JPanel sidePanel; 
+    private Board currentBoard; 
 
     public BoardPanel() {
 
@@ -48,8 +51,30 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
 
     @Override
     public void updateBoard(Board board) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateBoard'");
+
+        this.currentBoard = board; 
+
+        for (int row = 0; row < 10; row++ ){
+            for (int col = 0; col < 9; col++ ){
+                
+                Position pos = new Position(row, col); 
+                Piece piece = board.getPieceAt(pos); 
+
+                if (piece == null){
+                    cells[row][col].setText("");
+                }else{
+                    cells[row][col].setText(pieceToText(piece)); 
+                }
+            }
+        }
+    }
+
+    private String pieceToText(Piece piece){
+
+        PieceType type = piece.getType(); 
+        Color c = piece.getOwner().getColor(); 
+
+        return c.getSymbol()+type.getSymbol(); 
     }
 
     @Override
