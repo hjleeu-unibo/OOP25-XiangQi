@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Describe the rules of the Xiangqi game.
  * Provides the logic for check, checkmate, draw,flying general
- *  detection and legal moves selection.
+ * detection and legal moves selection.
  */
 
 public interface RuleEngine {
