@@ -9,10 +9,10 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.Move;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.common.api.Position;
 import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.view.api.BoardView;
 import it.unibo.xiangqi.view.api.HintView;
@@ -26,12 +26,13 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
     private JPanel boardGrid; 
     private JPanel sidePanel; 
     private Board currentBoard; 
+    private List<Position> highlightedCells;
 
     public BoardPanel() {
 
         boardGrid = new JPanel(new GridLayout(10, 9));
         sidePanel = new JPanel();
-        hintButton = new JButton("Hint");
+        hintButton = new JButton("Hint"); 
         cells = new JButton[10][9];
 
         for (int row = 0; row < 10; row++) {
@@ -58,7 +59,7 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
             for (int col = 0; col < 9; col++ ){
                 
                 Position pos = new Position(row, col); 
-                Piece piece = board.getPieceAt(pos); 
+                Piece piece = this.currentBoard.getPieceAt(pos); 
 
                 if (piece == null){
                     cells[row][col].setText("");
@@ -79,38 +80,75 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
 
     @Override
     public void highlightCells(List<Position> positions) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'highlightCells'");
+        this.highlightedCells = positions; 
+
+        for (int row = 0; row < 10; row++ ){
+            for (int col = 0; col < 9; col++ ){
+                Position pos = new Position(row, col); 
+                if(this.highlightedCells.contains(pos)){
+                    highlightCell(pos, java.awt.Color.YELLOW);
+                }
+            }
+        }
+
     }
 
     @Override
     public void showSuggestedMove(Move move) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showSuggestedMove'");
+        Position from = move.getFrom();
+        Position to = move.getTo();
+        highlightCell(from, java.awt.Color.GREEN);
+        highlightCell(to, java.awt.Color.GREEN);
+    }
+
+    private void highlightCell(Position pos, java.awt.Color color) {
+        int row = pos.getRow();
+        int col = pos.getCol();
+        cells[row][col].setBackground(color);
+    }
+
+    private void resetHighlights() {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 9; col++) {
+                cells[row][col].setBackground(null);
+            }
+        }
     }
 
     @Override
     public void setPlayerEnabled(Color c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPlayerEnabled'");
+        this.setPlayer(true, c);
     }
 
     @Override
     public void setPlayerDisabled(Color c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPlayerDisabled'");
+        this.setPlayer(false, c);
+    }
+
+    private void setPlayer(boolean enable, Color c){
+
+        for (int row = 0; row < 10; row++ ){
+            for (int col = 0; col < 9; col++ ){
+                
+                Position pos = new Position(row, col); 
+                Piece piece = this.currentBoard.getPieceAt(pos); 
+                
+                if (piece != null && piece.getOwner().getColor() == c){
+                    cells[row][col].setEnabled(enable);
+                }
+            }
+        }
+
     }
 
     @Override
     public void setHintButtonEnabled() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setHintButtonEnabled'");
+        this.hintButton.setEnabled(true);
     }
 
     @Override
     public void setHintButtonDisabled() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setHintButtonDisabled'");
+        this.hintButton.setEnabled(false);
     }
     
 }

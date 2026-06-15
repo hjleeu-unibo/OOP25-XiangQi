@@ -1,0 +1,20 @@
+package it.unibo.xiangqi.common.api;
+
+public class Move {
+    
+    private Position from; 
+    private Position to;
+    
+    public Move(Position from, Position to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    public Position getFrom() {
+        return from;
+    }
+
+    public Position getTo() {
+        return to;
+    } 
+}

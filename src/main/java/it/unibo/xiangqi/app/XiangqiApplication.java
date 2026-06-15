@@ -3,6 +3,7 @@ package it.unibo.xiangqi.app;
 import java.util.List;
 
 import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.Move;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.common.api.Position;
 import it.unibo.xiangqi.model.api.Player;
@@ -23,10 +24,19 @@ public class XiangqiApplication {
         
         Piece p1 = new FakePiece(PieceType.CANNON, player2, new Position(0, 2)); 
         Piece p2 = new FakePiece(PieceType.ADVISOR, player1, new Position(0, 0));
+        Piece p3 = new FakePiece(PieceType.SOLDIER, player1, new Position(2, 3));
 
-        Board board = new FakeBoard(List.of(p1, p2)); 
+        Board board = new FakeBoard(List.of(p1, p2, p3)); 
 
         view.updateBoard(board);
+
+        //view.highlightCells(List.of(new Position(1, 3), new Position(0, 5)));
+        
+        //Move m = new Move(new Position(0, 0), new Position(2, 5));
+        //view.showSuggestedMove(m); 
+
+        //view.setHintButtonDisabled();
+        //view.setHintButtonEnabled();
 
     }
 }

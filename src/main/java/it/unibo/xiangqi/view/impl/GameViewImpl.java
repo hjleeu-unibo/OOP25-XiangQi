@@ -9,9 +9,9 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 
 import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.Move;
 import it.unibo.xiangqi.common.api.Position;
 import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.view.api.GameView;
 
 public class GameViewImpl implements GameView{
@@ -55,36 +55,32 @@ public class GameViewImpl implements GameView{
 
     @Override
     public void setPlayerEnabled(Color c) {
+        boardPanel.setPlayerEnabled(c);
     }
 
     @Override
     public void setPlayerDisabled(Color c) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPlayerDisabled'");
+        boardPanel.setPlayerDisabled(c);
     }
 
     @Override
     public void setHintButtonEnabled() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setHintButtonEnabled'");
+        boardPanel.setHintButtonEnabled();
     }
 
     @Override
     public void setHintButtonDisabled() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setHintButtonDisabled'");
+        boardPanel.setHintButtonDisabled();
     }
 
     @Override
     public void highlightCells(List<Position> cells) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'highlightCells'");
+        boardPanel.highlightCells(cells);
     }
 
     @Override
     public void showSuggestedMove(Move move) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showSuggestedMove'");
+        boardPanel.showSuggestedMove(move);
     }
     
 }
