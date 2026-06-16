@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+//import javax.swing.JTextField;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.Move;

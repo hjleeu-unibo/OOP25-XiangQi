@@ -33,7 +33,7 @@ public class FakeInputHandler implements InputHandler{
 
     @Override
     public void onExit() {
-
+        System.out.println("onExit");
     }
 
     @Override

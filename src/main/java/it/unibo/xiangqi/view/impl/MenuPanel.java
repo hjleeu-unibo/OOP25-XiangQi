@@ -1,14 +1,14 @@
 package it.unibo.xiangqi.view.impl;
 
-import java.awt.GridLayout;
-
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.InputHandler;
-import it.unibo.xiangqi.view.api.MenuView;
 
-public class MenuPanel extends JPanel implements MenuView{
+public class MenuPanel extends JPanel{
 
     private JButton pvpButton;
     private JButton pveButton;
@@ -16,29 +16,34 @@ public class MenuPanel extends JPanel implements MenuView{
     private InputHandler inputHandler; 
 
     public MenuPanel() {
-
-        this.setLayout(new GridLayout(3, 1, 10, 10));
-
         pvpButton = new JButton("Player vs Player");
         pveButton = new JButton("Player vs AI");
         resumeButton = new JButton("Resume Game");
 
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        pvpButton.setAlignmentX(CENTER_ALIGNMENT);
+        pveButton.setAlignmentX(CENTER_ALIGNMENT);
+        resumeButton.setAlignmentX(CENTER_ALIGNMENT);
+
+        this.add(Box.createVerticalGlue());
         this.add(pvpButton);
+        this.add(Box.createVerticalStrut(10));
         this.add(pveButton);
+        this.add(Box.createVerticalStrut(10));
         this.add(resumeButton);
+        this.add(Box.createVerticalGlue());
+
+        /*Event listeners */
+        pvpButton.addActionListener(e -> {
+            inputHandler.onStart(GameModeType.PVP); 
+        });
+        pveButton.addActionListener(e -> {
+            inputHandler.onStart(GameModeType.PVE);
+        });
+        resumeButton.addActionListener(e -> {
+            inputHandler.onResume();
+        });
 }
-
-    @Override
-    public void showMainMenu() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showMainMenu'");
-    }
-
-    @Override
-    public void showGameScreen() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showGameScreen'");
-    }
 
     public void setInputHandler(InputHandler inputHandler) {
         this.inputHandler = inputHandler;

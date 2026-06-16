@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.Move;
@@ -22,6 +24,7 @@ public class GameViewImpl implements GameView{
     private CardLayout cardLayout;
     private MenuPanel menuPanel;
     private BoardPanel boardPanel;
+    private InputHandler inputHandler; 
 
 
     public GameViewImpl() {
@@ -35,7 +38,7 @@ public class GameViewImpl implements GameView{
         rootPanel.add(menuPanel, "MENU");
         rootPanel.add(boardPanel, "GAME");
         frame.setContentPane(rootPanel);
-        cardLayout.show(rootPanel, "GAME");
+        cardLayout.show(rootPanel, "MENU");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(screenSize.height * 0.7); 
@@ -44,8 +47,17 @@ public class GameViewImpl implements GameView{
         frame.setSize(width, height); 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
+        frame.addWindowListener(new WindowAdapter() {
+        @Override
+        public void windowClosing(WindowEvent e) {
+            if (inputHandler != null) {
+                inputHandler.onExit();
+            }
+            System.exit(0);
+        }
+});
 }
     
 
@@ -85,6 +97,7 @@ public class GameViewImpl implements GameView{
     }
 
     public void setInputHandler(InputHandler handler) {
+        this.inputHandler = handler; 
         boardPanel.setInputHandler(handler);
         menuPanel.setInputHandler(handler);
     }
