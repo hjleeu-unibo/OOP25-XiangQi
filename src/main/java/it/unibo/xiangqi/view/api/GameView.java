@@ -5,6 +5,7 @@ import java.util.List;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.Move;
 import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 
 public interface GameView {
@@ -15,4 +16,5 @@ public interface GameView {
     void setHintButtonDisabled(); 
     void highlightCells(List<Position> cells); 
     void showSuggestedMove(Move move); 
+    void setInputHandler(InputHandler inputHandler); 
 }

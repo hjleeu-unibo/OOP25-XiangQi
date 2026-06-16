@@ -11,6 +11,7 @@ import java.awt.Toolkit;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.Move;
 import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.view.api.GameView;
 
@@ -81,6 +82,11 @@ public class GameViewImpl implements GameView{
     @Override
     public void showSuggestedMove(Move move) {
         boardPanel.showSuggestedMove(move);
+    }
+
+    public void setInputHandler(InputHandler handler) {
+        boardPanel.setInputHandler(handler);
+        menuPanel.setInputHandler(handler);
     }
     
 }

@@ -3,15 +3,16 @@ package it.unibo.xiangqi.app;
 import java.util.List;
 
 import it.unibo.xiangqi.common.api.Color;
-import it.unibo.xiangqi.common.api.Move;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.view.api.GameView;
 import it.unibo.xiangqi.view.impl.GameViewImpl;
 import it.unibo.xiangqi.view.test.FakeBoard;
+import it.unibo.xiangqi.view.test.FakeInputHandler;
 import it.unibo.xiangqi.view.test.FakePiece;
 import it.unibo.xiangqi.view.test.FakePlayer;
 
@@ -37,6 +38,11 @@ public class XiangqiApplication {
 
         //view.setHintButtonDisabled();
         //view.setHintButtonEnabled();
+
+        InputHandler ih = new FakeInputHandler(view); 
+        view.setInputHandler(ih); 
+
+        view.setPlayerEnabled(Color.RED);
 
     }
 }

@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.view.api.MenuView;
 
 public class MenuPanel extends JPanel implements MenuView{
@@ -12,6 +13,7 @@ public class MenuPanel extends JPanel implements MenuView{
     private JButton pvpButton;
     private JButton pveButton;
     private JButton resumeButton;
+    private InputHandler inputHandler; 
 
     public MenuPanel() {
 
@@ -36,6 +38,10 @@ public class MenuPanel extends JPanel implements MenuView{
     public void showGameScreen() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'showGameScreen'");
+    }
+
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
     }
     
 }
