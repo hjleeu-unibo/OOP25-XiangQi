@@ -42,8 +42,15 @@ import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.RuleEngine;
 
 public class MoveCalculatorImpl implements MoveCalculator {
+    private final RuleEngine ruleEngine;
+
+    public MoveCalculatorImpl(final RuleEngine ruleEngine) {
+        this.ruleEngine = ruleEngine;
+    }
+
     public double calculateBoardScore(GameState gm) {
         /* DATA NEEDED. */
         double stateScore = 0;
@@ -94,7 +101,25 @@ public class MoveCalculatorImpl implements MoveCalculator {
         /* THREATENING PIECES. */
         for (Piece p : myPieces) {
             for (Move m : ruleEngine.getLegalMoves(p, board)) {
-                
+                Piece capturedPiece = board.getPieceAt(m.getTo());
+                if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
+                    boolean isProtected = false;
+                    for (Piece enemyP : enemyPieces) {
+                        for (Move enemyPieceMove : ruleEngine.getLegalMoves(enemyP, board)) {
+                            if (enemyPieceMove.getTo().equals(capturedPiece.getPosition())) {
+                                isProtected = true;
+                                break;
+                            }
+                        }
+                        if (isProtected) {
+                            break;
+                        }
+                    }
+
+                    if (!isProtected) {
+                        stateScore += (1.5 * capturedPiece.getValue());
+                    }
+                }
             }
         }
 
