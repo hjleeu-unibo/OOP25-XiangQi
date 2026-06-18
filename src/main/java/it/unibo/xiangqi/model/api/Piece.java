@@ -80,5 +80,5 @@ public interface Piece {
     *
     * @param value the new strategic value
     */
-    public void setValue(final int new_value);
+    public void setValue(final float new_value);
 }
