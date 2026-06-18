@@ -33,14 +33,72 @@ package it.unibo.xiangqi.ai.impl;
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import it.unibo.xiangqi.ai.api.MoveCalculator;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.model.api.Player;
 
 public class MoveCalculatorImpl implements MoveCalculator {
     public double calculateBoardScore(GameState gm) {
-        return 0;
+        /* DATA NEEDED. */
+        double stateScore = 0;
+
+        Board board = gm.getBoard();
+        Player currentPlayer = gm.getCurrentPlayer();
+
+        List<Piece> myPieces = new ArrayList<>();
+        List<Piece> enemyPieces = new ArrayList<>();
+
+        for (Piece p : board.getPieces()) {
+            if (p.getOwner().equals(currentPlayer)) {
+                myPieces.add(p);
+            } else {
+                enemyPieces.add(p);
+            }
+        }
+
+        /* THREATENED PIECES. */
+        for (Piece p : enemyPieces) {
+            for (Move move : ruleEngine.getLegalMoves(p, board)) {
+                Piece capturedPiece = board.getPieceAt(move.getTo());
+
+                if (capturedPiece != null && capturedPiece.getOwner().equals(currentPlayer)) {
+                    boolean isProtected = false;
+
+                    for (Piece myPiece : myPieces) {
+                        for (Move m : ruleEngine.getLegalMoves(myPiece, board)) {
+                            if (m.getTo().equals(capturedPiece.getPosition())) {
+                                isProtected = true;
+                                break;
+                            }
+                        }
+                        if (isProtected) {
+                            break;
+                        }
+                    }
+
+                    if (isProtected) {
+                        stateScore += capturedPiece.getValue();
+                    } else {
+                        stateScore -= (1.5 * capturedPiece.getValue());
+                    }
+                }
+            }
+        }
+
+        /* THREATENING PIECES. */
+        for (Piece p : myPieces) {
+            for (Move m : ruleEngine.getLegalMoves(p, board)) {
+                
+            }
+        }
+
+        return stateScore;
     }
 
     public Move getBestMove(Board board) {
