@@ -2,7 +2,7 @@ package it.unibo.xiangqi.view.test;
 
 import java.util.List;
 
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
 
