@@ -71,7 +71,16 @@ public interface Piece {
      *
      * @return the piece value
      */
-    public float getValue();
+    public double getInitialValue();
+
+   /**
+     * Returns the current strategic value of this piece, which may differ
+     * from the initial value depending on the board situation
+     * (e.g. a Soldier crossing the river).
+     *
+     * @return the current piece value
+     */
+    public double getCurrentValue();
 
     /**
     * Updates the strategic value of this piece.
