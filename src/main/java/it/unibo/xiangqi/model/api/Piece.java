@@ -71,7 +71,7 @@ public interface Piece {
      *
      * @return the piece value
      */
-    public int getValue();
+    public float getValue();
 
     /**
     * Updates the strategic value of this piece.
