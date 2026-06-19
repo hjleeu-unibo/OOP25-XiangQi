@@ -3,6 +3,7 @@ package it.unibo.xiangqi.model.api;
 import java.util.List;
 
 import it.unibo.xiangqi.common.api.GameModeType;
+import it.unibo.xiangqi.common.api.GameStatus;
 
 /**
  * The central model of the Xiangqi game.
@@ -33,9 +34,10 @@ public interface GameModel {
      */
     public boolean isOver();
 
-    // -------------------------------------------------------------------------
-    // TURN MANAGEMENT
-    // -------------------------------------------------------------------------
+    /**
+     * Returns the current status of the game.
+     */
+    public GameStatus getStatus();
 
     /**
      * Advances the turn to the next player.
