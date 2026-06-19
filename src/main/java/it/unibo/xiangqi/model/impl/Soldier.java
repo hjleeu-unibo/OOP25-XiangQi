@@ -12,13 +12,15 @@ import it.unibo.xiangqi.model.api.Position;
 
 public class Soldier extends AbstractPiece{
 
-    protected Soldier(PieceType type, Player owner, Position position, double value) {
-        super(type, owner, position, value);
+    private static final int VALUE = 10;
+
+    protected Soldier(final Player owner,final Position position) {
+        super(PieceType.SOLDIER, owner, position, VALUE);
     }
 
     @Override
     public Piece createPiece(PieceType type, Player owner, Position startingPosition) {
-        return new Soldier(type, owner, startingPosition, 10.0);
+        return new Soldier(owner, startingPosition);
     }
 
     @Override
