@@ -36,7 +36,7 @@ public class Soldier extends AbstractPiece{
 
         // Forward direction: RED moves toward increasing rows, BLACK toward decreasing rows
         final int forward = isRed ? 1 : -1;
-        tryAddMove(moves, board, current, row + forward, col);
+        tryAddMove(moves, board, current, row + forward , col);
 
         // Sideways moves are only allowed after crossing the river
         if (hasCrossedRiver(row, isRed)) {
