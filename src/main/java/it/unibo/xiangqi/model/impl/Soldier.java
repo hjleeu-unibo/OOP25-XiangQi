@@ -62,7 +62,7 @@ public class Soldier extends AbstractPiece{
 
         // Target cell must be empty or occupied by an enemy piece
         if (target == null || !target.getOwner().equals(this.getOwner())) {
-            moves.add(new MoveImpl(from, to, this));
+            moves.add(new MoveImpl(from, to));
         }
     }
 }
