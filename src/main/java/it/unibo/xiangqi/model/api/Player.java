@@ -4,4 +4,5 @@ import it.unibo.xiangqi.common.Color;
 
 public interface Player {
     Color getColor(); 
+    boolean isHuman(); 
 }

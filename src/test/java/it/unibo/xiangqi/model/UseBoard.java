@@ -13,6 +13,7 @@ import it.unibo.xiangqi.common.PieceType;
 import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.impl.PlayerImpl;
 import it.unibo.xiangqi.model.api.Piece;
 
 public class UseBoard {
@@ -23,8 +24,8 @@ public class UseBoard {
     
     @BeforeEach
     void setup(){
-        this.blackPlayer = new FakePlayer(Color.BLACK); 
-        this.redPlayer = new FakePlayer(Color.RED); 
+        this.blackPlayer = new PlayerImpl(Color.BLACK, true); 
+        this.redPlayer = new PlayerImpl(Color.RED, true); 
         this.p1 = new FakePiece(PieceType.ADVISOR, this.blackPlayer, new Position(0, 3)); 
         this.p2 = new FakePiece(PieceType.CANNON, this.redPlayer, new Position(1, 5)); 
         this.p3 = new FakePiece(PieceType.ELEPHANT, this.blackPlayer, new Position(7, 2)); 

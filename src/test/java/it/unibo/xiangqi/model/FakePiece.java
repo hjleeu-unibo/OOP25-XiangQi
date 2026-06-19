@@ -51,5 +51,11 @@ public class FakePiece implements Piece{
             && Objects.equals(this.owner, other.owner)
             && Objects.equals(this.position, other.position);
     }
+
+    @Override
+    public void setPosition(Position position) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
+    }
     
 }
