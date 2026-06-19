@@ -3,6 +3,7 @@ package it.unibo.xiangqi.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
@@ -13,6 +14,8 @@ import it.unibo.xiangqi.model.api.Position;
 public class Soldier extends AbstractPiece{
 
     private static final int VALUE = 10;
+    private static final int RIVER_ROW_RED = 4;
+    private static final int RIVER_ROW_BLACK = 5;
 
     protected Soldier(final Player owner,final Position position) {
         super(PieceType.SOLDIER, owner, position, VALUE);
@@ -24,8 +27,15 @@ public class Soldier extends AbstractPiece{
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
-        List<Move> moves = new ArrayList<>();
+    public List<Move> getMoves(final Board board) {
+        final List<Move> moves = new ArrayList<>();
+        final Position current = getPosition();
+        final int row = current.getRow();
+        final int col = current.getCol();
+        final boolean isRed = getOwner().getColor() == Color.RED;
+
+        // Forward direction: RED moves toward increasing rows, BLACK toward decreasing rows
+        final int forward = isRed ? 1 : -1;
         return moves;
     }
 }
