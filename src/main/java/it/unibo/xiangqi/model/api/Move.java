@@ -15,11 +15,4 @@ public interface Move {
      * @return the position where the piece moves to
      */
     public Position getTo();
-
-    /**
-     * Returns the piece that is performing this move.
-     *
-     * @return the moving piece
-     */
-    public Piece getPiece();
 }
