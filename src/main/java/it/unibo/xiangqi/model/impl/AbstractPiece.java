@@ -19,15 +19,15 @@ public abstract class AbstractPiece implements Piece {
     private final PieceType type;
     private final Player owner;
     private Position position;
-    private final double initialvalue;
-    private double currentvalue;
+    private final int initialvalue;
+    private int currentvalue;
 
     /**
      * @param type     the type of this piece
      * @param owner    the player who owns this piece
      * @param position the starting position
      */
-    protected AbstractPiece(final PieceType type, final Player owner, final Position position, final double initialvalue) {
+    protected AbstractPiece(final PieceType type, final Player owner, final Position position, final int initialvalue) {
         this.type = type;
         this.owner = owner;
         this.position = position;
@@ -64,17 +64,17 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override
-    public double getInitialValue() {
+    public int getInitialValue() {
         return this.initialvalue;
     }
     
     @Override
-    public double getCurrentValue() {
+    public int getCurrentValue() {
         return this.currentvalue;
     }
 
     @Override
-    public void setValue(final float value) {
+    public void setValue(final int value) {
         this.currentvalue = value;
     }
 
