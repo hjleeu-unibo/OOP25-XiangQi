@@ -90,9 +90,9 @@ public class MoveCalculatorImpl implements MoveCalculator {
                     }
 
                     if (isProtected) {
-                        stateScore += capturedPiece.getValue();
+                        stateScore += capturedPiece.getInitialValue();
                     } else {
-                        stateScore -= (1.5 * capturedPiece.getValue());
+                        stateScore -= (1.5 * capturedPiece.getInitialValue());
                     }
                 }
             }
@@ -117,7 +117,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
                     }
 
                     if (!isProtected) {
-                        stateScore += (1.5 * capturedPiece.getValue());
+                        stateScore += (1.5 * capturedPiece.getInitialValue());
                     }
                 }
             }
