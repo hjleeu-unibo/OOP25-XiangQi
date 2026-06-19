@@ -24,6 +24,11 @@ public class Advisor extends AbstractPiece {
     }
 
     @Override
+    public Boolean isDefensor() {
+        return true;
+    }
+
+    @Override
     public List<Move> getMoves(Board board) {
        List<Move> moves = new ArrayList<>();
        return moves;
