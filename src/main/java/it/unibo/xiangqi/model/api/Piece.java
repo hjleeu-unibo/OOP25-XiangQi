@@ -8,17 +8,6 @@ import it.unibo.xiangqi.common.api.PieceType;
  * Represents a Xiangqi piece on the board.
  */
 public interface Piece {
-
-    /**
-     * Creates a new instance of this piece with the given parameters.
-     * Each concrete piece class implements this as a factory method.
-     *
-     * @param type             the type of the piece
-     * @param owner            the player who owns the piece
-     * @param startingPosition the initial position on the board
-     * @return a new Piece instance
-     */
-    public Piece createPiece(PieceType type, Player owner, Position startingPosition );
     
     /**
      * Returns the type of this piece (i.e. HORSE, CANNON, GENERAL...).
