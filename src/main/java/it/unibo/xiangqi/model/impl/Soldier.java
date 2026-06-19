@@ -38,4 +38,8 @@ public class Soldier extends AbstractPiece{
         final int forward = isRed ? 1 : -1;
         return moves;
     }
+
+    private boolean hasCrossedRiver(final int row, final boolean isRed) {
+        return isRed ? row > RIVER_ROW_RED : row < RIVER_ROW_BLACK;
+    }
 }
