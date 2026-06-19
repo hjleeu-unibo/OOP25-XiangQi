@@ -47,7 +47,9 @@ public class GameModelImpl implements GameModel {
     }
 
     public void switchTurn() {
-       return;
+        final int currentIndex = players.indexOf(currentPlayer);
+        final int nextIndex = (currentIndex + 1) % players.size();
+        currentPlayer = players.get(nextIndex);
     }
 
     @Override
