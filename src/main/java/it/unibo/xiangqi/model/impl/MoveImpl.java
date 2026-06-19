@@ -22,7 +22,6 @@ public class MoveImpl implements Move {
      * @param from          the starting position
      * @param to            the destination position
      * @param piece         the piece that is moving
-     * @param capturedPiece the piece that is captured, or null if none
      */
     public MoveImpl(final Position from, final Position to, final Piece piece) {
         this.from = from;
