@@ -13,17 +13,6 @@ import it.unibo.xiangqi.common.api.GameModeType;
 public interface GameModel {
 
     /**
-     * Creates and returns a new GameModel instance.
-     *
-     * @param board   the board to play on
-     * @param players the two players — red at index 0, black at index 1
-     * @return a new GameModel instance
-     */
-    public static GameModel createGameModel(Board board, List<Player> players) {
-        throw new UnsupportedOperationException("Implement in concrete class");
-    }
-
-    /**
      * Initialises the game for the given mode.
      * Creates the board, places all pieces at their starting positions using
      * PieceFactory, and sets up the two players (human/bot depending on mode).
