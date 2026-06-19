@@ -61,17 +61,17 @@ public interface Piece {
      * Each subclass defines its own value.
      *
      * Default values:
-     *   General          = 100
-     *   Chariot          = 9
-     *   Cannon           = 4.5
-     *   Horse            = 4
-     *   Advisor          = 2
-     *   Elephant         = 2
-     *   Soldier          = 1
+     *   General          = 1000
+     *   Chariot          = 90
+     *   Cannon           = 45
+     *   Horse            = 40
+     *   Advisor          = 20
+     *   Elephant         = 20
+     *   Soldier          = 10
      *
      * @return the piece value
      */
-    public double getInitialValue();
+    public int getInitialValue();
 
    /**
      * Returns the current strategic value of this piece, which may differ
@@ -80,7 +80,7 @@ public interface Piece {
      *
      * @return the current piece value
      */
-    public double getCurrentValue();
+    public int getCurrentValue();
 
     /**
     * Updates the strategic value of this piece.
@@ -89,5 +89,5 @@ public interface Piece {
     *
     * @param value the new strategic value
     */
-    public void setValue(final float new_value);
+    public void setValue(final int value);
 }
