@@ -43,6 +43,14 @@ public interface GameController {
     void save();
 
     /**
+     * Reports whether a previously saved game is avaible 
+     * to be resumed.
+     * 
+     * @return true if a saved game exists and can be restored
+     */
+    public boolean isResumeAvailable();
+
+    /**
      * Loads a previously saved game state from persistent storage
      */
     void load();

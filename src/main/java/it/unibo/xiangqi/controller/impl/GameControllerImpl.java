@@ -12,7 +12,7 @@ import it.unibo.xiangqi.model.api.RuleEngine;
 import it.unibo.xiangqi.view.api.GameView;
 
 /**
- * Implemetation of the game controller.
+ * Implementation of the game controller.
  * 
  * Manages the game flow by delegating operations to the 
  * underlying model components and updating the view.
@@ -25,6 +25,15 @@ public final class GameControllerImpl implements GameController {
     private final MoveCalculator moveCalculator;
     private final GameLoader gameLoader;
 
+    /**
+     * Builds a new game controller with the given collaborators.
+     * 
+     * @param gameModel the model holding the game state
+     * @param gameView the view rendering the game
+     * @param ruleEngine the engine evaluating game rules
+     * @param moveCalculator the calculator computing bot moves and hints
+     * @param gameLoader the loader managing save and load of the game state
+     */
     public GameControllerImpl(final GameModel gameModel,
                               final GameView gameView,
                               final RuleEngine ruleEngine,
@@ -77,7 +86,23 @@ public final class GameControllerImpl implements GameController {
 
     @Override
     public void save() {
-        gameLoader.store(gameModel);
+        switch(gameModel.getStatus()) {
+            case NOT_STARTED:
+                break;  
+            case IN_PROGRESS:
+                gameLoader.store(gameModel);
+                break;
+            case FINISHED:
+                gameLoader.discardSave();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public boolean isResumeAvailable() {
+        return gameLoader.hasStoredGame();
     }
 
     @Override
@@ -91,7 +116,6 @@ public final class GameControllerImpl implements GameController {
     public void hint() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
 
-        //reaching this branch indicates an unexpected state
         if (gameModel.getHintsRemaining(currentPlayer) == 0) {
             return;
         }
@@ -108,6 +132,7 @@ public final class GameControllerImpl implements GameController {
 
     }
 
+    //triggers the current turn after checking the game state
     private void dispatchTurn() {
          final Player currentPlayer = gameModel.getCurrentPlayer();
          final Board board = gameModel.getBoard();
@@ -135,10 +160,10 @@ public final class GameControllerImpl implements GameController {
          } else {
             botTurn();
          }
-
-         
     }
-
+    
+    // enables or disables the hint button based on how many
+    // hints the player has left in this game 
     private void updateHintState(final Player currentPlayer) {
 
             if (gameModel.getHintsRemaining(currentPlayer) > 0){
