@@ -22,11 +22,6 @@ public class Soldier extends AbstractPiece{
     }
 
     @Override
-    public Piece createPiece(PieceType type, Player owner, Position startingPosition) {
-        return new Soldier(owner, startingPosition);
-    }
-
-    @Override
     public List<Move> getMoves(final Board board) {
         final List<Move> moves = new ArrayList<>();
         final Position current = getPosition();
