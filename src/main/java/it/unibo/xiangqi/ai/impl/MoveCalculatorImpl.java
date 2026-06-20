@@ -90,12 +90,12 @@ public class MoveCalculatorImpl implements MoveCalculator {
 
         /* THREATENING PIECES. */
         for (Move move : ruleEngine.getLegalMoves(piece, board)) {
-            Piece threatenedPiece = board.getPieceAt(move.getTo());
+            Piece capturedPiece = board.getPieceAt(move.getTo());
             boolean isProtected = false;
-            if (threatenedPiece != null && !threatenedPiece.getOwner(currentPlayer)) {
+            if (capturedPiece != null && !capturedPiece.getOwner(currentPlayer)) {
                 for (Piece p : enemyPieces) {
                     for (Move m : ruleEngine.getLegalMoves(p, board)) {
-                        if (m.getTo() == threatenedPiece.getPosition()) {
+                        if (m.getTo() == capturedPiece.getPosition()) {
                             isProtected = true;
                             break;
                         }
@@ -106,8 +106,10 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 }
 
                 if (!isProtected) {
-                    newValue = 15 * piece.getInitialValue();
-                } 
+                    newValue += 15 * capturedPiece.getInitialValue();
+                }
+            } else if (capturedPiece != null && capturedPiece.getOwner().equals(currentPlayer)) {
+                newValue += capturedPiece.getInitialValue();
             }
         }
     }
