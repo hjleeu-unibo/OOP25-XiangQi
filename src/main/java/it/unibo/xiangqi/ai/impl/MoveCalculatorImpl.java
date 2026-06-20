@@ -2,28 +2,28 @@ package it.unibo.xiangqi.ai.impl;
 
 /**
  * LOGIC OF THIS SYSTEM | HOW THE BOARD SCORES ARE CALCULATED:
- * Each piece has their own initial value (stored as double):
- *  - GENERAL   ->  100.0
- *  - ADVISOR   ->  2.0
- *  - ELEPHANT  ->  2.0
- *  - HORSE     ->  4.0
- *  - CHARIOT   ->  9.0
- *  - CANNON    ->  4.5
- *  - SOLDIER   ->  1.0
+ * Each piece has their own initial value (stored as int):
+ *  - GENERAL   ->  1000
+ *  - ADVISOR   ->  20
+ *  - ELEPHANT  ->  20
+ *  - HORSE     ->  40
+ *  - CHARIOT   ->  90
+ *  - CANNON    ->  45
+ *  - SOLDIER   ->  10
  * For a more real game experience, some pieces get different values depending by some factors:
- *  - SOLDIER   ->  over the river, its value changes to 2.0.
- *  - CANNON    ->  when its position is on the same line or column of the general, its values changes to 5.0,
- *                  but this real value is: own_value (4.5 -> 5.0) - 0.1 per dead piece (of all players).
+ *  - SOLDIER   ->  over the river, its value changes to 20.
+ *  - CANNON    ->  when its position is on the same line or column of the general, its values changes to 50,
+ *                  but this real value is: own_value (45 -> 50) -> 1 per dead piece (of all players).
  *                  The variable factor is because it became useless when it has less "stepping stones".
- *                  However, its minimum value is 4.0 -> max(4.5/5.0 - 0.1x, 4.0).
+ *                  However, its minimum value is 4.0 -> max(45/50 - x, 40).
  *  - CHARIOT   ->  when its position is ont he same line or column of the enemy's general,
- *                  its value changes to 10.0.
- *  - HORSE     ->  over the river, its value changes to 5.0.
+ *                  its value changes to 100.
+ *  - HORSE     ->  over the river, its value changes to 50.
  *                  The horse became more useful when there are less "obstacles" (pieces) on the board.
- *                  The formula is: own_value (4.0 -> 5.0) + 0.1 per dead piece (of all players).
- *                  The maximum value is 6.5 -> min(4.0/5.0 + 0.1, 6.5).
- *  - ELEPHANT  ->  out of its initial position, its value changes to 3.0.
- *  - ADVISOR   ->  out of its initial position, its value changes to 3.0.
+ *                  The formula is: own_value (40 -> 50) + 1 per dead piece (of all players).
+ *                  The maximum value is 65 -> min(40/50 + x, 65).
+ *  - ELEPHANT  ->  out of its initial position, its value changes to 30.
+ *  - ADVISOR   ->  out of its initial position, its value changes to 30.
  *  - GENERAL   ->  its value will not be changed.
  * 
  * Above, these are the value of each piece during the game.
@@ -51,82 +51,64 @@ public class MoveCalculatorImpl implements MoveCalculator {
         this.ruleEngine = ruleEngine;
     }
 
-    public double calculateBoardScore(GameState gm) {
-        /* DATA NEEDED. */
-        double stateScore = 0;
+    @Override
+    public int calculateBoardScore(GameState gameState) {
+        final Board board = gameState.getBoard();
+        final Player currentPlayer = gameState.getCurrentPlayer();
+        int boardScore = 0;
 
-        Board board = gm.getBoard();
-        Player currentPlayer = gm.getCurrentPlayer();
+        for (final Piece piece : board.getPieces()) {
+            if (piece.getOwner().equals(currentPlayer)) {
+                updatePieceValue(piece, board);
+                boardScore += piece.getCurrentValue();
+            }
+        }
+        
+        return boardScore;
+    }
 
-        List<Piece> myPieces = new ArrayList<>();
+    @Override
+    public Move getBestMove(Board board) {
+        return null;
+    }
+
+    /**
+     * Update the value of a piece due to the state of the game.
+     * @param piece the piece to update
+     * @param board the game board
+     */
+    private void updatePieceValue(Piece piece, Board board) {
+        int newValue = 0;
+        Player currentPlayer = board.getCurrentPlayer();
         List<Piece> enemyPieces = new ArrayList<>();
 
         for (Piece p : board.getPieces()) {
-            if (p.getOwner().equals(currentPlayer)) {
-                myPieces.add(p);
-            } else {
+            if (!p.getOwner().equals(currentPlayer)) {
                 enemyPieces.add(p);
             }
         }
 
-        /* THREATENED PIECES. */
-        for (Piece p : enemyPieces) {
-            for (Move move : ruleEngine.getLegalMoves(p, board)) {
-                Piece capturedPiece = board.getPieceAt(move.getTo());
-
-                if (capturedPiece != null && capturedPiece.getOwner().equals(currentPlayer)) {
-                    boolean isProtected = false;
-
-                    for (Piece myPiece : myPieces) {
-                        for (Move m : ruleEngine.getLegalMoves(myPiece, board)) {
-                            if (m.getTo().equals(capturedPiece.getPosition())) {
-                                isProtected = true;
-                                break;
-                            }
-                        }
-                        if (isProtected) {
-                            break;
-                        }
-                    }
-
-                    if (isProtected) {
-                        stateScore += capturedPiece.getInitialValue();
-                    } else {
-                        stateScore -= (1.5 * capturedPiece.getInitialValue());
-                    }
-                }
-            }
-        }
-
         /* THREATENING PIECES. */
-        for (Piece p : myPieces) {
-            for (Move m : ruleEngine.getLegalMoves(p, board)) {
-                Piece capturedPiece = board.getPieceAt(m.getTo());
-                if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
-                    boolean isProtected = false;
-                    for (Piece enemyP : enemyPieces) {
-                        for (Move enemyPieceMove : ruleEngine.getLegalMoves(enemyP, board)) {
-                            if (enemyPieceMove.getTo().equals(capturedPiece.getPosition())) {
-                                isProtected = true;
-                                break;
-                            }
-                        }
-                        if (isProtected) {
+        for (Move move : ruleEngine.getLegalMoves(piece, board)) {
+            Piece threatenedPiece = board.getPieceAt(move.getTo());
+            boolean isProtected = false;
+            if (threatenedPiece != null && !threatenedPiece.getOwner(currentPlayer)) {
+                for (Piece p : enemyPieces) {
+                    for (Move m : ruleEngine.getLegalMoves(p, board)) {
+                        if (m.getTo() == threatenedPiece.getPosition()) {
+                            isProtected = true;
                             break;
                         }
                     }
-
-                    if (!isProtected) {
-                        stateScore += (1.5 * capturedPiece.getInitialValue());
+                    if (isProtected) {
+                        break;
                     }
                 }
+
+                if (!isProtected) {
+                    newValue = 15 * piece.getInitialValue();
+                } 
             }
         }
-
-        return stateScore;
-    }
-
-    public Move getBestMove(Board board) {
-        return null;
     }
 }

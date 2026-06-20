@@ -6,16 +6,17 @@ import it.unibo.xiangqi.model.api.Move;
 
 public interface MoveCalculator {
     /**
-     * Calculate the score of the board at that moment.
-     * @ gm State of the board, as a simulation of the game.
-     * @return Score of the board.
+     * Calculate the total score of the board for the current player.
+     * The score is the sum of the current values of the player's pieces.
+     * @param gameState current game state
+     * @return board score
      */
-    public double calculateBoardScore(GameState gm);
+    public int calculateBoardScore(GameState gameState);
 
     /**
-     * Return the best Move for the current player.
+     * Return the best move for the current player.
      * @param board Game Board.
-     * @return The Best Move.
+     * @return the best move
      */
     public Move getBestMove(Board board);
 }
