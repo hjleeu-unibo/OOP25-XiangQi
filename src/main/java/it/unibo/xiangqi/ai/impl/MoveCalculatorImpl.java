@@ -79,7 +79,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
      */
     private void updatePieceValue(Piece piece, Board board) {
         int newValue = 0;
-        Player currentPlayer = board.getCurrentPlayer();
+        Player currentPlayer = board.clone().getCurrentPlayer();
         List<Piece> enemyPieces = new ArrayList<>();
 
         for (Piece p : board.getPieces()) {
@@ -92,10 +92,10 @@ public class MoveCalculatorImpl implements MoveCalculator {
         for (Move move : ruleEngine.getLegalMoves(piece, board)) {
             Piece capturedPiece = board.getPieceAt(move.getTo());
             boolean isProtected = false;
-            if (capturedPiece != null && !capturedPiece.getOwner(currentPlayer)) {
+            if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
                 for (Piece p : enemyPieces) {
                     for (Move m : ruleEngine.getLegalMoves(p, board)) {
-                        if (m.getTo() == capturedPiece.getPosition()) {
+                        if (m.getTo().equals(capturedPiece.getPosition())) {
                             isProtected = true;
                             break;
                         }
@@ -112,5 +112,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 newValue += capturedPiece.getInitialValue();
             }
         }
+
+        piece.setValue(newValue);
     }
 }
