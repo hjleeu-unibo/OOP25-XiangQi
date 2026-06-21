@@ -15,7 +15,7 @@ package it.unibo.xiangqi.ai.impl;
  *  - CANNON    ->  when its position is on the same line or column of the general, its values changes to 50,
  *                  but this real value is: own_value (45 -> 50) -> 1 per dead piece (of all players).
  *                  The variable factor is because it became useless when it has less "stepping stones".
- *                  However, its minimum value is 4.0 -> max(45/50 - x, 40).
+ *                  However, its minimum value is 40 -> max(45/50 - x, 40).
  *  - CHARIOT   ->  when its position is ont he same line or column of the enemy's general,
  *                  its value changes to 100.
  *  - HORSE     ->  over the river, its value changes to 50.
@@ -29,7 +29,7 @@ package it.unibo.xiangqi.ai.impl;
  * Above, these are the value of each piece during the game.
  * But they can get some extra value:
  *  - when they are protecting some ally pieces: own_value + ally_pieces_values
- *  - when they are threatening some enemy pieces: own_value + 1.5 x enemy_pieces_value
+ *  - when they are threatening some enemy pieces: own_value + 15 x enemy_pieces_value
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
  */
 
@@ -80,10 +80,13 @@ public class MoveCalculatorImpl implements MoveCalculator {
     private void updatePieceValue(Piece piece, Board board) {
         int newValue = 0;
         Player currentPlayer = board.clone().getCurrentPlayer();
+        List<Piece> myPieces = new ArrayList<>();
         List<Piece> enemyPieces = new ArrayList<>();
 
         for (Piece p : board.getPieces()) {
-            if (!p.getOwner().equals(currentPlayer)) {
+            if (p.getOwner().equals(currentPlayer)) {
+                myPieces.add(p);
+            } else {
                 enemyPieces.add(p);
             }
         }
@@ -108,11 +111,39 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 if (!isProtected) {
                     newValue += 15 * capturedPiece.getInitialValue();
                 }
-            } else if (capturedPiece != null && capturedPiece.getOwner().equals(currentPlayer)) {
-                newValue += capturedPiece.getInitialValue();
             }
         }
 
+        /* IS THREATENED? */
+        for (Piece p : enemyPieces) {
+            boolean isProtected = false;
+            for (Move m : ruleEngine.getLegalMoves(p, board)) {
+                if (m.getTo().equals(piece.getPosition())) {
+                    for (Piece myP : myPieces) {
+                        for (Move myM : ruleEngine.getLegalMoves(myP, board)) {
+                            if (myM.getTo().equals(piece.getPosition())) {
+                                isProtected = true;
+                                break;
+                            }
+                        }
+                        if (isProtected) {
+                            break;
+                        }
+                    }
+                }
+                if (isProtected) {
+                    break;
+                }
+            }
+            
+            if (isProtected) {
+                newValue += piece.getInitialValue();
+                break;
+            }
+        }
+
+
+        /* Update the piece currentValue with the new calculated value. */
         piece.setValue(newValue);
     }
 }
