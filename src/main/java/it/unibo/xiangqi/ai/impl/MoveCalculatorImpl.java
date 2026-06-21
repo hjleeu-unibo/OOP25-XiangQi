@@ -69,7 +69,23 @@ public class MoveCalculatorImpl implements MoveCalculator {
 
     @Override
     public Move getBestMove(Board board) {
-        return null;
+        GameState currentState = board.clone();
+        int maxSimulatedScore = 0;
+        Move bestMove = null;
+
+        for (Piece p : board.getPieces()) {
+            if (p.getOwner().equals(currentState.getCurrentPlayer())) {
+                for (Move m : ruleEngine.getLegalMoves(p, board)) {
+                    GameState simulation = currentState.applyMove(m);
+                    if (calculateBoardScore(simulation) >= maxSimulatedScore) {
+                        maxSimulatedScore = calculateBoardScore(simulation);
+                        bestMove = m;
+                    }
+                }
+            }
+        }
+
+        return bestMove;
     }
 
     /**
