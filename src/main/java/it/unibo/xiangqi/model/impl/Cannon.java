@@ -34,12 +34,26 @@ public class Cannon extends AbstractPiece{
             while(row >= 0 && row < Position.ROWS && col >= 0 && col < Position.COLS) {
                 final Position to = new Position(row, col);
                 final Piece target = board.getPieceAt(to);
-
+                
+                // if the block is empty
                 if(target == null) {
                     if(!screenFound) {
                         moves.add(new MoveImpl(current, to)); // // phase 1 move freely
                     }
+                    // phase 2: empty cell after screen → skip, keep looking
+                } else {
+                    if(!screenFound) {
+                        screenFound = true; // first piece hit → becomes the screen
+                    } else {
+                        // second piece found after screen
+                        if(!target.getOwner().equals(this.getOwner())) {
+                            moves.add(new MoveImpl(current, to)); // if enemy → capture
+                        }
+                        break;
+                    }
                 }
+                row += dir[0];
+                col += dir[1];
             }
         }
         return moves;
