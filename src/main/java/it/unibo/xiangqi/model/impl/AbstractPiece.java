@@ -87,18 +87,18 @@ public abstract class AbstractPiece implements Piece {
     //Tries to add a move. Returns true only if the cell was empty.
     protected boolean tryAddMove(final List<Move> moves, final Board board, 
         final Position from, final int toRow, final int toCol) {
-    if (toRow < 0 || toRow >= Position.ROWS || toCol < 0 || toCol >= Position.COLS) {
-        return false;                                  // out of bounds
+        if (toRow < 0 || toRow >= Position.ROWS || toCol < 0 || toCol >= Position.COLS) {
+            return false;                                  // out of bounds
+        }
+        final Position to = new Position(toRow, toCol);
+        final Piece target = board.getPieceAt(to);
+        if (target == null) {
+            moves.add(new MoveImpl(from, to));
+            return true;                                   // empty → keep sliding
+        } else if (!target.getOwner().equals(this.getOwner())) {
+            moves.add(new MoveImpl(from, to));
+            return false;                                  // capture → stop
+        }
+        return false;                                      // friendly → stop
     }
-    final Position to = new Position(toRow, toCol);
-    final Piece target = board.getPieceAt(to);
-    if (target == null) {
-        moves.add(new MoveImpl(from, to));
-        return true;                                   // empty → keep sliding
-    } else if (!target.getOwner().equals(this.getOwner())) {
-        moves.add(new MoveImpl(from, to));
-        return false;                                  // capture → stop
-    }
-    return false;                                      // friendly → stop
-}
 }
