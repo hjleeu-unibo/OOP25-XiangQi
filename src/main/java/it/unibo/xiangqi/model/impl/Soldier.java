@@ -30,7 +30,7 @@ public class Soldier extends AbstractPiece{
         final boolean isRed = getOwner().getColor() == Color.RED;
 
         // Forward direction: RED moves toward increasing rows, BLACK toward decreasing rows
-        final int forward = isRed ? 1 : -1;
+        final int forward = isRed ? -1 : 1;
         tryAddMove(moves, board, current, row + forward , col);
 
         // Sideways moves are only allowed after crossing the river
@@ -42,7 +42,7 @@ public class Soldier extends AbstractPiece{
     }
 
     private boolean hasCrossedRiver(final int row, final boolean isRed) {
-        return isRed ? row > RIVER_ROW_RED : row < RIVER_ROW_BLACK;
+        return isRed ? row <= RIVER_ROW_RED : row >= RIVER_ROW_BLACK;
     }
 
     private void tryAddMove(final List<Move> moves, final Board board,
