@@ -13,14 +13,26 @@ public class Chariot extends AbstractPiece{
 
     private static final int VALUE = 90;
 
+    // Up, down, left, right
+    private static final position DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
     protected Chariot(Player owner, Position position) {
         super(PieceType.CHARIOT, owner, position, VALUE);
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
-        List<Move> moves = new ArrayList<>();
+    public List<Move> getMoves(final Board board) {
+        final List<Move> moves = new ArrayList<>();
+        final Position current = this.getPosition();
+
+        for (final int[] dir : DIRECTIONS) {
+            int row = current.getRow() + dir[0];
+            int col = current.getCol() + dir[1];
+            while (tryAddMove(moves, board, current, row, col)) {
+                row += dir[0];
+                col += dir[1];
+            }
+        }
         return moves;
     }
-
 }
