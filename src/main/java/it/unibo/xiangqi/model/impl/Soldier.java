@@ -28,9 +28,11 @@ public class Soldier extends AbstractPiece{
         final int col = current.getCol();
         final boolean isRed = getOwner().getColor() == Color.RED;
 
+        // Soldiers always move one step forward
         final int forward = isRed ? -1 : 1;
         tryAddMove(moves, board, current, row + forward, col);
 
+        // the soldier can move horizontally after has crossed the river
         if (hasCrossedRiver(row, isRed)) {
             tryAddMove(moves, board, current, row, col + 1);
             tryAddMove(moves, board, current, row, col - 1);
@@ -38,6 +40,7 @@ public class Soldier extends AbstractPiece{
         return moves;
     }
 
+    // Checks whether the soldier has crossed the river.
     private boolean hasCrossedRiver(final int row, final boolean isRed) {
         return isRed ? row <= RIVER_ROW_RED : row >= RIVER_ROW_BLACK;
     }
