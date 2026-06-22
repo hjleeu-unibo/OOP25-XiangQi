@@ -30,6 +30,17 @@ public class Cannon extends AbstractPiece{
             int row = current.getRow() + dir[0];
             int col = current.getCol() + dir[1];
             boolean screenFound = false; // has the cannon platform been found?
+
+            while(row >= 0 && row < Position.ROWS && col >= 0 && col < Position.COLS) {
+                final Position to = new Position(row, col);
+                final Piece target = board.getPieceAt(to);
+
+                if(target == null) {
+                    if(!screenFound) {
+                        moves.add(new MoveImpl(current, to)); // // phase 1 move freely
+                    }
+                }
+            }
         }
         return moves;
     }
