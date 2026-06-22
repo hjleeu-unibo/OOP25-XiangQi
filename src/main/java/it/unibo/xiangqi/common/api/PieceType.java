@@ -8,4 +8,8 @@ public enum PieceType {
     CHARIOT,
     CANNON,
     SOLDIER
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main
