@@ -1,22 +1,22 @@
-package it.unibo.xiangqi.common.api;
+package it.unibo.xiangqi.common;
 
 public enum PieceType {
 
-    GENERAL("G"),
-    ADVISOR("A"),
-    ELEPHANT("E"),
-    HORSE("H"),
-    CHARIOT("R"),
-    CANNON("C"),
-    SOLDIER("S");
+    GENERAL("general"),
+    ADVISOR("advisor"),
+    ELEPHANT("elephant"),
+    HORSE("horse"),
+    CHARIOT("chariot"),
+    CANNON("cannon"),
+    SOLDIER("soldier");
 
-    private final String symbol;
+    private String name;
 
-    PieceType(String symbol) {
-        this.symbol = symbol;
+    PieceType(String name) {
+        this.name = name;
     }
 
-    public String getSymbol() {
-        return symbol;
+    public String getName() {
+        return this.name;
     }
 }

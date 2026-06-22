@@ -3,7 +3,7 @@ package it.unibo.xiangqi.view.impl;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 
 public class CellListener implements ActionListener {

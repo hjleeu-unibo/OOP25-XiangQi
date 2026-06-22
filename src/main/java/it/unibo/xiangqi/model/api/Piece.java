@@ -1,7 +1,7 @@
 package it.unibo.xiangqi.model.api;
 
-import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.Position;
 
 public interface Piece {
     PieceType getType(); 

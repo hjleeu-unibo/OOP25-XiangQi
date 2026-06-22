@@ -5,7 +5,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import it.unibo.xiangqi.common.api.GameModeType;
+import it.unibo.xiangqi.common.GameModeType;
 import it.unibo.xiangqi.controller.api.InputHandler;
 
 public class MenuPanel extends JPanel{

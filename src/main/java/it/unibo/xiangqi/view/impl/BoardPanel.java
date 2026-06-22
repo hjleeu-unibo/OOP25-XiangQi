@@ -1,18 +1,23 @@
 package it.unibo.xiangqi.view.impl;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 //import javax.swing.JTextField;
 
-import it.unibo.xiangqi.common.api.Color;
-import it.unibo.xiangqi.common.api.Move;
-import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.Color;
+import it.unibo.xiangqi.common.Move;
+import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
@@ -31,6 +36,7 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
     private List<Position> highlightedCells;
     private Position selectedCell; 
     private InputHandler inputHandler; 
+    private int cellSize; 
     //private JTextField text; 
 
     public BoardPanel() {
@@ -40,6 +46,9 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         hintButton = new JButton("Hint"); 
         cells = new JButton[10][9];
         //text = new JTextField("Start"); 
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.cellSize = (int)(screenSize.height * 0.05);
 
         hintButton.addActionListener(e -> {
             if(this.inputHandler != null)
@@ -77,18 +86,20 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
                 if (piece == null){
                     cells[row][col].setText("");
                 }else{
-                    cells[row][col].setText(pieceToText(piece)); 
+                    cells[row][col].setIcon(pieceToIcon(piece));  
                 }
             }
         }
     }
 
-    private String pieceToText(Piece piece){
-
-        PieceType type = piece.getType(); 
-        Color c = piece.getOwner().getColor(); 
-
-        return c.getSymbol()+type.getSymbol(); 
+    private ImageIcon pieceToIcon(Piece piece){
+        String color = piece.getOwner().getColor().getName();
+        String type = piece.getType().getName();
+        String path = "icons/" + color + "_" + type + ".png";
+        URL url = ClassLoader.getSystemResource(path); 
+        ImageIcon icon = new ImageIcon(url); 
+        Image scaled = icon.getImage().getScaledInstance(this.cellSize, this.cellSize, Image.SCALE_SMOOTH); 
+        return new ImageIcon(scaled); 
     }
 
     @Override

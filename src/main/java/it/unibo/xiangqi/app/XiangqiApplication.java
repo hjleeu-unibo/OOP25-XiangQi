@@ -2,9 +2,9 @@ package it.unibo.xiangqi.app;
 
 import java.util.List;
 
-import it.unibo.xiangqi.common.api.Color;
-import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.Color;
+import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Board;
@@ -23,7 +23,7 @@ public class XiangqiApplication {
         Player player1 = new FakePlayer(Color.RED);
         Player player2 = new FakePlayer(Color.BLACK); 
         
-        Piece p1 = new FakePiece(PieceType.CANNON, player2, new Position(0, 2)); 
+        Piece p1 = new FakePiece(PieceType.GENERAL, player2, new Position(0, 2)); 
         Piece p2 = new FakePiece(PieceType.ADVISOR, player1, new Position(0, 0));
         Piece p3 = new FakePiece(PieceType.SOLDIER, player1, new Position(2, 3));
 
@@ -39,10 +39,9 @@ public class XiangqiApplication {
         //view.setHintButtonDisabled();
         //view.setHintButtonEnabled();
 
-        InputHandler ih = new FakeInputHandler(view); 
-        view.setInputHandler(ih); 
-
-        view.setPlayerEnabled(Color.RED);
+        //InputHandler ih = new FakeInputHandler(view); 
+        //view.setInputHandler(ih); 
+        //view.setPlayerEnabled(Color.RED);
 
     }
 }

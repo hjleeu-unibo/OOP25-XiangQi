@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.common.api;
+package it.unibo.xiangqi.common;
 
 public enum GameModeType {
     PVP, 

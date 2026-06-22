@@ -1,8 +1,8 @@
 package it.unibo.xiangqi.controller.api;
 
-import it.unibo.xiangqi.common.api.GameModeType;
-import it.unibo.xiangqi.common.api.Move;
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.GameModeType;
+import it.unibo.xiangqi.common.Move;
+import it.unibo.xiangqi.common.Position;
 
 public interface InputHandler {
     void onSelect(Position position); 

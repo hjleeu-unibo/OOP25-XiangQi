@@ -1,7 +1,7 @@
 package it.unibo.xiangqi.view.test;
 
-import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.common.api.Position;
+import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 
