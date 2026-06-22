@@ -1,10 +1,17 @@
-package it.unibo.xiangqi.common.api;
+package it.unibo.xiangqi.common;
 
 public enum Color {
-    RED,
-    BLACK
-<<<<<<< HEAD
+
+    RED("R"),
+    BLACK("B"); 
+
+    private final String symbol;
+
+    Color(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
 }
-=======
-}
->>>>>>> main
