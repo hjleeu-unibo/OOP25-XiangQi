@@ -49,7 +49,7 @@ public class Cannon extends AbstractPiece{
                         if(!target.getOwner().equals(this.getOwner())) {
                             moves.add(new MoveImpl(current, to)); // if enemy → capture
                         }
-                        break;
+                        break; // stop move in this direction
                     }
                 }
                 row += dir[0];
