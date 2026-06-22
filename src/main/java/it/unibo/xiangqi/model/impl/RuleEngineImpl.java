@@ -111,20 +111,20 @@ public class RuleEngineImpl implements RuleEngine {
     private boolean isFlyingGeneral(final Board board)  {
 
         Position redGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.RED);
-        Position blackGeneral = findGeneralPosition(board, p -> p.getOwner.getColor() == Color.BLACK);
+        Position blackGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.BLACK);
 
-        if (redGeneral.getX() != blackGeneral.getX()) {
+        if (redGeneral.getCol() != blackGeneral.getCol()) {
 
             return false;
         }
 
-        final int start = Math.min(redGeneral.getY(), blackGeneral.getY());
-        final int end = Math.max(redGeneral.getY(), blackGeneral.getY());
+        final int start = Math.min(redGeneral.getRow(), blackGeneral.getRow());
+        final int end = Math.max(redGeneral.getRow(), blackGeneral.getRow());
     
 
         for(int y=start+1; y<end; y++) {
 
-            if (board.getPieceAt(new Position(redGeneral.getX(), y)) != null) {
+            if (board.getPieceAt(new Position(redGeneral.getCol(), y)) != null) {
                 return false;
             }
         }
