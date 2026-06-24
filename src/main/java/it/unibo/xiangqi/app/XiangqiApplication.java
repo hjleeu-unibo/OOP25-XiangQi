@@ -30,6 +30,8 @@ public class XiangqiApplication {
         Board board = new FakeBoard(List.of(p1, p2, p3)); 
 
         view.updateBoard(board);
+        view.showCheck(); 
+        view.showWinner(Color.BLACK);
 
         //view.highlightCells(List.of(new Position(1, 3), new Position(0, 5)));
         

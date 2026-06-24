@@ -41,8 +41,8 @@ public class GameViewImpl implements GameView{
         cardLayout.show(rootPanel, "GAME");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = (int)(screenSize.height * 0.7); 
-        int width = (int)(screenSize.height * 0.8);
+        int height = (int)(screenSize.height * 0.8); 
+        int width = height;
 
         frame.setSize(width, height); 
         frame.setLocationRelativeTo(null);
@@ -100,6 +100,24 @@ public class GameViewImpl implements GameView{
         this.inputHandler = handler; 
         boardPanel.setInputHandler(handler);
         menuPanel.setInputHandler(handler);
+    }
+
+
+    @Override
+    public void showCheck() {
+        this.boardPanel.showCheck();
+    }
+
+
+    @Override
+    public void resetCheck() {
+        this.boardPanel.resetCheck();
+    }
+
+
+    @Override
+    public void showWinner(Color color) {
+        this.boardPanel.showWinner(color);
     }
     
 }

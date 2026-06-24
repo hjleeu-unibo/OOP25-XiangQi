@@ -16,5 +16,8 @@ public interface GameView {
     void setHintButtonDisabled(); 
     void highlightCells(List<Position> cells); 
     void showSuggestedMove(Move move); 
-    void setInputHandler(InputHandler inputHandler); 
+    void setInputHandler(InputHandler inputHandler);
+    void showCheck(); 
+    void resetCheck(); 
+    void showWinner(Color color); 
 }

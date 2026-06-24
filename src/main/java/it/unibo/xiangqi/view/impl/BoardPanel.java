@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 //import javax.swing.JTextField;
 
@@ -37,6 +38,8 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
     private Position selectedCell; 
     private InputHandler inputHandler; 
     private int cellSize; 
+    private JPanel notificationPanel; 
+    private JLabel notificationLabel;
     //private JTextField text; 
 
     public BoardPanel() {
@@ -45,10 +48,17 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         sidePanel = new JPanel();
         hintButton = new JButton("Hint"); 
         cells = new JButton[10][9];
+
+        notificationPanel = new JPanel(); 
+        notificationLabel = new JLabel();
+        notificationPanel.add(notificationLabel);
         //text = new JTextField("Start"); 
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.cellSize = (int)(screenSize.height * 0.05);
+        notificationPanel.setPreferredSize( new Dimension(0, (int)(Toolkit.getDefaultToolkit()
+                                                                                .getScreenSize().height * 0.075))
+        );
 
         hintButton.addActionListener(e -> {
             if(this.inputHandler != null)
@@ -70,6 +80,7 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         this.setLayout(new BorderLayout());
         this.add(boardGrid, BorderLayout.CENTER); 
         this.add(sidePanel, BorderLayout.EAST);
+        this.add(notificationPanel, BorderLayout.SOUTH); 
 }
 
     @Override
@@ -213,6 +224,55 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
             this.disableAll();
             this.resetHighlights();
         }
+    }
+
+    public void showCheck(){
+        String path = "notifications/check.png";
+        URL url = ClassLoader.getSystemResource(path);
+        ImageIcon icon = new ImageIcon(url); 
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int h = (int)(screenSize.height * 0.075);
+        int w = (int)(screenSize.height * 0.4);
+        Image scaled = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+
+        notificationLabel.setIcon(
+            new ImageIcon(scaled)
+        );
+
+        notificationPanel.revalidate();
+        notificationPanel.repaint();
+    }
+
+    public void resetCheck() {
+        notificationLabel.setIcon(null);
+        notificationPanel.revalidate();
+        notificationPanel.repaint();
+    }
+
+    public void showWinner(Color color){
+        this.disableAll();
+        String path; 
+        if (color == Color.BLACK){
+            path = "notifications/black_wins.png"; 
+        }else{
+            path = "notifications/red_wins.png";
+        }
+
+        URL url = ClassLoader.getSystemResource(path);
+        ImageIcon icon = new ImageIcon(url); 
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int h = (int)(screenSize.height * 0.075);
+        int w = (int)(screenSize.height * 0.65);
+        Image scaled = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
+
+        notificationLabel.setIcon(
+            new ImageIcon(scaled)
+        );
+
+        notificationPanel.revalidate();
+        notificationPanel.repaint();
     }
     
 }
