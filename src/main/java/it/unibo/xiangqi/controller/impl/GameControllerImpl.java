@@ -1,12 +1,12 @@
 package it.unibo.xiangqi.controller.impl;
 
+import it.unibo.xiangqi.ai.api.MoveCalculator;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.GameController;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameLoader;
 import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.MoveCalculator;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.RuleEngine;
 import it.unibo.xiangqi.view.api.GameView;
@@ -24,6 +24,8 @@ public final class GameControllerImpl implements GameController {
     private final RuleEngine ruleEngine;
     private final MoveCalculator moveCalculator;
     private final GameLoader gameLoader;
+
+    private boolean checkActive;
 
     /**
      * Builds a new game controller with the given collaborators.
@@ -65,7 +67,7 @@ public final class GameControllerImpl implements GameController {
     public void botTurn() {
         gameView.setHintDisabled();
 
-        final Move botMove = moveCalculator.getBestMove();
+        final Move botMove = moveCalculator.getBestMove(gameModel);
 
         //reaching this branch indicates an unexpected state
         if (botMove == null) {
@@ -120,7 +122,7 @@ public final class GameControllerImpl implements GameController {
             return;
         }
 
-        final Move suggestedMove = moveCalculator.getBestMove();
+        final Move suggestedMove = moveCalculator.getBestMove(gameModel);
 
         if (suggestedMove == null) {  
             return;
@@ -139,6 +141,11 @@ public final class GameControllerImpl implements GameController {
 
          gameView.update();
 
+         if (checkActive) {
+            gameView.resetCheck();
+            checkActive = false;
+         }
+
          if (ruleEngine.isDraw(board)) {
             gameView.showDraw();
             gameModel.endGame();
@@ -146,13 +153,15 @@ public final class GameControllerImpl implements GameController {
          }
 
          if (ruleEngine.isCheckMate(currentPlayer, board)) {
-            gameView.showCheckMate(currentPlayer);
+            Player winner = getEnemy(currentPlayer);
+            gameView.showWinner(winner);
             gameModel.endGame();
             return;
          }
 
          if (ruleEngine.isCheck(currentPlayer, board)) {
             gameView.showCheck(); 
+            checkActive = true;
          }   
 
          if (currentPlayer.isHuman()) {
@@ -171,6 +180,15 @@ public final class GameControllerImpl implements GameController {
             } else {
                 gameView.setHintDisabled();
             }
+     }
+
+     //returns the opponent of the given player
+     private Player getEnemy(final Player player) {
+        for (Player player : gameModel.getPlayer()) {
+            if(!player.equals(player)) {
+                return player;
+            }
+        }
      }
   
 }
