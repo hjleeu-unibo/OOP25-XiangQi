@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.xiangqi.ai.api.MoveCalculator;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.GameState;
@@ -71,11 +73,11 @@ public class MoveCalculatorImpl implements MoveCalculator {
     @Override
     public Move getBestMove(GameModel gameModel) {
         Board board = gameModel.getBoard();
-        Player currentPlayer = gameModel.getCurrentPlayer();
+        final Player currentPlayer = gameModel.getCurrentPlayer();
         GameState currentState = gameModel.copyState();
-        int maxSimulatedScore = 0;
+        int maxSimulatedScore = Integer.MIN_VALUE;
         Move bestMove = null;
-
+        
         for (Piece p : board.getPieces()) {
             if (p.getOwner().equals(currentPlayer)) {
                 for (Move m : ruleEngine.getLegalMoves(p, board)) {
@@ -98,8 +100,16 @@ public class MoveCalculatorImpl implements MoveCalculator {
      * @param board the game board
      */
     private void updatePieceValue(Piece piece, Board board) {
+        final int RED_RIVER_ROW = 4;
+        final int BLACK_RIVER_ROW = 5;
+        final int BLACK_BOTTOM_ROW = 0;
+        final int RED_BOTTOM_ROW = 9;
+        final int MAX_PIECES = 32;
+
         int newValue = 0;
-        Player currentPlayer = piece.getOwner();
+        final Player currentPlayer = piece.getOwner();
+        final Color currentPlayerColor = currentPlayer.getColor();
+        Piece enemyGeneral = null;
         List<Piece> myPieces = new ArrayList<>();
         List<Piece> enemyPieces = new ArrayList<>();
 
@@ -107,8 +117,64 @@ public class MoveCalculatorImpl implements MoveCalculator {
             if (p.getOwner().equals(currentPlayer)) {
                 myPieces.add(p);
             } else {
+                if (p.getType().equals(PieceType.GENERAL)) {
+                    enemyGeneral = p;
+                }
                 enemyPieces.add(p);
             }
+        }
+
+        /* UPDATE CURRENT OWN VALUE. */
+        switch (piece.getType()) {
+            case SOLDIER:
+                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
+                    newValue += 20;
+                } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
+                    newValue += 20;
+                } else {
+                    newValue += piece.getInitialValue();
+                }
+                break;
+            case CANNON:
+                if (enemyGeneral != null && piece.getPosition().getCol() == enemyGeneral.getPosition().getCol() || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow()) {
+                    newValue += 50;
+                } else {
+                    newValue += piece.getInitialValue();
+                }
+                newValue -= MAX_PIECES - board.getPieces().size();
+                newValue = Math.max(newValue, 40);
+                break;
+            case CHARIOT:
+                if (enemyGeneral != null && piece.getPosition().getCol() == enemyGeneral.getPosition().getCol() || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow()) {
+                    newValue += 100;
+                } else {
+                    newValue += piece.getInitialValue();
+                }
+                break;
+            case HORSE:
+                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
+                    newValue += 50;
+                } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
+                    newValue += 50;
+                } else {
+                    newValue += piece.getInitialValue();
+                }
+                newValue += MAX_PIECES - board.getPieces().size();
+                newValue = Math.min(newValue, 65);
+                break;
+            case ELEPHANT:
+            case ADVISOR:
+                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
+                    newValue += 30;
+                } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
+                    newValue += 30;
+                } else {
+                    newValue += piece.getInitialValue();
+                }
+                break;
+            case GENERAL:
+                newValue = piece.getInitialValue();
+                break;
         }
 
         /* THREATENING PIECES. */
@@ -129,7 +195,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 }
 
                 if (!isProtected) {
-                    newValue += 1.5 * capturedPiece.getInitialValue();
+                    newValue += (int)(1.5 * capturedPiece.getInitialValue());
                 }
             }
         }
