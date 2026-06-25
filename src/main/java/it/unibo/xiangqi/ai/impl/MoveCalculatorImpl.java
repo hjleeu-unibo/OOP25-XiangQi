@@ -38,6 +38,7 @@ import java.util.List;
 
 import it.unibo.xiangqi.ai.api.MoveCalculator;
 import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
@@ -68,13 +69,15 @@ public class MoveCalculatorImpl implements MoveCalculator {
     }
 
     @Override
-    public Move getBestMove(Board board) {
-        GameState currentState = board.clone();
+    public Move getBestMove(GameModel gameModel) {
+        Board board = gameModel.getBoard();
+        Player currentPlayer = gameModel.getCurrentPlayer();
+        GameState currentState = gameModel.copyState();
         int maxSimulatedScore = 0;
         Move bestMove = null;
 
         for (Piece p : board.getPieces()) {
-            if (p.getOwner().equals(currentState.getCurrentPlayer())) {
+            if (p.getOwner().equals(currentPlayer)) {
                 for (Move m : ruleEngine.getLegalMoves(p, board)) {
                     GameState simulation = currentState.applyMove(m);
                     int newBoardScore = calculateBoardScore(simulation);
