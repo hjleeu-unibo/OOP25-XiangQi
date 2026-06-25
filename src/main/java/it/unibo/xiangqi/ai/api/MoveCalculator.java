@@ -1,6 +1,6 @@
 package it.unibo.xiangqi.ai.api;
 
-import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
 
@@ -15,8 +15,8 @@ public interface MoveCalculator {
 
     /**
      * Return the best move for the current player.
-     * @param board Game Board.
+     * @param gameModel Game model.
      * @return the best move
      */
-    public Move getBestMove(Board board);
+    public Move getBestMove(GameModel gameModel);
 }
