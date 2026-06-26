@@ -23,7 +23,7 @@ public class Elephant extends AbstractPiece {
 
     @Override
     public Boolean isDefensor() {
-        return true;
+        return true;    // Elephant is a defensive piece protecting the General
     }
 
     @Override
@@ -39,6 +39,14 @@ public class Elephant extends AbstractPiece {
             final int toCol = col + dir[1];
             final int eyeRow = row + dir[0] / 2;
             final int eyeCol = col + dir[1] / 2;
+
+            // the elephant must not cross the river
+            if ((isRed ? toRow > RIVER_ROW_RED : toRow < RIVER_ROW_BLACK)
+                && eyeRow >= 0 && eyeRow < Position.ROWS
+                && eyeCol >= 0 && eyeCol < Position.COLS
+                && board.getPieceAt(new Position(eyeRow, eyeCol)) == null) { // there isn't piece in the eye cell
+                    tryAddMove(moves, board, current, toRow, toCol);
+                }
         }
         return moves;
     }
