@@ -21,14 +21,14 @@ public interface GameTimer {
      * @param player the current player
      * @return seconds left
      */
-    int getTurnRemaining(Player player);
+    long getTurnRemaining(Player player);
 
     /**
      * Returns the remaining time of the entire game.
      * @param player the current player
      * @return seconds left
      */
-    int getGameRemaining(Player player);
+    long getGameRemaining(Player player);
 
     /**
      * Tell you if the timer of this turn is expired or not.
