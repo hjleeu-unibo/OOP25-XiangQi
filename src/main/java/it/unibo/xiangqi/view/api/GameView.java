@@ -19,5 +19,6 @@ public interface GameView {
     void setInputHandler(InputHandler inputHandler);
     void showCheck(); 
     void resetCheck(); 
-    void showWinner(Color color); 
+    void showWinner(Color color);
+    void showGamePanel(); 
 }

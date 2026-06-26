@@ -13,21 +13,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-//import javax.swing.JTextField;
 
 import it.unibo.xiangqi.common.Color;
 import it.unibo.xiangqi.common.Move;
-import it.unibo.xiangqi.common.PieceType;
 import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
-import it.unibo.xiangqi.view.api.BoardView;
-import it.unibo.xiangqi.view.api.HintView;
-import it.unibo.xiangqi.view.api.PlayerView;
 
 
-public class BoardPanel extends JPanel implements BoardView, HintView, PlayerView{
+public class BoardPanel extends JPanel {
 
     private JButton[][] cells;
     private JButton hintButton;
@@ -40,7 +35,6 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
     private int cellSize; 
     private JPanel notificationPanel; 
     private JLabel notificationLabel;
-    //private JTextField text; 
 
     public BoardPanel() {
 
@@ -52,13 +46,10 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         notificationPanel = new JPanel(); 
         notificationLabel = new JLabel();
         notificationPanel.add(notificationLabel);
-        //text = new JTextField("Start"); 
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.cellSize = (int)(screenSize.height * 0.05);
-        notificationPanel.setPreferredSize( new Dimension(0, (int)(Toolkit.getDefaultToolkit()
-                                                                                .getScreenSize().height * 0.075))
-        );
+        notificationPanel.setPreferredSize( new Dimension(0, (int)(screenSize.height * 0.075)));
 
         hintButton.addActionListener(e -> {
             if(this.inputHandler != null)
@@ -76,14 +67,12 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
 
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.add(hintButton);
-        //sidePanel.add(text); 
         this.setLayout(new BorderLayout());
         this.add(boardGrid, BorderLayout.CENTER); 
         this.add(sidePanel, BorderLayout.EAST);
         this.add(notificationPanel, BorderLayout.SOUTH); 
 }
 
-    @Override
     public void updateBoard(Board board) {
 
         this.currentBoard = board; 
@@ -103,17 +92,20 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         }
     }
 
+    private ImageIcon pathToIcon(String path, int width, int height){
+        URL url = ClassLoader.getSystemResource(path); 
+        ImageIcon icon = new ImageIcon(url); 
+        Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaled); 
+    }
+
     private ImageIcon pieceToIcon(Piece piece){
         String color = piece.getOwner().getColor().getName();
         String type = piece.getType().getName();
         String path = "icons/" + color + "_" + type + ".png";
-        URL url = ClassLoader.getSystemResource(path); 
-        ImageIcon icon = new ImageIcon(url); 
-        Image scaled = icon.getImage().getScaledInstance(this.cellSize, this.cellSize, Image.SCALE_SMOOTH); 
-        return new ImageIcon(scaled); 
+        return this.pathToIcon(path, this.cellSize, this.cellSize); 
     }
 
-    @Override
     public void highlightCells(List<Position> positions) {
         this.highlightedCells = positions; 
         this.disableAll();
@@ -141,7 +133,6 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         }
     }
 
-    @Override
     public void showSuggestedMove(Move move) {
         Position from = move.getFrom();
         Position to = move.getTo();
@@ -163,13 +154,11 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
         }
     }
 
-    @Override
     public void setPlayerEnabled(Color c) {
         this.disableAll();
         this.setPlayer(true, c);
     }
 
-    @Override
     public void setPlayerDisabled(Color c) {
         this.disableAll();
         this.setPlayer(false, c);
@@ -191,12 +180,10 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
 
     }
 
-    @Override
     public void setHintButtonEnabled() {
         this.hintButton.setEnabled(true);
     }
 
-    @Override
     public void setHintButtonDisabled() {
         this.hintButton.setEnabled(false);
     }
@@ -228,18 +215,11 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
 
     public void showCheck(){
         String path = "notifications/check.png";
-        URL url = ClassLoader.getSystemResource(path);
-        ImageIcon icon = new ImageIcon(url); 
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int h = (int)(screenSize.height * 0.075);
         int w = (int)(screenSize.height * 0.4);
-        Image scaled = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
-
-        notificationLabel.setIcon(
-            new ImageIcon(scaled)
-        );
-
+        
+        notificationLabel.setIcon(this.pathToIcon(path, w, h));
         notificationPanel.revalidate();
         notificationPanel.repaint();
     }
@@ -259,18 +239,11 @@ public class BoardPanel extends JPanel implements BoardView, HintView, PlayerVie
             path = "notifications/red_wins.png";
         }
 
-        URL url = ClassLoader.getSystemResource(path);
-        ImageIcon icon = new ImageIcon(url); 
-
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int h = (int)(screenSize.height * 0.075);
         int w = (int)(screenSize.height * 0.65);
-        Image scaled = icon.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
 
-        notificationLabel.setIcon(
-            new ImageIcon(scaled)
-        );
-
+        notificationLabel.setIcon(this.pathToIcon(path, w, h));
         notificationPanel.revalidate();
         notificationPanel.repaint();
     }

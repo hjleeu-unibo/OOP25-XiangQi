@@ -20,6 +20,9 @@ public class XiangqiApplication {
     public static void main(String[] args) {
         GameView view = new GameViewImpl();
 
+        InputHandler ih = new FakeInputHandler(view); 
+        view.setInputHandler(ih);
+
         Player player1 = new FakePlayer(Color.RED);
         Player player2 = new FakePlayer(Color.BLACK); 
         
@@ -30,8 +33,8 @@ public class XiangqiApplication {
         Board board = new FakeBoard(List.of(p1, p2, p3)); 
 
         view.updateBoard(board);
-        view.showCheck(); 
-        view.showWinner(Color.BLACK);
+        view.showWinner(Color.BLACK); 
+        //view.showWinner(Color.BLACK);
 
         //view.highlightCells(List.of(new Position(1, 3), new Position(0, 5)));
         
@@ -40,9 +43,6 @@ public class XiangqiApplication {
 
         //view.setHintButtonDisabled();
         //view.setHintButtonEnabled();
-
-        //InputHandler ih = new FakeInputHandler(view); 
-        //view.setInputHandler(ih); 
         //view.setPlayerEnabled(Color.RED);
 
     }

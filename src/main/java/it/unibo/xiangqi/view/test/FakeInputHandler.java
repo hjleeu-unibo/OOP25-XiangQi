@@ -28,7 +28,7 @@ public class FakeInputHandler implements InputHandler{
 
     @Override
     public void onStart(GameModeType mode) {
-
+        view.showGamePanel(); 
     }
 
     @Override

@@ -38,11 +38,11 @@ public class GameViewImpl implements GameView{
         rootPanel.add(menuPanel, "MENU");
         rootPanel.add(boardPanel, "GAME");
         frame.setContentPane(rootPanel);
-        cardLayout.show(rootPanel, "GAME");
+        cardLayout.show(rootPanel, "MENU");
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = (int)(screenSize.height * 0.8); 
-        int width = height;
+        int height = (int)(screenSize.height * 0.6); 
+        int width = (int)(screenSize.width * 0.6);
 
         frame.setSize(width, height); 
         frame.setLocationRelativeTo(null);
@@ -102,22 +102,32 @@ public class GameViewImpl implements GameView{
         menuPanel.setInputHandler(handler);
     }
 
-
     @Override
     public void showCheck() {
         this.boardPanel.showCheck();
     }
-
 
     @Override
     public void resetCheck() {
         this.boardPanel.resetCheck();
     }
 
-
     @Override
     public void showWinner(Color color) {
         this.boardPanel.showWinner(color);
+    }
+
+    private void setGameSize(){
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = (int)(screenSize.height * 0.8); 
+        int width = height;
+        this.frame.setSize(width, height);
+        frame.setLocationRelativeTo(null);
+    }
+
+    public void showGamePanel(){
+        this.setGameSize();
+        this.cardLayout.show(rootPanel, "GAME");
     }
     
 }

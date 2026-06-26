@@ -1,7 +1,11 @@
 package it.unibo.xiangqi.view.impl;
 
+import java.awt.Graphics;
+import java.awt.Image;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -14,11 +18,16 @@ public class MenuPanel extends JPanel{
     private JButton pveButton;
     private JButton resumeButton;
     private InputHandler inputHandler; 
+    private Image backgroundImage; 
 
     public MenuPanel() {
         pvpButton = new JButton("Player vs Player");
         pveButton = new JButton("Player vs AI");
         resumeButton = new JButton("Resume Game");
+
+        this.backgroundImage = new ImageIcon(
+            ClassLoader.getSystemResource("menu/menu.png")
+        ).getImage();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         pvpButton.setAlignmentX(CENTER_ALIGNMENT);
@@ -47,6 +56,19 @@ public class MenuPanel extends JPanel{
 
     public void setInputHandler(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(
+            this.backgroundImage,
+            0,
+            0,
+            this.getWidth(),
+            this.getHeight(),
+            this
+        );
     }
     
 }
