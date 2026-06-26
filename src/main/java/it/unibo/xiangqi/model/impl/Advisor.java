@@ -19,7 +19,7 @@ public class Advisor extends AbstractPiece {
 
     @Override
     public Boolean isDefensor() {
-        return true;
+        return true; // Advisor is a defensive piece protecting the General
     }
 
     @Override
