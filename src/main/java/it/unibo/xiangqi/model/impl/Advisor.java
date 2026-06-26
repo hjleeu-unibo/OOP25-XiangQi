@@ -48,5 +48,4 @@ public class Advisor extends AbstractPiece {
        }
        return moves;
     }
-
 }
