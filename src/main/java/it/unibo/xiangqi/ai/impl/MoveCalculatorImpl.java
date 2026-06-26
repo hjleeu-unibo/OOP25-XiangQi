@@ -198,7 +198,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 }
 
                 if (!isProtected) {
-                    newValue += (int)(1.5 * capturedPiece.getInitialValue());
+                    newValue += (int)(1.5 * capturedPiece.getCurrentValue());
                 }
             }
         }
@@ -230,10 +230,10 @@ public class MoveCalculatorImpl implements MoveCalculator {
             
             /* We have two cases. */
             if (isThreatened && isProtected) {
-                newValue += piece.getInitialValue();
+                newValue += piece.getCurrentValue();
                 break;
             } else if (isThreatened && !isProtected) {
-                newValue -= piece.getInitialValue();
+                newValue -= piece.getCurrentValue();
                 break;
             }
         }
