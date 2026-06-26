@@ -11,12 +11,12 @@ public interface MoveCalculator {
      * @param gameState current game state
      * @return board score
      */
-    public int calculateBoardScore(GameState gameState);
+    public int calculateBoardScore(final GameState gameState);
 
     /**
      * Return the best move for the current player.
      * @param gameModel Game model.
      * @return the best move
      */
-    public Move getBestMove(GameModel gameModel);
+    public Move getBestMove(final GameModel gameModel);
 }
