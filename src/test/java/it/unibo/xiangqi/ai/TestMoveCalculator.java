@@ -1,8 +1,10 @@
 package it.unibo.xiangqi.ai;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -46,12 +48,17 @@ public final class TestMoveCalculator {
 
         when(red1.getOwner()).thenReturn(redPlayer);
         when(red1.getCurrentValue()).thenReturn(10);
+        when(red1.getInitialValue()).thenReturn(10);
         when(red2.getOwner()).thenReturn(redPlayer);
         when(red2.getCurrentValue()).thenReturn(20);
+        when(red2.getInitialValue()).thenReturn(10);
         when(black.getOwner()).thenReturn(blackPlayer);
         when(black.getCurrentValue()).thenReturn(50);
+        when(black.getInitialValue()).thenReturn(10);
 
         when(board.getPieces()).thenReturn(List.of(red1, red2, black));
+
+        when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(Collections.emptyList());
 
         GameState gameState = mock(GameState.class);
         when(gameState.getBoard()).thenReturn(board);
