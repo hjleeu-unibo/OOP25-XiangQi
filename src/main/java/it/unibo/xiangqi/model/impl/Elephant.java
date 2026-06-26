@@ -13,6 +13,8 @@ public class Elephant extends AbstractPiece {
 
     private static final int VALUE = 20;
 
+    private static final int[][] DIRECTIONS = {{2, 2}, {2, -2}, {-2, 2}, {-2, -2}};
+
     protected Elephant(Player owner, Position position) {
         super(PieceType.ELEPHANT, owner, position, VALUE);
     }
