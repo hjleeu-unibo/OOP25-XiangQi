@@ -33,13 +33,14 @@ public class GameStateImpl implements GameState{
     }
 
     @Override
-    public void applyMove(Move move) {
+    public GameState applyMove(Move move) {
         if(this.board.getPieceAt(move.getTo()) != null){
             this.board.deletePiece(this.board.getPieceAt(move.getTo()));
         }
         Piece piece = Objects.requireNonNull(this.board.getPieceAt(move.getFrom()));
         piece.setPosition(move.getTo());
         this.switchTurn();
+        return this; 
     }
 
     private void switchTurn(){

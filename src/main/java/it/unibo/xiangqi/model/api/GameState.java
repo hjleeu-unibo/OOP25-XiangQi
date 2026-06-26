@@ -11,5 +11,5 @@ public interface GameState {
     }
     Board getBoard(); 
     Player getCurrentPlayer(); 
-    void applyMove(Move move); 
+    GameState applyMove(Move move); 
 }
