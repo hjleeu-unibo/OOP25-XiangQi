@@ -65,7 +65,7 @@ public final class GameControllerImpl implements GameController {
 
     @Override
     public void botTurn() {
-        gameView.setHintDisabled();
+        gameView.setHintButtonDisabled();
 
         final Move botMove = moveCalculator.getBestMove(gameModel);
 
@@ -129,7 +129,7 @@ public final class GameControllerImpl implements GameController {
         }
 
         gameModel.useHint(currentPlayer);
-        gameView.setHintDisabled();
+        gameView.setHintButtonDisabled();
         gameView.showSuggestedMove(suggestedMove);
 
     }
@@ -139,7 +139,7 @@ public final class GameControllerImpl implements GameController {
          final Player currentPlayer = gameModel.getCurrentPlayer();
          final Board board = gameModel.getBoard();
 
-         gameView.update();
+         gameView.updateBoard(board);
 
          if (checkActive) {
             gameView.resetCheck();
@@ -176,9 +176,9 @@ public final class GameControllerImpl implements GameController {
     private void updateHintState(final Player currentPlayer) {
 
             if (gameModel.getHintsRemaining(currentPlayer) > 0){
-                gameView.setHintEnabled();
+                gameView.setHintButtonEnabled();
             } else {
-                gameView.setHintDisabled();
+                gameView.setHintButtonDisabled();
             }
      }
 
