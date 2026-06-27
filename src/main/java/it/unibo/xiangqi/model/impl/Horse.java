@@ -12,6 +12,13 @@ import it.unibo.xiangqi.model.api.Position;
 public class Horse extends AbstractPiece {
 
     private static final int VALUE = 40;
+    private static final int[][] DIRECTIONS = {
+        {-2,  1}, {-2, -1},  // up 2
+        { 2,  1}, { 2, -1},  // down 2
+        { 1,  2}, {-1,  2},  // right 2
+        { 1, -2}, {-1, -2},  // left 2
+    };
+
 
     protected Horse(Player owner, Position position) {
         super(PieceType.HORSE, owner, position, VALUE);
@@ -20,6 +27,9 @@ public class Horse extends AbstractPiece {
     @Override
     public List<Move> getMoves(Board board) {
         List<Move> moves = new ArrayList<>();
+        final Position current = getPosition();
+        final int row = current.getRow();
+        final int col = current.getCol();
         return moves;
     }
 
