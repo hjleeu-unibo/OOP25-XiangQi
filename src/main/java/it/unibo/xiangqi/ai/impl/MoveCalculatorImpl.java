@@ -29,8 +29,9 @@ package it.unibo.xiangqi.ai.impl;
  * 
  * Above, these are the value of each piece during the game.
  * But they can get some extra value:
- *  - when they are protecting some ally pieces: own_value + protecting_pieces_value
- *  - when they are threatening some enemy pieces: own_value + 1.5 x threatening_pieces_value
+ *  - when they are protecting some ally pieces: own_positional_value + protecting_pieces_positional_value
+ *  - when they are threatening some enemy pieces: own_positional_value + 1.5 x threatening_pieces_positional_value
+ * The positional value depends only by their position in the board.
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
  */
 
@@ -61,9 +62,13 @@ public class MoveCalculatorImpl implements MoveCalculator {
         final Player currentPlayer = gameState.getCurrentPlayer();
         int boardScore = 0;
 
+        /* First update all pieces current value, also enemys'. */
+        for (final Piece piece : board.getPieces()) {
+            updatePieceValue(piece, board);
+        }
+
         for (final Piece piece : board.getPieces()) {
             if (piece.getOwner().equals(currentPlayer)) {
-                updatePieceValue(piece, board);
                 boardScore += piece.getCurrentValue();
             }
         }
@@ -126,58 +131,62 @@ public class MoveCalculatorImpl implements MoveCalculator {
         }
 
         /* UPDATE CURRENT OWN VALUE. SEE THE DOC AT THE TOP. */
+        int positionalValue = 0;
+
         switch (piece.getType()) {
             case SOLDIER:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
-                    newValue += 20;
+                    positionalValue = 20;
                 } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
-                    newValue += 20;
+                    positionalValue = 20;
                 } else {
-                    newValue += piece.getInitialValue();
+                    positionalValue = piece.getInitialValue();
                 }
                 break;
             case CANNON:
                 if (enemyGeneral != null && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol() || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
-                    newValue += 50;
+                    positionalValue = 50;
                 } else {
-                    newValue += piece.getInitialValue();
+                    positionalValue = piece.getInitialValue();
                 }
-                newValue -= MAX_PIECES - board.getPieces().size();
-                newValue = Math.max(newValue, 40);
+                positionalValue -= MAX_PIECES - board.getPieces().size();
+                positionalValue = Math.max(positionalValue, 40);
                 break;
             case CHARIOT:
                 if (enemyGeneral != null && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol() || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
-                    newValue += 100;
+                    positionalValue = 100;
                 } else {
-                    newValue += piece.getInitialValue();
+                    positionalValue = piece.getInitialValue();
                 }
                 break;
             case HORSE:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
-                    newValue += 50;
+                    positionalValue = 50;
                 } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
-                    newValue += 50;
+                    positionalValue = 50;
                 } else {
-                    newValue += piece.getInitialValue();
+                    positionalValue = piece.getInitialValue();
                 }
-                newValue += MAX_PIECES - board.getPieces().size();
-                newValue = Math.min(newValue, 65);
+                positionalValue += MAX_PIECES - board.getPieces().size();
+                positionalValue = Math.min(positionalValue, 65);
                 break;
             /* For Elephant and Advisor, the logic is the same. */
             case ELEPHANT:
             case ADVISOR:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
-                    newValue += 30;
+                    positionalValue = 30;
                 } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
-                    newValue += 30;
+                    positionalValue = 30;
                 } else {
-                    newValue += piece.getInitialValue();
+                    positionalValue = piece.getInitialValue();
                 }
                 break;
             case GENERAL:
-                newValue = piece.getInitialValue();
+                positionalValue = piece.getInitialValue();
                 break;
         }
+
+        newValue += positionalValue;
 
         /* THREATENING PIECES. */
         for (final Move move : ruleEngine.getLegalMoves(piece, board)) {
@@ -230,10 +239,10 @@ public class MoveCalculatorImpl implements MoveCalculator {
             
             /* We have two cases. */
             if (isThreatened && isProtected) {
-                newValue += piece.getCurrentValue();
+                newValue += positionalValue;
                 break;
             } else if (isThreatened && !isProtected) {
-                newValue -= piece.getCurrentValue();
+                newValue -= positionalValue;
                 break;
             }
         }
