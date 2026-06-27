@@ -13,10 +13,17 @@ import it.unibo.xiangqi.model.api.Position;
 public class Advisor extends AbstractPiece {
 
     private static final int VALUE = 20;
+
+    // the palace spans columns 3-5 for both sides
     private static final int PALACE_COL_MIN = 3;
     private static final int PALACE_COL_MAX = 5;
-    private static final int PALACE_ROW_RED_MIN = 7;  // red palace: rows 7-9
-    private static final int PALACE_ROW_BLACK_MAX = 2;  // black palace: rows 0-2
+
+    // red palace: rows 7-9, black palace: rows 0-2
+    // the remaining bounds (red max row 9, black min row 0) are covered by tryAddMove
+    private static final int PALACE_ROW_RED_MIN = 7;
+    private static final int PALACE_ROW_BLACK_MAX = 2;
+
+    // 4 diagonal moves of magnitude 1
     private static final int[][] DIRECTIONS = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
     protected Advisor(Player owner, Position position) {
