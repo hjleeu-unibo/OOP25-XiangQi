@@ -169,8 +169,6 @@ public final class TestMoveCalculator {
         when(ruleEngine.getLegalMoves(enemyHorse, board)).thenReturn(List.of());
         when(board.getPieces()).thenReturn(List.of(enemyHorse, chariot));
 
-        when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
-
         mockSetValue(chariot);
         mockSetValue(enemyHorse);
 
@@ -666,6 +664,7 @@ public final class TestMoveCalculator {
         Position soldierPos = mock(Position.class);
         Move captureHorse = mock(Move.class);
         Move captureSoldier = mock(Move.class);
+        Move threatenMove = mock(Move.class);
 
         GameState sim1 = mock(GameState.class);
         GameState sim2 = mock(GameState.class);
@@ -680,42 +679,63 @@ public final class TestMoveCalculator {
         when(chariot1.getType()).thenReturn(PieceType.CHARIOT);
         when(chariot1.getInitialValue()).thenReturn(90);
         when(chariot1.getPosition()).thenReturn(chariotPos);
+
         when(chariot2.getOwner()).thenReturn(redPlayer);
         when(chariot2.getType()).thenReturn(PieceType.CHARIOT);
         when(chariot2.getInitialValue()).thenReturn(90);
         when(chariot2.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
 
         mockSetValue(chariot1);
         mockSetValue(chariot2);
 
-        when(board.getPieces()).thenReturn(List.of(chariot1, enemyHorse, enemySoldier));
-        when(ruleEngine.getLegalMoves(chariot1, board)).thenReturn(List.of(captureHorse, captureSoldier));
-
-        when(gameState.applyMove(captureHorse)).thenReturn(sim1);
-        when(sim1.getBoard()).thenReturn(board1);
-        when(sim1.getCurrentPlayer()).thenReturn(redPlayer);
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
         when(enemyHorse.getInitialValue()).thenReturn(40);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
-        when(board1.getPieces()).thenReturn(List.of(chariot1, enemyHorse));
-        when(ruleEngine.getLegalMoves(enemyHorse, board1)).thenReturn(List.of());
+        when(horsePos.getRow()).thenReturn(0);
+        when(horsePos.getCol()).thenReturn(1);
 
-        mockSetValue(enemyHorse);
-
-        when(gameState.applyMove(captureSoldier)).thenReturn(sim2);
-        when(sim2.getBoard()).thenReturn(board2);
-        when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
         when(enemySoldier.getOwner()).thenReturn(blackPlayer);
         when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
         when(enemySoldier.getInitialValue()).thenReturn(10);
         when(enemySoldier.getPosition()).thenReturn(soldierPos);
-        when(board2.getPieces()).thenReturn(List.of(enemySoldier, chariot2));
-        when(ruleEngine.getLegalMoves(enemySoldier, board2)).thenReturn(List.of());
+        when(soldierPos.getRow()).thenReturn(0);
+        when(soldierPos.getCol()).thenReturn(2);
 
+        mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
+
+        when(board.getPieces()).thenReturn(List.of(chariot1, enemyHorse, enemySoldier));
+        when(ruleEngine.getLegalMoves(chariot1, board)).thenReturn(List.of(captureHorse, captureSoldier));
+        when(captureHorse.getTo()).thenReturn(horsePos);
+        when(captureSoldier.getTo()).thenReturn(soldierPos);
+
+        /**
+         * Base: 90
+         * Horse: 40 + (32 - 2) = 70 -> 65
+         * Threatening not protected: 1.5 * 65 = 97
+         * Expected: 90 + 97 = 187 (the higher one)
+         */
+        when(gameState.applyMove(captureHorse)).thenReturn(sim1);
+        when(sim1.getBoard()).thenReturn(board1);
+        when(sim1.getCurrentPlayer()).thenReturn(redPlayer);
+        when(board1.getPieces()).thenReturn(List.of(chariot1, enemyHorse));
+        when(threatenMove.getTo()).thenReturn(horsePos);
+        when(board1.getPieceAt(horsePos)).thenReturn(enemyHorse);
+        when(ruleEngine.getLegalMoves(chariot1, board1)).thenReturn(List.of(threatenMove));
+        when(ruleEngine.getLegalMoves(enemyHorse, board1)).thenReturn(List.of());
+
+        /**
+         * Base: 90
+         * Soldier (not threatened): 10
+         * Expected: 90
+         */
+        when(gameState.applyMove(captureSoldier)).thenReturn(sim2);
+        when(sim2.getBoard()).thenReturn(board2);
+        when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
+        when(board2.getPieces()).thenReturn(List.of(enemySoldier, chariot2));
+        when(ruleEngine.getLegalMoves(chariot2, board2)).thenReturn(List.of());
+        when(ruleEngine.getLegalMoves(enemySoldier, board2)).thenReturn(List.of());
 
         Move bestMove = moveCalculator.getBestMove(gameModel);
 
