@@ -183,12 +183,15 @@ public final class GameControllerImpl implements GameController {
      }
 
      //returns the opponent of the given player
-     private Player getEnemy(final Player player) {
-        for (Player player : gameModel.getPlayer()) {
-            if(!player.equals(player)) {
-                return player;
+     private Player getEnemy (final Player player) {
+        for (Player p : gameModel.getPlayers()) {
+
+            if (!p.equals(player)) {
+                return p;
             }
         }
+
+        throw new IllegalStateException("The enemy was not found");
      }
   
 }
