@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ public final class TestMoveCalculator {
     private GameModel gameModel;
     private Board board;
     private Player redPlayer;
+    private Player blackPlayer;
     private GameState gameState;
     private Position pos;
 
@@ -38,6 +40,7 @@ public final class TestMoveCalculator {
         gameModel = mock(GameModel.class);
         board = mock(Board.class);
         redPlayer = mock(Player.class);
+        blackPlayer = mock(Player.class);
         gameState = mock(GameState.class);
         pos = mock(Position.class);
 
@@ -45,16 +48,16 @@ public final class TestMoveCalculator {
 
         /* When is called ..., then return ... */
         when(redPlayer.getColor()).thenReturn(Color.RED);
+        when(blackPlayer.getColor()).thenReturn(Color.BLACK);
         when(gameState.getBoard()).thenReturn(board);
+        when(gameState.getCurrentPlayer()).thenReturn(redPlayer);
+        when(pos.getRow()).thenReturn(9);
+        when(pos.getCol()).thenReturn(0);
     }
 
     /* Test if calculatebBoardScore() sums only the current players' pieces. */
     @Test
     void testCalculateBoardScore_onlySumCurrentPlayerPieces() {
-        Player blackPlayer = mock(Player.class);
-
-        when(blackPlayer.getColor()).thenReturn(Color.BLACK);
-
         Piece red1 = mock(Piece.class);
         Piece red2 = mock(Piece.class);
         Piece black = mock(Piece.class);
@@ -74,8 +77,6 @@ public final class TestMoveCalculator {
         when(black.getCurrentValue()).thenReturn(50);
         when(black.getInitialValue()).thenReturn(10);
 
-        when(pos.getCol()).thenReturn(9);
-        when(pos.getRow()).thenReturn(0);
         when(red1.getPosition()).thenReturn(pos);
         when(red2.getPosition()).thenReturn(pos);
         when(black.getPosition()).thenReturn(pos);
@@ -83,8 +84,6 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(red1, red2, black));
 
         when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
-
-        when(gameState.getCurrentPlayer()).thenReturn(redPlayer);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -102,14 +101,10 @@ public final class TestMoveCalculator {
     void testChariotAtStartingPositionHasInitialValue() {
         Piece chariot = mock(Piece.class);
 
-        when(gameState.getCurrentPlayer()).thenReturn(redPlayer);
-
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
         when(chariot.getInitialValue()).thenReturn(90);
         when(chariot.getPosition()).thenReturn(pos);
-        when(pos.getCol()).thenReturn(0);
-        when(pos.getRow()).thenReturn(9);
 
         when(board.getPieces()).thenReturn(List.of(chariot));
         when(ruleEngine.getLegalMoves(chariot, board)).thenReturn(List.of());
@@ -128,8 +123,6 @@ public final class TestMoveCalculator {
     @Test
     void testRedSoldierOverRiver() {
         Piece soldier = mock(Piece.class);
-
-        when(gameState.getCurrentPlayer()).thenReturn(redPlayer);
         
         when(soldier.getOwner()).thenReturn(redPlayer);
         when(soldier.getType()).thenReturn(PieceType.SOLDIER);
@@ -152,16 +145,12 @@ public final class TestMoveCalculator {
 
     @Test
     void testChariotThreateningUnprotectedPiece() {
-        Player blackPlayer = mock(Player.class);
         Piece chariot = mock(Piece.class);
         Piece enemyHorse = mock(Piece.class);
 
         Position chariotPos = mock(Position.class);
         Position horsePos = mock(Position.class);
         Move captureMove = mock(Move.class);
-
-        when(blackPlayer.getColor()).thenReturn(Color.BLACK);
-        when(gameState.getCurrentPlayer()).thenReturn(redPlayer);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
@@ -199,5 +188,95 @@ public final class TestMoveCalculator {
          * Expected: 90 + 60 = 150
          */
         assertEquals(150, score);
+    }
+
+    /* Test cannon aligned with enemy general, and decreasing value due to dead pieces. */
+    @Test
+    void testCannonAlignedWithEnemyGeneral() {
+        Piece cannon = mock(Piece.class);
+        Piece enemyGeneral = mock(Piece.class);
+        Position cannonPos = mock(Position.class);
+        Position generalPos = mock(Position.class);
+
+        when(cannon.getOwner()).thenReturn(redPlayer);
+        when(cannon.getType()).thenReturn(PieceType.CANNON);
+        when(cannon.getInitialValue()).thenReturn(45);
+        when(cannon.getPosition()).thenReturn(cannonPos);
+        when(cannonPos.getRow()).thenReturn(5);
+        when(cannonPos.getCol()).thenReturn(5);
+
+        when(enemyGeneral.getOwner()).thenReturn(blackPlayer);
+        when(enemyGeneral.getType()).thenReturn(PieceType.GENERAL);
+        when(enemyGeneral.getPosition()).thenReturn(generalPos);
+        when(generalPos.getRow()).thenReturn(0);
+        when(generalPos.getCol()).thenReturn(5);
+
+        List<Piece> pieces = new ArrayList<>(List.of(cannon, enemyGeneral));
+        for (int i = 0; i < 10; i++) {
+            Piece p = mock(Piece.class);
+            when(p.getOwner()).thenReturn(blackPlayer);
+            when(p.getType()).thenReturn(PieceType.SOLDIER);
+            when(p.getPosition()).thenReturn(mock(Position.class));
+            pieces.add(p);
+        }
+
+        when(board.getPieces()).thenReturn(pieces);
+        when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
+
+        doAnswer(inv -> {
+            when(cannon.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(cannon).setValue(anyInt());
+
+        int score = moveCalculator.calculateBoardScore(gameState);
+
+        /**
+         * Base value: 45
+         * Aligned with enemy general: 50
+         * Dead pieces: 32 - (2 + 10) = 20
+         * Min value: 40
+         * Expected: max(40, 50 - 20) = 40
+         */
+        assertEquals(40, score);
+    }
+
+    @Test
+    void testHorseOverRiver() {
+        Piece horse = mock(Piece.class);
+        Position horsePos = mock(Position.class);
+
+        when(horse.getOwner()).thenReturn(redPlayer);
+        when(horse.getType()).thenReturn(PieceType.HORSE);
+        when(horse.getInitialValue()).thenReturn(40);
+        when(horse.getPosition()).thenReturn(horsePos);
+        when(horsePos.getRow()).thenReturn(3);
+
+        List<Piece> pieces = new ArrayList<>(List.of(horse));
+        for (int i = 0; i < 10; i++) {
+            Piece p = mock(Piece.class);
+            when(p.getOwner()).thenReturn(redPlayer);
+            when(p.getType()).thenReturn(PieceType.ADVISOR);
+            when(p.getPosition()).thenReturn(mock(Position.class));
+            pieces.add(p);
+        }
+
+        when(board.getPieces()).thenReturn(pieces);
+        when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
+
+        doAnswer(inv -> {
+            when(horse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(horse).setValue(anyInt());
+
+        int score = moveCalculator.calculateBoardScore(gameState);
+
+        /**
+         * Base: 40
+         * Over the river: 50
+         * Dead pieces: 32 - 11 = 21
+         * Max value: 65
+         * Expected: max(65, 50 + 21) = 65
+         */
+        assertEquals(65, score);
     }
 }
