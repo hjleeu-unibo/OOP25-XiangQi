@@ -153,6 +153,9 @@ public class GameModelImpl implements GameModel {
                 .filter(p -> p.getColor() == currentPlayerColor)
                 .findFirst()
                 .orElse(red);
+
+                // this.board = Board.createBoard;
+                //pieces.forEach(p -> board.setPieceAt(p.getPosition(), p));
         return;
     }
 }
