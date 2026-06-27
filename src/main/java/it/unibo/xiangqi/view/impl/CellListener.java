@@ -18,11 +18,11 @@ public class CellListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         InputHandler handler = boardPanel.getInputHandler();
-
         if (handler != null) {
             boardPanel.handleCellClick(position);
+        }else{
+            throw new NullPointerException(); 
         }
     }
 }

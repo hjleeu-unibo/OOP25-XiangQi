@@ -1,6 +1,7 @@
 package it.unibo.xiangqi.view.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.*;
 
@@ -97,6 +98,7 @@ public class GameViewImpl implements GameView{
     }
 
     public void setInputHandler(InputHandler handler) {
+        Objects.requireNonNull(handler); 
         this.inputHandler = handler; 
         boardPanel.setInputHandler(handler);
         menuPanel.setInputHandler(handler);

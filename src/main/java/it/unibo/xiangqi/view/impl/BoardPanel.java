@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -40,7 +41,7 @@ public class BoardPanel extends JPanel {
 
         boardGrid = new JPanel(new GridLayout(10, 9));
         sidePanel = new JPanel();
-        hintButton = new JButton("Hint"); 
+        hintButton = new JButton("HINT"); 
         cells = new JButton[10][9];
 
         notificationPanel = new JPanel(); 
@@ -54,6 +55,9 @@ public class BoardPanel extends JPanel {
         hintButton.addActionListener(e -> {
             if(this.inputHandler != null)
                 inputHandler.onHint(); 
+            else{
+                throw new IllegalStateException("input handler has not been setted"); 
+            }
         });
 
         for (int row = 0; row < 10; row++) {
@@ -75,7 +79,11 @@ public class BoardPanel extends JPanel {
 
     public void updateBoard(Board board) {
 
-        this.currentBoard = board; 
+        if( board != null){
+            this.currentBoard = board;
+        }else{
+            throw new IllegalArgumentException("argument 'board' is null"); 
+        }
 
         for (int row = 0; row < 10; row++ ){
             for (int col = 0; col < 9; col++ ){
@@ -93,6 +101,9 @@ public class BoardPanel extends JPanel {
     }
 
     private ImageIcon pathToIcon(String path, int width, int height){
+        if(path == null){
+            throw new IllegalArgumentException(); 
+        }
         URL url = ClassLoader.getSystemResource(path); 
         ImageIcon icon = new ImageIcon(url); 
         Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -102,14 +113,21 @@ public class BoardPanel extends JPanel {
     private ImageIcon pieceToIcon(Piece piece){
         String color = piece.getOwner().getColor().getName();
         String type = piece.getType().getName();
+        if(color == null || type == null){
+            throw new NullPointerException(); 
+        }
         String path = "icons/" + color + "_" + type + ".png";
         return this.pathToIcon(path, this.cellSize, this.cellSize); 
     }
 
     public void highlightCells(List<Position> positions) {
-        this.highlightedCells = positions; 
-        this.disableAll();
+        if(positions != null){
+            this.highlightedCells = positions;
+        } else{
+            throw new IllegalArgumentException(); 
+        }
 
+        this.disableAll();
         for (int row = 0; row < 10; row++ ){
             for (int col = 0; col < 9; col++ ){
                 Position pos = new Position(row, col); 
@@ -134,6 +152,9 @@ public class BoardPanel extends JPanel {
     }
 
     public void showSuggestedMove(Move move) {
+        if(move == null){
+            throw new NullPointerException(); 
+        }
         Position from = move.getFrom();
         Position to = move.getTo();
         highlightCell(from, java.awt.Color.GREEN);
@@ -156,12 +177,12 @@ public class BoardPanel extends JPanel {
 
     public void setPlayerEnabled(Color c) {
         this.disableAll();
-        this.setPlayer(true, c);
+        this.setPlayer(true, Objects.requireNonNull(c));
     }
 
     public void setPlayerDisabled(Color c) {
         this.disableAll();
-        this.setPlayer(false, c);
+        this.setPlayer(false, Objects.requireNonNull(c));
     }
 
     private void setPlayer(boolean enable, Color c){
@@ -189,6 +210,7 @@ public class BoardPanel extends JPanel {
     }
     
     public void setInputHandler(InputHandler inputHandler) {
+        Objects.requireNonNull(inputHandler); 
         this.inputHandler = inputHandler;
     }
 
@@ -197,6 +219,7 @@ public class BoardPanel extends JPanel {
     }
 
     public void handleCellClick(Position position){
+        Objects.requireNonNull(position); 
         if(this.selectedCell == null){
             this.selectedCell = position; 
             this.inputHandler.onSelect(position);

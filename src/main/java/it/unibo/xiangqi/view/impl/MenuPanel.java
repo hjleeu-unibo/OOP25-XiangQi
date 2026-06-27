@@ -2,6 +2,7 @@ package it.unibo.xiangqi.view.impl;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.Objects;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -60,6 +61,7 @@ public class MenuPanel extends JPanel{
 
     @Override
     protected void paintComponent(Graphics g) {
+        Objects.requireNonNull(this.backgroundImage); 
         super.paintComponent(g);
         g.drawImage(
             this.backgroundImage,
