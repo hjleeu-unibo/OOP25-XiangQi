@@ -32,8 +32,18 @@ public class GameModelImpl implements GameModel {
     @Override
     public void startGame(GameModeType mode) {
         this.mode = mode;
+
+        // build players based on game mode
+        final Player red = new PlayerImpl(Color.RED, true);
+        final Player black = new PlayerImpl(Color.BLACK, mode == GameModeType.PVP);
+
+        this.players = List.of(red,black);
+
+        // red always moves first
         this.currentPlayer = players.get(0);
         this.status = GameStatus.IN_PROGRESS;
+
+
     }
 
     public void endGame() {
@@ -89,7 +99,4 @@ public class GameModelImpl implements GameModel {
             List<Position> blackHints, List<Piece> pieces) {
         return;
     }
-
-    
-
 }
