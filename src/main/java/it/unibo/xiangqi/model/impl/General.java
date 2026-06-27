@@ -42,6 +42,7 @@ public class General extends AbstractPiece{
             final int toRow = row + dir[0];
             final int toCol = col + dir[1];
 
+            // the General must stay within the palace (row and column bounds)
             if((isRed ? toRow >= PALACE_ROW_RED_MIN : toRow <= PALACE_ROW_BLACK_MAX)
                 && toCol >= PALACE_COL_MIN && toCol <= PALACE_COL_MAX) {
                     tryAddMove(moves, board, current, toRow, toCol);
