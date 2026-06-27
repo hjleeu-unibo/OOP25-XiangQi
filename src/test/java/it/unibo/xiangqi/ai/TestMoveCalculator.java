@@ -240,6 +240,7 @@ public final class TestMoveCalculator {
         assertEquals(40, score);
     }
 
+    /* Test horse over river, with some dead pieces. */
     @Test
     void testHorseOverRiver() {
         Piece horse = mock(Piece.class);
@@ -278,5 +279,55 @@ public final class TestMoveCalculator {
          * Expected: max(65, 50 + 21) = 65
          */
         assertEquals(65, score);
+    }
+
+    /* Test elephant out of the bottom row. */
+    @Test
+    void testElephantOutBottomRow() {
+        Piece elephant = mock(Piece.class);
+        Position elephantPos = mock(Position.class);
+
+        when(elephant.getOwner()).thenReturn(redPlayer);
+        when(elephant.getType()).thenReturn(PieceType.ELEPHANT);
+        when(elephant.getInitialValue()).thenReturn(20);
+        when(elephant.getPosition()).thenReturn(elephantPos);
+        when(elephantPos.getRow()).thenReturn(7);
+
+        when(board.getPieces()).thenReturn(List.of(elephant));
+        when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
+
+        doAnswer(inv -> {
+            when(elephant.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(elephant).setValue(anyInt());
+
+        int score = moveCalculator.calculateBoardScore(gameState);
+
+        assertEquals(30, score);
+    }
+
+    /* Test advisor out of the bottom row. */
+    @Test
+    void testAdvisorOutBottomRow() {
+        Piece advisor = mock(Piece.class);
+        Position advisorPos = mock(Position.class);
+
+        when(advisor.getOwner()).thenReturn(redPlayer);
+        when(advisor.getType()).thenReturn(PieceType.ADVISOR);
+        when(advisor.getInitialValue()).thenReturn(20);
+        when(advisor.getPosition()).thenReturn(advisorPos);
+        when(advisorPos.getRow()).thenReturn(8);
+
+        when(board.getPieces()).thenReturn(List.of(advisor));
+        when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
+
+        doAnswer(inv -> {
+            when(advisor.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(advisor).setValue(anyInt());
+
+        int score = moveCalculator.calculateBoardScore(gameState);
+
+        assertEquals(30, score);
     }
 }
