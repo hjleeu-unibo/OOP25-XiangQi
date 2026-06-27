@@ -62,13 +62,9 @@ public class MoveCalculatorImpl implements MoveCalculator {
         final Player currentPlayer = gameState.getCurrentPlayer();
         int boardScore = 0;
 
-        /* First update all pieces current value, also enemys'. */
-        for (final Piece piece : board.getPieces()) {
-            updatePieceValue(piece, board);
-        }
-
         for (final Piece piece : board.getPieces()) {
             if (piece.getOwner().equals(currentPlayer)) {
+                updatePieceValue(piece, board);
                 boardScore += piece.getCurrentValue();
             }
         }
@@ -86,7 +82,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
         
         for (final Piece p : board.getPieces()) {
             if (p.getOwner().equals(currentPlayer)) {
-                for (Move m : ruleEngine.getLegalMoves(p, board)) {
+                for (final Move m : ruleEngine.getLegalMoves(p, board)) {
                     final GameState simulation = currentState.applyMove(m);
                     int newBoardScore = calculateBoardScore(simulation);
                     if (newBoardScore >= maxSimulatedScore) {
@@ -106,16 +102,8 @@ public class MoveCalculatorImpl implements MoveCalculator {
      * @param board the game board
      */
     private void updatePieceValue(final Piece piece, final Board board) {
-        final int RED_RIVER_ROW = 4; /* The row that rapresents that the red pieces is over the river. */
-        final int BLACK_RIVER_ROW = 5; /* The row that rapresents that the black pieces is over the river. */
-        final int BLACK_BOTTOM_ROW = 0; /* The bottom row for the black player. */
-        final int RED_BOTTOM_ROW = 9; /* The bottom row for the red player. */
-        final int MAX_PIECES = 32; /* The max number of the pieces in the game. */
-
         int newValue = 0; /* The returning variable. */
         final Player currentPlayer = piece.getOwner();
-        final Color currentPlayerColor = currentPlayer.getColor();
-        Piece enemyGeneral = null;
         List<Piece> myPieces = new ArrayList<>();
         List<Piece> enemyPieces = new ArrayList<>();
 
@@ -123,15 +111,96 @@ public class MoveCalculatorImpl implements MoveCalculator {
             if (p.getOwner().equals(currentPlayer)) {
                 myPieces.add(p);
             } else {
-                if (p.getType().equals(PieceType.GENERAL)) {
-                    enemyGeneral = p;
-                }
                 enemyPieces.add(p);
             }
         }
 
         /* UPDATE CURRENT OWN VALUE. SEE THE DOC AT THE TOP. */
+        int positionalValue = calculatePositionalValue(piece, board);
+
+        newValue += positionalValue;
+
+        /* THREATENING PIECES. */
+        for (final Move move : ruleEngine.getLegalMoves(piece, board)) {
+            final Piece capturedPiece = board.getPieceAt(move.getTo());
+            boolean isProtected = false;
+            if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
+                /* IS PROTECTED? */
+                for (final Piece p : enemyPieces) {
+                    for (final Move m : ruleEngine.getLegalMoves(p, board)) {
+                        if (m.getTo().equals(capturedPiece.getPosition())) {
+                            isProtected = true;
+                            break;
+                        }
+                    }
+                    if (isProtected) {
+                        break;
+                    }
+                }
+
+                if (!isProtected) {
+                    newValue += (int)(1.5 * calculatePositionalValue(capturedPiece, board));
+                }
+            }
+        }
+
+        /* IS THREATENED? */
+        for (final Piece p : enemyPieces) {
+            boolean isThreatened = false;
+            boolean isProtected = false;
+            for (final Move m : ruleEngine.getLegalMoves(p, board)) {
+                if (m.getTo().equals(piece.getPosition())) {
+                    isThreatened = true;
+                    /* IS PROTECTED? */
+                    for (final Piece myP : myPieces) {
+                        for (final Move myM : ruleEngine.getLegalMoves(myP, board)) {
+                            if (myM.getTo().equals(piece.getPosition())) {
+                                isProtected = true;
+                                break;
+                            }
+                        }
+                        if (isProtected) {
+                            break;
+                        }
+                    }
+                }
+                if (isProtected) {
+                    break;
+                }
+            }
+            
+            /* We have two cases. */
+            if (isThreatened && isProtected) {
+                newValue += positionalValue;
+                break;
+            } else if (isThreatened && !isProtected) {
+                newValue -= positionalValue;
+                break;
+            }
+        }
+
+        /* Update the piece currentValue with the new calculated value. */
+        piece.setValue(newValue);
+    }
+
+    private int calculatePositionalValue(final Piece piece, final Board board) {
+        final int RED_RIVER_ROW = 4; /* The row that rapresents that the red pieces is over the river. */
+        final int BLACK_RIVER_ROW = 5; /* The row that rapresents that the black pieces is over the river. */
+        final int BLACK_BOTTOM_ROW = 0; /* The bottom row for the black player. */
+        final int RED_BOTTOM_ROW = 9; /* The bottom row for the red player. */
+        final int MAX_PIECES = 32; /* The max number of the pieces in the game. */
+
+        final Player currentPlayer = piece.getOwner();
+        final Color currentPlayerColor = currentPlayer.getColor();
+        Piece enemyGeneral = null;
         int positionalValue = 0;
+
+        for (final Piece p : board.getPieces()) {
+            if (!p.getOwner().equals(currentPlayer) && p.getType().equals(PieceType.GENERAL)) {
+                enemyGeneral = p;
+                break;
+            }
+        }
 
         switch (piece.getType()) {
             case SOLDIER:
@@ -185,69 +254,6 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 positionalValue = piece.getInitialValue();
                 break;
         }
-
-        newValue += positionalValue;
-
-        /* THREATENING PIECES. */
-        for (final Move move : ruleEngine.getLegalMoves(piece, board)) {
-            final Piece capturedPiece = board.getPieceAt(move.getTo());
-            boolean isProtected = false;
-            if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
-                /* IS PROTECTED? */
-                for (final Piece p : enemyPieces) {
-                    for (final Move m : ruleEngine.getLegalMoves(p, board)) {
-                        if (m.getTo().equals(capturedPiece.getPosition())) {
-                            isProtected = true;
-                            break;
-                        }
-                    }
-                    if (isProtected) {
-                        break;
-                    }
-                }
-
-                if (!isProtected) {
-                    newValue += (int)(1.5 * capturedPiece.getCurrentValue());
-                }
-            }
-        }
-
-        /* IS THREATENED? */
-        for (final Piece p : enemyPieces) {
-            boolean isThreatened = false;
-            boolean isProtected = false;
-            for (final Move m : ruleEngine.getLegalMoves(p, board)) {
-                if (m.getTo().equals(piece.getPosition())) {
-                    isThreatened = true;
-                    /* IS PROTECTED? */
-                    for (final Piece myP : myPieces) {
-                        for (final Move myM : ruleEngine.getLegalMoves(myP, board)) {
-                            if (myM.getTo().equals(piece.getPosition())) {
-                                isProtected = true;
-                                break;
-                            }
-                        }
-                        if (isProtected) {
-                            break;
-                        }
-                    }
-                }
-                if (isProtected) {
-                    break;
-                }
-            }
-            
-            /* We have two cases. */
-            if (isThreatened && isProtected) {
-                newValue += positionalValue;
-                break;
-            } else if (isThreatened && !isProtected) {
-                newValue -= positionalValue;
-                break;
-            }
-        }
-
-        /* Update the piece currentValue with the new calculated value. */
-        piece.setValue(newValue);
+        return positionalValue;
     }
 }
