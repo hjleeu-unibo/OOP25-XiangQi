@@ -5,15 +5,18 @@ import java.util.Objects;
 
 import javax.swing.*;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import it.unibo.xiangqi.common.Color;
-import it.unibo.xiangqi.common.Move;
-import it.unibo.xiangqi.common.Position;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.view.api.GameView;
@@ -26,6 +29,13 @@ public class GameViewImpl implements GameView{
     private MenuPanel menuPanel;
     private BoardPanel boardPanel;
     private InputHandler inputHandler; 
+
+    /* Haojie-Liu | Game timer section. */
+    private JPanel timerPanel;
+    private JLabel redTurnLabel;
+    private JLabel blackTurnLabel;
+    private JLabel redGameLabel;
+    private JLabel blackGameLabel;
 
 
     public GameViewImpl() {
@@ -40,6 +50,23 @@ public class GameViewImpl implements GameView{
         rootPanel.add(boardPanel, "GAME");
         frame.setContentPane(rootPanel);
         cardLayout.show(rootPanel, "MENU");
+
+        /* Haojie-Liu | Game timer section. */
+        timerPanel = new JPanel(cardLayout);
+        redTurnLabel = new JLabel("Red turn: --s");
+        redGameLabel = new JLabel("Red game: --s");
+        blackTurnLabel = new JLabel("Black turn: --s");
+        blackGameLabel = new JLabel("Black game: --s");
+
+        timerPanel.add(new JLabel("RED"));
+        timerPanel.add(redTurnLabel);
+        timerPanel.add(redGameLabel);
+        timerPanel.add(new JLabel(" | "));
+        timerPanel.add(new JLabel("BLACK"));
+        timerPanel.add(blackTurnLabel);
+        timerPanel.add(blackGameLabel);
+
+        frame.add(timerPanel, BorderLayout.SOUTH);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(screenSize.height * 0.6); 
@@ -132,4 +159,41 @@ public class GameViewImpl implements GameView{
         this.cardLayout.show(rootPanel, "GAME");
     }
     
+    /* Haojie-Liu | Game timer section. */
+    @Override
+    public void updateTimer(Player player, long turnRemaining, long gameRemaining) {
+        /* The invokeLater method make async update of the view with threads. */
+        SwingUtilities.invokeLater(() -> {
+            switch (player.getColor()) {
+                case RED:
+                    redTurnLabel.setText("Turn: " + timeToString(turnRemaining));
+                    redGameLabel.setText("Game: " + timeToString(gameRemaining));
+                    break;
+                case BLACK:
+                    blackTurnLabel.setText("Turn: " + timeToString(turnRemaining));
+                    blackGameLabel.setText("Game: " + timeToString(gameRemaining));
+                    break;
+            }
+        });
+    }
+
+    @Override
+    public void showExpiredTime(Player player) {
+        SwingUtilities.invokeLater(() -> {
+            String msg = player.getColor() + " player ran out of time. LOST!";
+            /* Pop-up message window. */
+            JOptionPane.showMessageDialog(frame, msg);
+        });
+    }
+
+    /**
+     * Return the time in a specified format.
+     * @param time the time in seconds
+     * @return the formatted time string
+     */
+    private String timeToString(long time) {
+        long minutes = time / 60;
+        long seconds = time % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
 }
