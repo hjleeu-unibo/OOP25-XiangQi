@@ -23,7 +23,7 @@ public class General extends AbstractPiece{
     private static final int PALACE_ROW_RED_MIN = 7;
     private static final int PALACE_ROW_BLACK_MAX = 2;
 
-    // 4 orthogonal moves of magnitude 1 (no diagonal, unlike Advisor)
+    // 4 orthogonal moves of magnitude 1
     private static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
     protected General(Player owner, Position position) {
