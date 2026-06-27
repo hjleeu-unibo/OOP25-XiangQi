@@ -7,6 +7,9 @@ import it.unibo.xiangqi.model.impl.GameStateImpl;
 
 public interface GameState {
     static GameState createGameState(Board board, List<Player> players, Player currentPlayer){
+        if (board == null || players == null || currentPlayer == null){
+            throw new NullPointerException(); 
+        }
         return new GameStateImpl(board, players.get(0), players.get(1), currentPlayer); 
     }
     Board getBoard(); 

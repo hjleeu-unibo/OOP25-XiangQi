@@ -34,6 +34,7 @@ public class GameStateImpl implements GameState{
 
     @Override
     public GameState applyMove(Move move) {
+        Objects.requireNonNull(move); 
         if(this.board.getPieceAt(move.getTo()) != null){
             this.board.deletePiece(this.board.getPieceAt(move.getTo()));
         }

@@ -1,6 +1,7 @@
 package it.unibo.xiangqi.model.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Board;
@@ -21,6 +22,7 @@ public class BoardImpl implements Board{
 
     @Override
     public Piece getPieceAt(Position position) {
+        Objects.requireNonNull(position); 
         Piece piece = null; 
         for (Piece p : this.pieces){
             if(p.getPosition().equals(position)){
@@ -32,6 +34,7 @@ public class BoardImpl implements Board{
 
     @Override
     public void deletePiece(Piece piece) {
+        Objects.requireNonNull(piece); 
         this.pieces.remove(piece); 
     }
     
