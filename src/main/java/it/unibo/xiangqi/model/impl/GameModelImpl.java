@@ -141,6 +141,18 @@ public class GameModelImpl implements GameModel {
     @Override
     public void setStatus(GameModeType mode, Color currentPlayerColor, List<Position> redHints,
             List<Position> blackHints, List<Piece> pieces) {
+                this.mode = mode;
+
+                // build players from mode
+                final Player red   = new PlayerImpl(Color.RED,   true);
+                final Player black = new PlayerImpl(Color.BLACK,  mode == GameModeType.PVP);
+                this.players = List.of(red, black);
+
+                // restore current player by matching the saved color
+                this.currentPlayer = this.players.stream()
+                .filter(p -> p.getColor() == currentPlayerColor)
+                .findFirst()
+                .orElse(red);
         return;
     }
 }
