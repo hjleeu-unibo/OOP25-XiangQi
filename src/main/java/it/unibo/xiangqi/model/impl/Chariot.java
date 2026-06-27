@@ -24,10 +24,12 @@ public class Chariot extends AbstractPiece{
     public List<Move> getMoves(final Board board) {
         final List<Move> moves = new ArrayList<>();
         final Position current = this.getPosition();
+        
         // Soldiers always move one step forward
         for (final int[] dir : DIRECTIONS) {
             int row = current.getRow() + dir[0];
             int col = current.getCol() + dir[1];
+            
             /*
             Continue moving in the same direction until blocked,
             when the block is occupied by Enemy -> capture and stop
