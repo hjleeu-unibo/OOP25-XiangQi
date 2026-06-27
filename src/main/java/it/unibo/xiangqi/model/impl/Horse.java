@@ -30,9 +30,19 @@ public class Horse extends AbstractPiece {
         final Position current = getPosition();
         final int row = current.getRow();
         final int col = current.getCol();
+
+        for (final int[] dir : DIRECTIONS) {
+            final int toRow = row + dir[0];
+            final int toCol = col + dir[1];
+            final int legRow = dir[0] / 2;
+            final int legCol = dir[1] / 2;
+
+            if(legRow >= 0 && legRow < Position.ROWS
+                && legCol >= 0 && legCol < Position.COLS
+                && board.getPieceAt(new Position(legRow, legCol)) == null) {
+                    tryAddMove(moves, board, current, toRow, toCol);
+                }
+        }
         return moves;
     }
-
-
-
 }
