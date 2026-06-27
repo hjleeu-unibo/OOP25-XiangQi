@@ -146,6 +146,8 @@ public class GameModelImpl implements GameModel {
     @Override
     public GameState copyState() {
         // final Board boardCopy = Board.createBoard();
+
+        // each piece must be copied with its current position
         board.getPieces().forEach(p -> {
             /* 
              boardCopy.addPiece(
