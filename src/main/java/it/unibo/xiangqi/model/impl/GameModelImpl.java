@@ -86,7 +86,7 @@ public class GameModelImpl implements GameModel {
         );
 
         // this.board = new BoardImpl();
-        // pieces.forEach(p -> board.setPieceAt(p.getPosition(), p));
+        // pieces.forEach(p -> board.addPiece(p));
 
     }
 
@@ -154,8 +154,11 @@ public class GameModelImpl implements GameModel {
                 .findFirst()
                 .orElse(red);
 
+                // restore board information
                 // this.board = Board.createBoard;
-                //pieces.forEach(p -> board.setPieceAt(p.getPosition(), p));
+                //pieces.forEach(p -> board.addPiece(p));
+
+                this.status = GameStatus.IN_PROGRESS;
         return;
     }
 }
