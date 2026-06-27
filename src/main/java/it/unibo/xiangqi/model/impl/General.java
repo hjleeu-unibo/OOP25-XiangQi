@@ -3,6 +3,7 @@ package it.unibo.xiangqi.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
@@ -32,6 +33,20 @@ public class General extends AbstractPiece{
     @Override
     public List<Move> getMoves(Board board) {
        List<Move> moves = new ArrayList<>();
+       final Position current = getPosition();
+       final int row = current.getRow();
+       final int col = current.getCol();
+       final boolean isRed = getOwner().getColor() == Color.RED;
+
+       for (int[] dir : DIRECTIONS) {
+            final int toRow = row + dir[0];
+            final int toCol = col + dir[1];
+
+            if((isRed ? toRow >= PALACE_ROW_RED_MIN : toRow <= PALACE_ROW_BLACK_MAX)
+                && toCol >= PALACE_COL_MIN && toCol <= PALACE_COL_MAX) {
+                    tryAddMove(moves, board, current, toRow, toCol);
+            }
+       }
        return moves;
     }
 
