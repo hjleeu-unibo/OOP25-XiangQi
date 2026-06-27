@@ -13,6 +13,8 @@ import it.unibo.xiangqi.model.api.Position;
 public class Soldier extends AbstractPiece{
 
     private static final int VALUE = 10;
+
+    // river boundary: red stays on rows 5-9, black stays on rows 0-4
     private static final int RIVER_ROW_RED = 4;
     private static final int RIVER_ROW_BLACK = 5;
 
