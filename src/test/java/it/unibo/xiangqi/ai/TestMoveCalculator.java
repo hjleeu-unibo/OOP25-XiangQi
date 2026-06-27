@@ -83,7 +83,7 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(red1, red2, black));
 
-        when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
+        when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -109,10 +109,7 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(chariot));
         when(ruleEngine.getLegalMoves(chariot, board)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
+        mockSetValue(chariot);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -133,10 +130,7 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(soldier));
         when(ruleEngine.getLegalMoves(soldier, board)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(soldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(soldier).setValue(anyInt());
+        mockSetValue(soldier);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -176,10 +170,7 @@ public final class TestMoveCalculator {
         when(ruleEngine.getLegalMoves(enemyHorse, board)).thenReturn(List.of());
         when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
+        mockSetValue(chariot);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -218,16 +209,14 @@ public final class TestMoveCalculator {
             when(p.getOwner()).thenReturn(blackPlayer);
             when(p.getType()).thenReturn(PieceType.SOLDIER);
             when(p.getPosition()).thenReturn(mock(Position.class));
+            mockSetValue(p);
             pieces.add(p);
         }
 
         when(board.getPieces()).thenReturn(pieces);
         when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(cannon.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(cannon).setValue(anyInt());
+        mockSetValue(cannon);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -259,16 +248,14 @@ public final class TestMoveCalculator {
             when(p.getOwner()).thenReturn(redPlayer);
             when(p.getType()).thenReturn(PieceType.ADVISOR);
             when(p.getPosition()).thenReturn(mock(Position.class));
+            mockSetValue(p);
             pieces.add(p);
         }
 
         when(board.getPieces()).thenReturn(pieces);
         when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(horse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(horse).setValue(anyInt());
+        mockSetValue(horse);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -297,10 +284,7 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(elephant));
         when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(elephant.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(elephant).setValue(anyInt());
+        mockSetValue(elephant);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -322,10 +306,7 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(advisor));
         when(ruleEngine.getLegalMoves(any(Piece.class), board)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(advisor.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(advisor).setValue(anyInt());
+        mockSetValue(advisor);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -376,20 +357,9 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse, enemySoldier));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemySoldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemySoldier).setValue(anyInt());
+        mockSetValue(chariot);
+        mockSetValue(enemyHorse);
+        mockSetValue(enemySoldier);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -446,20 +416,9 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse, enemySoldier));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemySoldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemySoldier).setValue(anyInt());
+        mockSetValue(chariot);
+        mockSetValue(enemyHorse);
+        mockSetValue(enemySoldier);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -512,20 +471,9 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse, soldier));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(soldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(soldier).setValue(anyInt());
+        mockSetValue(chariot);
+        mockSetValue(enemyHorse);
+        mockSetValue(soldier);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -566,15 +514,8 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
+        mockSetValue(chariot);
+        mockSetValue(enemyHorse);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -625,20 +566,9 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse, enemySoldier));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemySoldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemySoldier).setValue(anyInt());
+        mockSetValue(chariot);
+        mockSetValue(enemyHorse);
+        mockSetValue(enemySoldier);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -699,25 +629,10 @@ public final class TestMoveCalculator {
 
         when(board.getPieces()).thenReturn(List.of(chariot, cannon, enemyHorse, enemySoldier));
 
-        doAnswer(inv -> {
-            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(chariot).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(cannon.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(cannon).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
-
-        doAnswer(inv -> {
-            when(enemySoldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemySoldier).setValue(anyInt());
+        mockSetValue(chariot);
+        mockSetValue(cannon);
+        mockSetValue(enemyHorse);
+        mockSetValue(enemySoldier);
 
         int score = moveCalculator.calculateBoardScore(gameState);
 
@@ -771,10 +686,7 @@ public final class TestMoveCalculator {
         when(board1.getPieces()).thenReturn(List.of(chariot, enemyHorse, enemySoldier));
         when(ruleEngine.getLegalMoves(enemyHorse, board1)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemyHorse).setValue(anyInt());
+        mockSetValue(enemyHorse);
 
         when(gameState.applyMove(captureSoldier)).thenReturn(sim2);
         when(sim2.getBoard()).thenReturn(board2);
@@ -786,10 +698,7 @@ public final class TestMoveCalculator {
         when(board2.getPieces()).thenReturn(List.of(chariot, enemyHorse, enemySoldier));
         when(ruleEngine.getLegalMoves(enemySoldier, board2)).thenReturn(List.of());
 
-        doAnswer(inv -> {
-            when(enemySoldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
-            return null;
-        }).when(enemySoldier).setValue(anyInt());
+        mockSetValue(enemySoldier);
 
         Move bestMove = moveCalculator.getBestMove(gameModel);
 
@@ -875,10 +784,8 @@ public final class TestMoveCalculator {
         when(simPos1.getRow()).thenReturn(9);
         when(simBoard1.getPieces()).thenReturn(List.of(simPiece1));
         when(ruleEngine.getLegalMoves(simPiece1, simBoard1)).thenReturn(List.of());
-        doAnswer(inv -> {
-            when(simPiece1.getCurrentValue()).thenReturn((int) inv.getArgument(0));
-            return null;
-        }).when(simPiece1).setValue(anyInt());
+
+        mockSetValue(simPiece1);
 
         /* The move with higher score. */
         when(gameState.applyMove(moveFromPiece2)).thenReturn(sim2);
@@ -892,13 +799,18 @@ public final class TestMoveCalculator {
         when(simPos2.getCol()).thenReturn(0);
         when(simBoard2.getPieces()).thenReturn(List.of(simPiece2));
         when(ruleEngine.getLegalMoves(simPiece2, simBoard2)).thenReturn(List.of());
-        doAnswer(inv -> {
-            when(simPiece2.getCurrentValue()).thenReturn((int) inv.getArgument(0));
-            return null;
-        }).when(simPiece2).setValue(anyInt());
+        
+        mockSetValue(simPiece2);
 
         Move result = moveCalculator.getBestMove(gameModel);
 
         assertEquals(moveFromPiece2, result);
+    }
+
+    private void mockSetValue(final Piece piece) {
+        doAnswer(inv -> {
+            when(piece.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(piece).setValue(anyInt());
     }
 }
