@@ -75,7 +75,7 @@ public final class InputHandlerImpl implements InputHandler{
         final Player currentPlayer = gameModel.getCurrentPlayer();
 
         gameView.setPlayerDisabled(currentPlayer.getColor());
-        gameView.setHintDisabled();
+        gameView.setHintButtonDisabled();
 
         gameModel.movePiece(move);
         gameController.nextTurn();
