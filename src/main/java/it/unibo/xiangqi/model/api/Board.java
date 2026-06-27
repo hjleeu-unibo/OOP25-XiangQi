@@ -24,4 +24,5 @@ public interface Board {
     List<Piece> getPieces(); 
     Piece getPieceAt(Position position);  
     void deletePiece(Piece piece); 
+    void addPiece(Piece piece); 
 }

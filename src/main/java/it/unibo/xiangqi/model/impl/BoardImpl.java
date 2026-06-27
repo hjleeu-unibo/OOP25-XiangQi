@@ -37,5 +37,10 @@ public class BoardImpl implements Board{
         Objects.requireNonNull(piece); 
         this.pieces.remove(piece); 
     }
+
+    @Override
+    public void addPiece(Piece piece) {
+        this.pieces.add(piece); 
+    }
     
 }
