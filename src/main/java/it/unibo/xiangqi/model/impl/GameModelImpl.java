@@ -91,6 +91,14 @@ public class GameModelImpl implements GameModel {
     }
 
     public void endGame() {
+        // clear the board
+        // board.getPieces().forEach(p -> board.removePiece(p));
+
+        // reset players and current player
+        this.players = List.of();
+        this.currentPlayer = null;
+
+        // mark game as finished
         this.status = GameStatus.FINISHED;
     }
 
