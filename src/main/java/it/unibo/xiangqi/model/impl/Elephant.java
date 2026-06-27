@@ -13,8 +13,12 @@ import it.unibo.xiangqi.model.api.Position;
 public class Elephant extends AbstractPiece {
 
     private static final int VALUE = 20;
+    
+    // river boundary: red stays on rows 5-9, black stays on rows 0-4
     private static final int RIVER_ROW_RED = 4;
     private static final int RIVER_ROW_BLACK = 5;
+
+    // 4 diagonal moves of magnitude 2; the eye is exactly halfway (dir/2)
     private static final int[][] DIRECTIONS = {{2, 2}, {2, -2}, {-2, 2}, {-2, -2}};
 
     protected Elephant(Player owner, Position position) {
@@ -37,10 +41,13 @@ public class Elephant extends AbstractPiece {
         for (final int[] dir : DIRECTIONS) {
             final int toRow = row + dir[0];
             final int toCol = col + dir[1];
+
+            // the eye is the diagonal cell halfway between start and destination
             final int eyeRow = row + dir[0] / 2;
             final int eyeCol = col + dir[1] / 2;
 
             // the elephant must not cross the river
+            // the eye must be on the board and unoccupied (no blocking piece)
             if ((isRed ? toRow > RIVER_ROW_RED : toRow < RIVER_ROW_BLACK)
                 && eyeRow >= 0 && eyeRow < Position.ROWS
                 && eyeCol >= 0 && eyeCol < Position.COLS
