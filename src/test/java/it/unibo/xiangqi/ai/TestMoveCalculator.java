@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockSettings;
 
 import it.unibo.xiangqi.ai.impl.MoveCalculatorImpl;
 import it.unibo.xiangqi.common.api.Color;
@@ -329,5 +330,72 @@ public final class TestMoveCalculator {
         int score = moveCalculator.calculateBoardScore(gameState);
 
         assertEquals(30, score);
+    }
+
+    @Test
+    void testThreateningProtected() {
+        Piece chariot = mock(Piece.class);
+        Piece enemyHorse = mock(Piece.class);
+        Piece enemySoldier = mock(Piece.class);
+
+        Position chariotPos = mock(Position.class);
+        Position horsePos = mock(Position.class);
+        Position soldierPos = mock(Position.class);
+        Move captureMove = mock(Move.class);
+        Move protectMove = mock(Move.class);
+
+        when(chariot.getOwner()).thenReturn(redPlayer);
+        when(chariot.getType()).thenReturn(PieceType.CHARIOT);
+        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getPosition()).thenReturn(chariotPos);
+        when(chariotPos.getCol()).thenReturn(0);
+        when(chariotPos.getRow()).thenReturn(2);
+
+        when(enemyHorse.getOwner()).thenReturn(blackPlayer);
+        when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
+        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getPosition()).thenReturn(horsePos);
+        when(horsePos.getCol()).thenReturn(0);
+        when(horsePos.getRow()).thenReturn(4);
+
+        when(enemySoldier.getOwner()).thenReturn(blackPlayer);
+        when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
+        when(enemySoldier.getInitialValue()).thenReturn(10);
+        when(enemySoldier.getPosition()).thenReturn(soldierPos);
+        when(horsePos.getCol()).thenReturn(0);
+        when(horsePos.getRow()).thenReturn(5);
+
+        when(captureMove.getTo()).thenReturn(horsePos);
+        when(board.getPieceAt(horsePos)).thenReturn(enemyHorse);
+        when(ruleEngine.getLegalMoves(chariot, board)).thenReturn(List.of(captureMove));
+
+        when(ruleEngine.getLegalMoves(enemyHorse, board)).thenReturn(List.of());
+        when(ruleEngine.getLegalMoves(enemySoldier, board)).thenReturn(List.of(protectMove));
+
+        when(board.getPieces()).thenReturn(List.of(chariot, enemyHorse, enemySoldier));
+
+        doAnswer(inv -> {
+            when(chariot.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(chariot).setValue(anyInt());
+
+        doAnswer(inv -> {
+            when(enemyHorse.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(enemyHorse).setValue(anyInt());
+
+        doAnswer(inv -> {
+            when(enemySoldier.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            return null;
+        }).when(enemySoldier).setValue(anyInt());
+
+        int score = moveCalculator.calculateBoardScore(gameState);
+
+        /**
+         * Base value: 90 (not aligned with the enemy general)
+         * Threatening but protected: 0
+         * Expected: 90
+         */
+        assertEquals(90, score);
     }
 }
