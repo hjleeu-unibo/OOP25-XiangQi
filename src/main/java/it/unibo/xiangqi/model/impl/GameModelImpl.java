@@ -115,7 +115,14 @@ public class GameModelImpl implements GameModel {
 
     @Override
     public boolean movePiece(Move move) {
-        return false;
+        final Piece piece = board.getPieceAt(move.getFrom());
+        final Piece captured = board.getPieceAt(move.getTo());
+
+        if (captured != null) {
+            // board.removePiece(captured);
+        }
+        piece.setPosition(move.getTo());
+        return piece.getPosition() == move.getTo();
     }
 
     @Override
