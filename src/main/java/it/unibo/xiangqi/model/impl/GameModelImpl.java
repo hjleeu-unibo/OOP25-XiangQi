@@ -145,6 +145,16 @@ public class GameModelImpl implements GameModel {
 
     @Override
     public GameState copyState() {
+        // final Board boardCopy = Board.createBoard();
+        board.getPieces().forEach(p -> {
+            /* 
+             boardCopy.addPiece(
+                Piece1;
+                Piece2;
+                ...;
+            )
+            */
+        });
         return null;
     }
 
@@ -165,7 +175,7 @@ public class GameModelImpl implements GameModel {
                 .orElse(red);
 
                 // restore board information
-                // this.board = Board.createBoard;
+                // this.board = Board.createBoard();
                 //pieces.forEach(p -> board.addPiece(p));
 
                 this.status = GameStatus.IN_PROGRESS;
