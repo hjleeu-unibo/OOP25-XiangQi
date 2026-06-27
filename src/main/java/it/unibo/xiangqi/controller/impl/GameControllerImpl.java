@@ -3,6 +3,7 @@ package it.unibo.xiangqi.controller.impl;
 import it.unibo.xiangqi.ai.api.MoveCalculator;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.GameController;
+import it.unibo.xiangqi.controller.api.GameTimer;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameLoader;
 import it.unibo.xiangqi.model.api.GameModel;
@@ -24,6 +25,7 @@ public final class GameControllerImpl implements GameController {
     private final RuleEngine ruleEngine;
     private final MoveCalculator moveCalculator;
     private final GameLoader gameLoader;
+    private final GameTimer gameTimer;
 
     private boolean checkActive;
 
@@ -40,13 +42,15 @@ public final class GameControllerImpl implements GameController {
                               final GameView gameView,
                               final RuleEngine ruleEngine,
                               final MoveCalculator moveCalculator,
-                              final GameLoader gameLoader) {
+                              final GameLoader gameLoader,
+                              final GameTimer gameTimer) {
 
         this.gameModel = gameModel;
         this.gameView = gameView;
         this.ruleEngine = ruleEngine;
         this.moveCalculator = moveCalculator;
-        this.gameLoader = gameLoader;                        
+        this.gameLoader = gameLoader;
+        this.gameTimer = gameTimer;
     }
 
     @Override
@@ -61,6 +65,34 @@ public final class GameControllerImpl implements GameController {
 
         gameView.setPlayerEnabled(currentPlayer.getColor());
         updateHintState(currentPlayer);
+
+        /* Haojie-Liu | Game Timer section. */
+        gameTimer.startTurn(currentPlayer);
+        /* Using Thread, this block will run at the same time of other methods. */
+        new Thread(() -> {
+            /* This loop will never stop until something happens (see below). */
+            while (true) {
+                try {
+                    /* Wait 1s between every loop. */
+                    Thread.sleep(1000);
+                } catch (Error e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+
+                final long turnRemaining = gameTimer.getTurnRemaining(currentPlayer);
+                final long gameRemaining = gameTimer.getGameRemaining(currentPlayer);
+
+                gameView.updateTimer(currentPlayer, turnRemaining, gameRemaining);
+
+                if (gameTimer.isTurnExpired(currentPlayer) || gameTimer.isTotalExpired(currentPlayer)) {
+                    gameTimer.stopTurn(currentPlayer);
+                    gameModel.endGame();
+                    gameView.showExpiredTime(currentPlayer);
+                    return;
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -82,6 +114,10 @@ public final class GameControllerImpl implements GameController {
 
     @Override
     public void nextTurn() {
+        /* Haojie-Liu | Game timer section. */
+        final Player currentPlayer = gameModel.getCurrentPlayer();
+        gameTimer.stopTurn(currentPlayer);
+
         gameModel.switchTurn();
         dispatchTurn();
     }
