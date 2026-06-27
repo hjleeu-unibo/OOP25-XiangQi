@@ -122,7 +122,7 @@ public class GameModelImpl implements GameModel {
             // board.removePiece(captured);
         }
         piece.setPosition(move.getTo());
-        return piece.getPosition() == move.getTo();
+        return piece.getPosition().equals(move.getTo());
     }
 
     @Override
