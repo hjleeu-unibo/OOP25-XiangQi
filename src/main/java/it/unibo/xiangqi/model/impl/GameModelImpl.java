@@ -2,6 +2,7 @@ package it.unibo.xiangqi.model.impl;
 
 import java.util.List;
 
+import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.common.api.GameStatus;
 import it.unibo.xiangqi.model.api.Board;
@@ -10,6 +11,7 @@ import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 
 public class GameModelImpl implements GameModel {
 
@@ -83,13 +85,11 @@ public class GameModelImpl implements GameModel {
     }
 
     @Override
-    public void setStatus(GameModeType mode, List<Player> players, Player currentPlayer, Board board,
-            List<Piece> pieces) {
-        this.mode = mode;
-        this.players = players;
-        this.currentPlayer = currentPlayer;
-        this.board = board;
-        this.status = GameStatus.IN_PROGRESS;
+    public void setStatus(GameModeType mode, Color currentPlayerColor, List<Position> redHints,
+            List<Position> blackHints, List<Piece> pieces) {
+        return;
     }
+
+    
 
 }
