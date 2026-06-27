@@ -118,9 +118,12 @@ public class GameModelImpl implements GameModel {
         final Piece piece = board.getPieceAt(move.getFrom());
         final Piece captured = board.getPieceAt(move.getTo());
 
+        // remove captured enemy piece if present
         if (captured != null) {
             // board.removePiece(captured);
         }
+
+        // update piece's internal position
         piece.setPosition(move.getTo());
         return piece.getPosition().equals(move.getTo());
     }
