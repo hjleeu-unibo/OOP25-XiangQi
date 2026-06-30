@@ -21,8 +21,18 @@ import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.view.api.GameView;
 
-
+/**
+ * Represents the graphical panel containing the Xiangqi game board.
+ *
+ * <p>This panel manages the board cells, player interactions, hint button,
+ * and game notifications. It is responsible for updating the visual state
+ * of the game according to the current board configuration.</p>
+ *
+ * <p>This class is part of the view implementation and handles the Swing
+ * components used to display the game.</p>
+ */
 public class BoardPanel extends JPanel {
 
     private JButton[][] cells;
@@ -37,6 +47,12 @@ public class BoardPanel extends JPanel {
     private JPanel notificationPanel; 
     private JLabel notificationLabel;
 
+    /**
+     * Creates a new board panel.
+     *
+     * <p>The panel initializes the board grid, control buttons,
+     * notification area, and cell listeners.</p>
+     */
     public BoardPanel() {
 
         boardGrid = new JPanel(new GridLayout(10, 9));
@@ -77,12 +93,18 @@ public class BoardPanel extends JPanel {
         this.add(notificationPanel, BorderLayout.SOUTH); 
 }
 
+    /**
+     * {@link GameView#updateBoard(Board)} implementation.
+     * 
+     * @param board the new board configuration to display
+     * @throws NullPointerException if board is null
+     */
     public void updateBoard(Board board) {
 
         if( board != null){
             this.currentBoard = board;
         }else{
-            throw new IllegalArgumentException("argument 'board' is null"); 
+            throw new NullPointerException("argument 'board' is null"); 
         }
 
         for (int row = 0; row < 10; row++ ){
@@ -100,16 +122,24 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @hidden
+     */
     private ImageIcon pathToIcon(String path, int width, int height){
-        if(path == null){
-            throw new IllegalArgumentException(); 
-        }
+        Objects.requireNonNull(path); 
         URL url = ClassLoader.getSystemResource(path); 
         ImageIcon icon = new ImageIcon(url); 
         Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled); 
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @hidden
+     */
     private ImageIcon pieceToIcon(Piece piece){
         String color = piece.getOwner().getColor().getName();
         String type = piece.getType().getName();
@@ -120,11 +150,17 @@ public class BoardPanel extends JPanel {
         return this.pathToIcon(path, this.cellSize, this.cellSize); 
     }
 
+    /**
+     * {@link GameView#highlightCells(List)} implementation.
+     * 
+     * @param positions the list of positions to highlight
+     * @throws NullPointerException if {@code positions} is null
+     */
     public void highlightCells(List<Position> positions) {
         if(positions != null){
             this.highlightedCells = positions;
         } else{
-            throw new IllegalArgumentException(); 
+            throw new NullPointerException("positions is null"); 
         }
 
         this.disableAll();
@@ -143,6 +179,11 @@ public class BoardPanel extends JPanel {
         cells[row][col].setEnabled(true);
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @hidden
+     */
     private void disableAll(){
         for (int row = 0; row < 10; row++ ){
             for (int col = 0; col < 9; col++ ){
@@ -151,22 +192,36 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * {@link GameView#showSuggestedMove(Move)} implementation.
+     * 
+     * @param move the move to display
+     * @throws NullPointerException if {@code move} is null
+     */
     public void showSuggestedMove(Move move) {
-        if(move == null){
-            throw new NullPointerException(); 
-        }
+        Objects.requireNonNull(move); 
         Position from = move.getFrom();
         Position to = move.getTo();
         highlightCell(from, java.awt.Color.GREEN);
         highlightCell(to, java.awt.Color.GREEN);
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @hidden
+     */
     private void highlightCell(Position pos, java.awt.Color color) {
         int row = pos.getRow();
         int col = pos.getCol();
         cells[row][col].setBackground(color);
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @hidden
+     */
     private void resetHighlights() {
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 9; col++) {
@@ -175,16 +230,33 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * {@link GameView#setPlayerEnabled(Color)} implementation.
+     * 
+     * @param c the color of the player to enable
+     * @throws NullPointerException if {@code c} is null
+     */
     public void setPlayerEnabled(Color c) {
         this.disableAll();
         this.setPlayer(true, Objects.requireNonNull(c));
     }
 
+    /**
+     * {@link GameView#setPlayerDisabled(Color)} implementation.
+     * 
+     * @param c the color of the player to disable
+     * @throws NullPointerException if {@code c} is null
+     */
     public void setPlayerDisabled(Color c) {
         this.disableAll();
         this.setPlayer(false, Objects.requireNonNull(c));
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @hidden
+     */
     private void setPlayer(boolean enable, Color c){
 
         for (int row = 0; row < 10; row++ ){
@@ -201,23 +273,47 @@ public class BoardPanel extends JPanel {
 
     }
 
+    /**
+     * {@link GameView#setHintButtonEnabled()} implementation.
+     */
     public void setHintButtonEnabled() {
         this.hintButton.setEnabled(true);
     }
 
+    /**
+     * {@link GameView#setHintButtonDisabled()} implementation.
+     */
     public void setHintButtonDisabled() {
         this.hintButton.setEnabled(false);
     }
     
+    /**
+     * {@link GameView#setInputHandler(InputHandler)} implementation.
+     * 
+     * @param inputHandler the input handler associated with this view
+     * @throws NullPointerException if {@code inputHandler} is null
+     */
     public void setInputHandler(InputHandler inputHandler) {
         Objects.requireNonNull(inputHandler); 
         this.inputHandler = inputHandler;
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @return the current input handler
+     * @hidden
+     */
     public InputHandler getInputHandler(){
         return this.inputHandler; 
     }
 
+    /**
+     * Internal helper method
+     * 
+     * @param position the clicked cell position
+     * @hidden
+     */
     public void handleCellClick(Position position){
         Objects.requireNonNull(position); 
         if(this.selectedCell == null){
@@ -236,6 +332,9 @@ public class BoardPanel extends JPanel {
         }
     }
 
+    /**
+     * {@link GameView#showCheck()} implementation.
+     */
     public void showCheck(){
         String path = "notifications/check.png";
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -247,12 +346,20 @@ public class BoardPanel extends JPanel {
         notificationPanel.repaint();
     }
 
+    /**
+     * {@link GameView#resetCheck()} implementation.
+     */
     public void resetCheck() {
         notificationLabel.setIcon(null);
         notificationPanel.revalidate();
         notificationPanel.repaint();
     }
 
+    /**
+     * {@link GameView#showWinner(Color)} implementation.
+     * 
+     * @param color the color of the winning player
+     */
     public void showWinner(Color color){
         this.disableAll();
         String path; 

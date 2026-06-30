@@ -16,6 +16,11 @@ import it.unibo.xiangqi.view.test.FakeInputHandler;
 import it.unibo.xiangqi.view.test.FakePiece;
 import it.unibo.xiangqi.view.test.FakePlayer;
 
+/**
+ * temp
+ * 
+ * @hidden
+ */
 public class XiangqiApplication {
     public static void main(String[] args) {
         GameView view = new GameViewImpl();

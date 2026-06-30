@@ -4,6 +4,11 @@ import it.unibo.xiangqi.common.GameModeType;
 import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.common.Position;
 
+/**
+ * temp
+ * 
+ * @hidden
+ */
 public interface InputHandler {
     void onSelect(Position position); 
     void onMove(Move move); 

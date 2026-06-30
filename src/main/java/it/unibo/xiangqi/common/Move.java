@@ -1,5 +1,10 @@
 package it.unibo.xiangqi.common;
 
+/**
+ * temp
+ * 
+ * @hidden
+ */
 public class Move {
     
     private Position from; 

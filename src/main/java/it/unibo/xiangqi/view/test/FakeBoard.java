@@ -6,6 +6,11 @@ import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
 
+/**
+ * test class
+ * 
+ * @hidden
+ */
 public class FakeBoard implements Board{
 
     private List<Piece> pieces;

@@ -13,6 +13,13 @@ import javax.swing.JPanel;
 import it.unibo.xiangqi.common.GameModeType;
 import it.unibo.xiangqi.controller.api.InputHandler;
 
+/**
+ * Represents the graphical menu panel of the game.
+ *
+ * <p>This panel provides the user interface for selecting the game mode
+ * and resuming a previous game. It also manages the background image and
+ * forwards user actions to the assigned {@link InputHandler}.</p>
+ */
 public class MenuPanel extends JPanel{
 
     private JButton pvpButton;
@@ -21,6 +28,12 @@ public class MenuPanel extends JPanel{
     private InputHandler inputHandler; 
     private Image backgroundImage; 
 
+    /**
+     * Creates a new menu panel.
+     *
+     * <p>The panel initializes the menu buttons, configures the layout,
+     * loads the background image and registers the required action listeners.</p>
+     */
     public MenuPanel() {
         pvpButton = new JButton("Player vs Player");
         pveButton = new JButton("Player vs AI");
@@ -53,12 +66,20 @@ public class MenuPanel extends JPanel{
         resumeButton.addActionListener(e -> {
             inputHandler.onResume();
         });
-}
+    }
 
+    /**
+     * Sets the input handler used to notify the controller about user actions.
+     *
+     * @param inputHandler the handler responsible for processing user inputs
+     */
     public void setInputHandler(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void paintComponent(Graphics g) {
         Objects.requireNonNull(this.backgroundImage); 

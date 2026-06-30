@@ -5,6 +5,11 @@ import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 
+/**
+ * test class
+ * 
+ * @hidden
+ */
 public class FakePiece implements Piece{
 
     private PieceType type; 

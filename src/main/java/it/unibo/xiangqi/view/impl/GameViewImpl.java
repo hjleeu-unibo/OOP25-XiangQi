@@ -18,6 +18,9 @@ import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.view.api.GameView;
 
+/**
+ * Game view implementation based on Swing components.
+ */
 public class GameViewImpl implements GameView{
 
     private JFrame frame; 
@@ -27,7 +30,12 @@ public class GameViewImpl implements GameView{
     private BoardPanel boardPanel;
     private InputHandler inputHandler; 
 
-
+    /**
+     * Creates a new game view.
+     *
+     * <p>Initializes the graphical user interface, configures the main window,
+     * creates the menu and game panels, and displays the main menu.</p>
+     */
     public GameViewImpl() {
 
         frame = new JFrame("Xiangqi");
@@ -61,42 +69,65 @@ public class GameViewImpl implements GameView{
 });
 }
     
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateBoard(Board board) {
         boardPanel.updateBoard(board);
     }
 
+    /**
+    * {@inheritDoc}
+    */
     @Override
     public void setPlayerEnabled(Color c) {
         boardPanel.setPlayerEnabled(c);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPlayerDisabled(Color c) {
         boardPanel.setPlayerDisabled(c);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setHintButtonEnabled() {
         boardPanel.setHintButtonEnabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setHintButtonDisabled() {
         boardPanel.setHintButtonDisabled();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void highlightCells(List<Position> cells) {
         boardPanel.highlightCells(cells);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void showSuggestedMove(Move move) {
         boardPanel.showSuggestedMove(move);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setInputHandler(InputHandler handler) {
         Objects.requireNonNull(handler); 
         this.inputHandler = handler; 
@@ -104,21 +135,33 @@ public class GameViewImpl implements GameView{
         menuPanel.setInputHandler(handler);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void showCheck() {
         this.boardPanel.showCheck();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resetCheck() {
         this.boardPanel.resetCheck();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void showWinner(Color color) {
         this.boardPanel.showWinner(color);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     private void setGameSize(){
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = (int)(screenSize.height * 0.8); 
@@ -127,6 +170,9 @@ public class GameViewImpl implements GameView{
         frame.setLocationRelativeTo(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void showGamePanel(){
         this.setGameSize();
         this.cardLayout.show(rootPanel, "GAME");
