@@ -44,10 +44,7 @@ public class GameModelImpl implements GameModel {
         this.status = GameStatus.IN_PROGRESS;
         
         // create all pieces at standard starting positions
-        // this.board = new BoardImpl();
-        // PieceFactory.createStandardSet(red, black)
-                    // .forEach(p -> board.addPiece(p));
-
+        // this.board = new BoardImpl(PieceFactory.initializePieces(red, black));
     }
 
     public void endGame() {
@@ -114,17 +111,10 @@ public class GameModelImpl implements GameModel {
     @Override
     public GameState copyState() {
         // final Board boardCopy = Board.createBoard();
-
-        // each piece must be copied with its current position
-        board.getPieces().forEach(p -> {
-            /* 
-             boardCopy.addPiece(
-                Piece1;
-                Piece2;
-                ...;
-            )
-            */
-        });
+        final List<Piece> copiedPieces = board.getPieces().stream()
+            .map(PieceFactory::copyPiece)
+            .toList();
+        //return GameState.createGameState(new BoardImpl(copiedPieces), this.players, this.currentPlayer);
         return null;
     }
 
