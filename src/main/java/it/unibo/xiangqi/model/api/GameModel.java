@@ -102,9 +102,17 @@ public interface GameModel {
      * @param blackHints            hints/suggestions saved for the black side
      * @param pieces                the saved list of pieces with their positions
      */
-    void setStatus(GameModeType mode,
+    public void setStatus(GameModeType mode,
                    Color currentPlayerColor,
                    List<Position> redHints,
                    List<Position> blackHints,
                    List<Piece> pieces);
+
+    /**
+    * Returns the number of hints remaining for the given player.
+    *
+    * @param player the player to check
+    * @return number of hints remaining (0-3)
+    */
+    public int getHintsRemaining(Player player);
 }
