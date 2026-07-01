@@ -97,6 +97,14 @@ public final class PieceFactory {
      * @return a new piece instance with the same type, owner and position
      */
     public static Piece copyPiece(final Piece p) {
-        return null;
+        return switch (p.getType()) {
+            case GENERAL -> new General(p.getOwner(), p.getPosition());
+            case ADVISOR -> new Advisor(p.getOwner(), p.getPosition());
+            case ELEPHANT -> new Elephant(p.getOwner(), p.getPosition());
+            case HORSE -> new Horse(p.getOwner(), p.getPosition());
+            case CHARIOT -> new Chariot(p.getOwner(), p.getPosition());
+            case CANNON -> new Cannon(p.getOwner(), p.getPosition());
+            case SOLDIER -> new Soldier(p.getOwner(), p.getPosition());
+        };
     }
 }
