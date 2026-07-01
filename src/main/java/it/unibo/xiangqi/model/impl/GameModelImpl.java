@@ -146,6 +146,10 @@ public class GameModelImpl implements GameModel {
                 // this.board = Board.createBoard();
                 //pieces.forEach(p -> board.addPiece(p));
 
+                // restore hints information
+                this.redHints = redHints;
+                this.blackHints = blackHints;
+
                 this.status = GameStatus.IN_PROGRESS;
         return;
     }
