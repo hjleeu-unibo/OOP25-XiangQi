@@ -37,5 +37,10 @@ public class FakePiece implements Piece{
     public Position getPosition() {
         return this.pos; 
     }
+
+    @Override
+    public void setPosition(Position position) {
+        throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
+    }
     
 }

@@ -35,6 +35,16 @@ public class FakeBoard implements Board{
         }
 
         return piece; 
+    }
+
+    @Override
+    public void deletePiece(Piece piece) {
+        throw new UnsupportedOperationException("Unimplemented method 'deletePiece'");
+    }
+
+    @Override
+    public void addPiece(Piece piece) {
+        throw new UnsupportedOperationException("Unimplemented method 'addPiece'");
     } 
     
 }
