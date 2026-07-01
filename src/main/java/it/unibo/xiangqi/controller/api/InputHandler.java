@@ -1,8 +1,8 @@
 package it.unibo.xiangqi.controller.api;
 
-import it.unibo.xiangqi.common.api.GameModeType;
-import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.Position;
+import it.unibo.xiangqi.common.GameModeType;
+import it.unibo.xiangqi.common.Move;
+import it.unibo.xiangqi.common.Position;
 
 /**
  * Handles user input coming from the view.
@@ -51,5 +51,4 @@ public interface InputHandler {
      * Handles the request to exit the game.
      */
     void onExit();
-
 }

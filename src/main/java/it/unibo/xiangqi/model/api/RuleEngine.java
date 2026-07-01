@@ -2,12 +2,13 @@ package it.unibo.xiangqi.model.api;
 
 import java.util.List;
 
+import it.unibo.xiangqi.common.Move;
+
 /**
  * Describe the rules of the Xiangqi game.
  * Provides the logic for check, checkmate, draw,flying general
  * detection and legal moves selection.
  */
-
 public interface RuleEngine {
 
     /**

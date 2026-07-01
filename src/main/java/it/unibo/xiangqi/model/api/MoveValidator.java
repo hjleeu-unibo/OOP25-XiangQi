@@ -5,6 +5,6 @@ package it.unibo.xiangqi.model.api;
  * 
  * @hidden
  */
-public interface GameLoader {
+public interface MoveValidator {
     
 }

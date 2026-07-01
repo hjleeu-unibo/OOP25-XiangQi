@@ -1,4 +1,15 @@
-plugins { java }
+plugins { 
+    java 
+    application
+}
+
+application{
+    mainClass.set("it.unibo.xiangqi.app.XiangqiApplication")
+}
+
+tasks.javadoc {
+    options.memberLevel = JavadocMemberLevel.PUBLIC
+}
 
 repositories { // Where to search for dependencies
     mavenCentral()
