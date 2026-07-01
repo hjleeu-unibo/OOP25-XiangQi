@@ -1,5 +1,10 @@
 package it.unibo.xiangqi.model.impl;
 
+import java.util.List;
+
+import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.model.api.Player;
+
 /**
  * Factory for creating Xiangqi pieces.
  * Centralizes all piece creation logic:
@@ -38,4 +43,28 @@ public final class PieceFactory {
     
     private PieceFactory() {} // utility class
 
+    /**
+     * Creates all 32 pieces for both players at their standard starting positions.
+     *
+     * @param red   the red player
+     * @param black the black player
+     * @return immutable list of all 32 pieces
+     */
+    public static List<Piece> initializePieces(final Player red, final Player black) {
+        return List.of(
+            // black pieces:
+            
+            // red pieces:
+        );
+    }
+
+    /**
+     * Creates a copy of a piece at its current position.
+     *
+     * @param p the piece to copy
+     * @return a new piece instance with the same type, owner and position
+     */
+    public static Piece copyPiece(final Piece p) {
+        return null;
+    }
 }
