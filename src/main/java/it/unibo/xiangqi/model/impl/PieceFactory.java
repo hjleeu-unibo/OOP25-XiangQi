@@ -4,6 +4,7 @@ import java.util.List;
 
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 
 /**
  * Factory for creating Xiangqi pieces.
@@ -28,15 +29,15 @@ public final class PieceFactory {
     private static final int SOLDIER_ROW_RED   = 6;
 
     //back row columns
-    private static final int COL_CHARIOT_LEFT   = 0;
-    private static final int COL_HORSE_LEFT     = 1;
-    private static final int COL_ELEPHANT_LEFT  = 2;
-    private static final int COL_ADVISOR_LEFT   = 3;
-    private static final int COL_GENERAL        = 4;
-    private static final int COL_ADVISOR_RIGHT  = 5;
-    private static final int COL_ELEPHANT_RIGHT = 6;
-    private static final int COL_HORSE_RIGHT    = 7;
-    private static final int COL_CHARIOT_RIGHT  = 8;
+    private static final int CHARIOT_COL_LEFT   = 0;
+    private static final int HORSE_COL_LEFT     = 1;
+    private static final int ELEPHANT_COL_LEFT  = 2;
+    private static final int ADVISOR_COL_LEFT   = 3;
+    private static final int GENERAL_COL        = 4;
+    private static final int ADVISOR_COL_RIGHT  = 5;
+    private static final int ELEPHANT_COL_RIGHT = 6;
+    private static final int HORSE_COL_RIGHT    = 7;
+    private static final int CHARIOT_COL_RIGHT  = 8;
 
     // soldier columns (even columns: 0, 2, 4, 6, 8)
     private static final int[] SOLDIER_COLS = {0, 2, 4, 6, 8};
@@ -53,8 +54,39 @@ public final class PieceFactory {
     public static List<Piece> initializePieces(final Player red, final Player black) {
         return List.of(
             // black pieces:
-            
+            new General(black, new Position(BACK_ROW_BLACK, GENERAL_COL)),
+            new Advisor(black, new Position(BACK_ROW_BLACK, ADVISOR_COL_LEFT)),
+            new Advisor(black, new Position(BACK_ROW_BLACK, ADVISOR_COL_RIGHT)),
+            new Elephant(black, new Position(BACK_ROW_BLACK, ELEPHANT_COL_LEFT)),
+            new Elephant(black, new Position(BACK_ROW_BLACK, ELEPHANT_COL_RIGHT)),
+            new Horse(black, new Position(BACK_ROW_BLACK, HORSE_COL_LEFT)),
+            new Horse(black, new Position(BACK_ROW_BLACK, HORSE_COL_RIGHT)),
+            new Chariot(black, new Position(BACK_ROW_BLACK, CHARIOT_COL_LEFT)),
+            new Chariot(black, new Position(BACK_ROW_BLACK, CHARIOT_COL_RIGHT)),
+            new Cannon(black, new Position(CANNON_ROW_BLACK, CANNON_COL_LEFT)),
+            new Cannon(black, new Position(CANNON_ROW_BLACK, CANNON_COL_RIGHT)),
+            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[0])),
+            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[1])),
+            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[2])),
+            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[3])),
+            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[4])),
             // red pieces:
+            new General(red, new Position(BACK_ROW_RED, GENERAL_COL)),
+            new Advisor(red, new Position(BACK_ROW_RED, ADVISOR_COL_LEFT)),
+            new Advisor(red, new Position(BACK_ROW_RED, ADVISOR_COL_RIGHT)),
+            new Elephant(red, new Position(BACK_ROW_RED, ELEPHANT_COL_LEFT)),
+            new Elephant(red, new Position(BACK_ROW_RED, ELEPHANT_COL_RIGHT)),
+            new Horse(red, new Position(BACK_ROW_RED, HORSE_COL_LEFT)),
+            new Horse(red, new Position(BACK_ROW_RED, HORSE_COL_RIGHT)),
+            new Chariot(red, new Position(BACK_ROW_RED, CHARIOT_COL_LEFT)),
+            new Chariot(red, new Position(BACK_ROW_RED, CHARIOT_COL_RIGHT)),
+            new Cannon(red, new Position(CANNON_ROW_RED, CANNON_COL_LEFT)),
+            new Cannon(red, new Position(CANNON_ROW_RED, CANNON_COL_RIGHT)),
+            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[0])),
+            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[1])),
+            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[2])),
+            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[3])),
+            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[4]))
         );
     }
 
