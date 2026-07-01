@@ -12,5 +12,5 @@ import it.unibo.xiangqi.common.api.Color;
  * @param position the position of the piece on the board
  */
 
-public record StoredPiece(PieceType type, Color color, Position position){
+public record StoredPiece(PieceType type, Color color, Position position) {
 }
