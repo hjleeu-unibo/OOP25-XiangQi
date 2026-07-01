@@ -128,7 +128,7 @@ public class GameModelImpl implements GameModel {
 
     @Override
     public void setStatus(GameModeType mode, Color currentPlayerColor, int redHints,
-            int blackHints, List<StoredPiece> pieces) {
+            int blackHints, List<StoredPiece> storedPieces) {
                 this.mode = mode;
 
                 // build players from mode
@@ -143,8 +143,11 @@ public class GameModelImpl implements GameModel {
                 .orElse(red);
 
                 // restore board information
-                // this.board = Board.createBoard();
-                //pieces.forEach(p -> board.addPiece(p));
+                /*
+                final List<Piece> pieces = 
+                // create Piece from StoredPiece information
+                this.board = new Board.createBoard(pieces);;
+                */
 
                 // restore hints information
                 this.redHints = redHints;
