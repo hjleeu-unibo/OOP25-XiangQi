@@ -104,9 +104,9 @@ public interface GameModel {
      */
     public void setStatus(GameModeType mode,
                    Color currentPlayerColor,
-                   List<Position> redHints,
-                   List<Position> blackHints,
-                   List<Piece> pieces);
+                   int redHints,
+                   int blackHints,
+                   List<StoredPiece> pieces);
 
     /**
     * Returns the number of hints remaining for the given player.
