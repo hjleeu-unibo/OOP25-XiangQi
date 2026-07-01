@@ -12,15 +12,19 @@ import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
-import it.unibo.xiangqi.model.api.Position;
 
 public class GameModelImpl implements GameModel {
+    
+    private static final int INITIAL_HINTS = 3;
 
     private Board board;
     private List<Player> players;
     private Player currentPlayer;
     private GameModeType mode;
     private GameStatus status;
+    
+    private int redHints;
+    private int blackHints; 
 
 
     protected GameModelImpl(final Board board, final List<Player> players) {
@@ -42,10 +46,14 @@ public class GameModelImpl implements GameModel {
 
         // red always moves first
         this.currentPlayer = players.get(0);
-        this.status = GameStatus.IN_PROGRESS;
+
+        // both players start with full hints
+        this.blackHints = INITIAL_HINTS;
+        this.redHints = INITIAL_HINTS;
         
         // create all pieces at standard starting positions
-        // this.board = new BoardImpl(PieceFactory.initializePieces(red, black));
+        // this.board = Board.createBoard(PieceFactory.initializePieces(red, black));
+         this.status = GameStatus.IN_PROGRESS;
     }
 
     public void endGame() {
@@ -111,11 +119,10 @@ public class GameModelImpl implements GameModel {
 
     @Override
     public GameState copyState() {
-        // final Board boardCopy = Board.createBoard();
         final List<Piece> copiedPieces = board.getPieces().stream()
             .map(PieceFactory::copyPiece)
             .toList();
-        //return GameState.createGameState(new BoardImpl(copiedPieces), this.players, this.currentPlayer);
+        //return GameState.createGameState(Board.createBoard(copiedPieces), this.players, this.currentPlayer);
         return null;
     }
 
@@ -145,13 +152,15 @@ public class GameModelImpl implements GameModel {
 
     @Override
     public int getHintsRemaining(Player player) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getHintsRemaining'");
+        return player.getColor() == Color.RED ? redHints : blackHints; 
     }
 
     @Override
     public void useHint(Player player) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'useHint'");
+        if (player.getColor() == Color.RED) {
+            redHints--;
+        } else{
+            blackHints--;
+        }
     }
 }
