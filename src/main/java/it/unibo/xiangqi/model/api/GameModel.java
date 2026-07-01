@@ -115,4 +115,11 @@ public interface GameModel {
     * @return number of hints remaining (0-3)
     */
     public int getHintsRemaining(Player player);
+
+    /**
+    * Decrements the hint counter for the given player.
+    *
+    * @param player the player who used a hint
+    */
+    public void useHint(Player player);
 }
