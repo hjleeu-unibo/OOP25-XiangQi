@@ -12,4 +12,5 @@ public interface Piece {
     PieceType getType(); 
     Player getOwner(); 
     Position getPosition(); 
+    void setPosition(Position position); 
 }

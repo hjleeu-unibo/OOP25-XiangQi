@@ -20,5 +20,10 @@ public class FakePlayer implements Player{
     public Color getColor() {
         return this.color; 
     }
+
+    @Override
+    public boolean isHuman() {
+        throw new UnsupportedOperationException("Unimplemented method 'isHuman'");
+    }
     
 }

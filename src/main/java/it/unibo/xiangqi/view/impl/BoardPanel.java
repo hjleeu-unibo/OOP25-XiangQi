@@ -91,6 +91,7 @@ public class BoardPanel extends JPanel {
         this.add(boardGrid, BorderLayout.CENTER); 
         this.add(sidePanel, BorderLayout.EAST);
         this.add(notificationPanel, BorderLayout.SOUTH); 
+
 }
 
     /**

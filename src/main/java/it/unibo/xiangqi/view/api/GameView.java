@@ -95,5 +95,5 @@ public interface GameView {
     /**
      * Shows the game panel.
      */
-    void showGamePanel(); 
+    void showGamePanel();
 }
