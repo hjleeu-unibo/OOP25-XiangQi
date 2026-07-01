@@ -5,6 +5,7 @@ import java.util.List;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.common.api.GameStatus;
+import it.unibo.xiangqi.common.api.StoredPiece;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.GameState;
@@ -119,8 +120,8 @@ public class GameModelImpl implements GameModel {
     }
 
     @Override
-    public void setStatus(GameModeType mode, Color currentPlayerColor, List<Position> redHints,
-            List<Position> blackHints, List<Piece> pieces) {
+    public void setStatus(GameModeType mode, Color currentPlayerColor, int redHints,
+            int blackHints, List<StoredPiece> pieces) {
                 this.mode = mode;
 
                 // build players from mode
@@ -140,5 +141,17 @@ public class GameModelImpl implements GameModel {
 
                 this.status = GameStatus.IN_PROGRESS;
         return;
+    }
+
+    @Override
+    public int getHintsRemaining(Player player) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getHintsRemaining'");
+    }
+
+    @Override
+    public void useHint(Player player) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'useHint'");
     }
 }
