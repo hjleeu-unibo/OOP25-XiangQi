@@ -33,11 +33,15 @@ public interface GameModel {
 
     /**
      * Returns true if the game has ended (endGame() has been called).
+     * 
+     * @return true if the game ended
      */
     public boolean isOver();
 
     /**
      * Returns the current status of the game.
+     * 
+     * @return Status of game
      */
     public GameStatus getStatus();
 
@@ -49,6 +53,8 @@ public interface GameModel {
 
     /**
      * Returns the player whose turn it currently is.
+     * 
+     * @return player of current turn
      */
     public Player getCurrentPlayer();
 
@@ -72,11 +78,15 @@ public interface GameModel {
 
     /**
      * Returns the current state of the board.
+     * 
+     * @return Board the current state of board
      */
     public Board getBoard();
 
     /**
      * Returns both players. Red player is at index 0, black at index 1.
+     * 
+     * @return List of Players
      */
     public List<Player> getPlayers();
 
