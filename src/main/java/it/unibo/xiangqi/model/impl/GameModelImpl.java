@@ -52,13 +52,13 @@ public class GameModelImpl implements GameModel {
         this.redHints = INITIAL_HINTS;
         
         // create all pieces at standard starting positions
-        // this.board = Board.createBoard(PieceFactory.initializePieces(red, black));
-         this.status = GameStatus.IN_PROGRESS;
+        this.board = Board.createBoard(PieceFactory.initializePieces(red, black));
+        this.status = GameStatus.IN_PROGRESS;
     }
 
     public void endGame() {
         // clear the board
-        // board.getPieces().forEach(p -> board.removePiece(p));
+        board.getPieces().forEach(p -> board.deletePiece(p));
 
         // reset players and current player
         this.players = List.of();
@@ -94,7 +94,7 @@ public class GameModelImpl implements GameModel {
 
         // remove captured enemy piece if present
         if (captured != null) {
-            // board.removePiece(captured);
+            board.deletePiece(captured);
         }
 
         // update piece's internal position
@@ -122,8 +122,7 @@ public class GameModelImpl implements GameModel {
         final List<Piece> copiedPieces = board.getPieces().stream()
             .map(PieceFactory::copyPiece)
             .toList();
-        //return GameState.createGameState(Board.createBoard(copiedPieces), this.players, this.currentPlayer);
-        return null;
+        return GameState.createGameState(Board.createBoard(copiedPieces), this.players, this.currentPlayer);
     }
 
     @Override
@@ -146,9 +145,8 @@ public class GameModelImpl implements GameModel {
                 final List<Piece> pieces = storedPieces.stream()
                 .map(s -> PieceFactory.fromStoredPiece(s, red, black))
                 .toList();
-                /*
-                this.board = new Board.createBoard(pieces);;
-                */
+
+                this.board = Board.createBoard(pieces);
 
                 // restore hints information
                 this.redHints = redHints;
