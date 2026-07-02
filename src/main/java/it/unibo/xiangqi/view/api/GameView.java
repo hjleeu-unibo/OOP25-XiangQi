@@ -82,6 +82,11 @@ public interface GameView {
     void showCheck(); 
 
     /**
+     * Displays the draw notification.
+     */
+    void showDraw(); 
+
+    /**
      * Removes the check notification.
      */
     void resetCheck(); 

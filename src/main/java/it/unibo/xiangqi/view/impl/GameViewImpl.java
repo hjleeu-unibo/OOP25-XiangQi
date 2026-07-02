@@ -195,4 +195,12 @@ public class GameViewImpl implements GameView{
         boardPanel.showExpiredTime(player);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showDraw() {
+        boardPanel.showDraw();
+    }
+
 }
