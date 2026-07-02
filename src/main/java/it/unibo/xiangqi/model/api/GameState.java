@@ -2,7 +2,6 @@ package it.unibo.xiangqi.model.api;
 
 import java.util.List;
 
-import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.model.impl.GameStateImpl;
 
 /**

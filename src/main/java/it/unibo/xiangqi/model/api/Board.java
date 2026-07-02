@@ -3,7 +3,6 @@ package it.unibo.xiangqi.model.api;
 import java.util.List;
 import java.util.Objects;
 
-import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.impl.BoardImpl;
 
 /**

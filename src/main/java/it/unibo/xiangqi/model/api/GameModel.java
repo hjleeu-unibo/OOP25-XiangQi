@@ -4,7 +4,6 @@ import java.util.List;
 
 import it.unibo.xiangqi.common.GameModeType;
 import it.unibo.xiangqi.common.GameStatus;
-import it.unibo.xiangqi.common.Move;
 
 /**
  * The central model of the Xiangqi game.

@@ -3,9 +3,9 @@ package it.unibo.xiangqi.view.test;
 import java.util.List;
 
 import it.unibo.xiangqi.common.GameModeType;
-import it.unibo.xiangqi.common.Move;
-import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
+import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.view.api.GameView;
 
 /**

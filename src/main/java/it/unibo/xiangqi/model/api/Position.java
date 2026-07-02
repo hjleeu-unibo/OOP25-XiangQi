@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.common;
+package it.unibo.xiangqi.model.api;
 
 import java.util.Objects;
 

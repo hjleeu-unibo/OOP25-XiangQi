@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.xiangqi.common.Color;
 import it.unibo.xiangqi.common.PieceType;
-import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.impl.PlayerImpl;
 import it.unibo.xiangqi.model.api.Piece;
 

@@ -2,9 +2,9 @@ package it.unibo.xiangqi.model.impl;
 
 import java.util.Objects;
 
-import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameState;
+import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 

@@ -1,8 +1,8 @@
 package it.unibo.xiangqi.ai.api;
 
-import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.GameState;
+import it.unibo.xiangqi.model.api.Move;
 
 public interface MoveCalculator {
     /**

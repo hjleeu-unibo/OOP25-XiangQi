@@ -2,9 +2,7 @@ package it.unibo.xiangqi.model.api;
 
 import java.util.List;
 
-import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.common.PieceType;
-import it.unibo.xiangqi.common.Position;
  
 /**
  * Represents a Xiangqi piece on the board.

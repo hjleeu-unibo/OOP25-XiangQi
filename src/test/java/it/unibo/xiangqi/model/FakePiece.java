@@ -3,12 +3,12 @@ package it.unibo.xiangqi.model;
 import java.util.List;
 import java.util.Objects;
 
-import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.common.PieceType;
-import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 
 public class FakePiece implements Piece{
     private PieceType type; 
