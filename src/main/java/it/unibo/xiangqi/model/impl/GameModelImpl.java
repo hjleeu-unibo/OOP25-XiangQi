@@ -169,4 +169,10 @@ public class GameModelImpl implements GameModel {
             blackHints--;
         }
     }
+
+    private void buildPlayers(final GameModeType mode) {
+        final Player red = new PlayerImpl(Color.RED, true);
+        final Player black = new PlayerImpl(Color.BLACK, mode == GameModeType.PVP);
+        this.players = List.of(red, black);
+    }
 }
