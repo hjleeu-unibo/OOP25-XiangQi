@@ -143,9 +143,10 @@ public class GameModelImpl implements GameModel {
                 .orElse(red);
 
                 // restore board information
+                final List<Piece> pieces = storedPieces.stream()
+                .map(s -> PieceFactory.fromStoredPiece(s, red, black))
+                .toList();
                 /*
-                final List<Piece> pieces = 
-                // create Piece from StoredPiece information
                 this.board = new Board.createBoard(pieces);;
                 */
 
