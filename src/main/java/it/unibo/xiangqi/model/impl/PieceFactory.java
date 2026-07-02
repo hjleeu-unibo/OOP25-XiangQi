@@ -1,7 +1,9 @@
 package it.unibo.xiangqi.model.impl;
 
+import java.awt.Color;
 import java.util.List;
 
+import it.unibo.xiangqi.common.api.StoredPiece;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
@@ -105,6 +107,19 @@ public final class PieceFactory {
             case CHARIOT -> new Chariot(p.getOwner(), p.getPosition());
             case CANNON -> new Cannon(p.getOwner(), p.getPosition());
             case SOLDIER -> new Soldier(p.getOwner(), p.getPosition());
+        };
+    }
+
+    public static Piece fromStoredPiece(final StoredPiece stored, final Player red, final Player black) {
+        final Player owner = stored.color() == Color.RED ? red : black;
+        return switch(stored.type()) {
+            case GENERAL -> new General(owner, stored.position());
+            case ADVISOR -> new Advisor(owner, stored.position());
+            case ELEPHANT -> new Elephant(owner, stored.position());
+            case HORSE -> new Horse(owner, stored.position());
+            case CHARIOT -> new Chariot(owner, stored.position());
+            case CANNON -> new Cannon(owner, stored.position());
+            case SOLDIER -> new Soldier(owner, stored.position());
         };
     }
 }
