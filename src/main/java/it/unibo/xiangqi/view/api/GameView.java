@@ -7,6 +7,7 @@ import it.unibo.xiangqi.common.Move;
 import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.Player;
 
 /**
  * Represents the main view of the game.
@@ -96,4 +97,21 @@ public interface GameView {
      * Shows the game panel.
      */
     void showGamePanel();
+
+    /** Show the updated timer on view.
+     * 
+     * @param player the player refers to
+     * @param turnRemaining seconds remaining for the current turn
+     * @param gameRemaining seconds remaing for the entire game
+     * @throws NullPointerException if {@code player} is null
+     */
+    void updateTimer(Player player, long turnRemaining, long gameRemaining);
+
+    /**
+     * Show a message indicating that the time is expired, so the player lost.
+     * 
+     * @param player the player refers to
+     * @throws NullPointerException if {@code player} is null
+     */
+    void showExpiredTime(Player player);
 }

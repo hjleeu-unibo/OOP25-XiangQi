@@ -21,6 +21,7 @@ import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.view.api.GameView;
 
 /**
@@ -46,6 +47,8 @@ public class BoardPanel extends JPanel {
     private int cellSize; 
     private JPanel notificationPanel; 
     private JLabel notificationLabel;
+    private Timer timer; 
+    private JPanel timerPanel; 
 
     /**
      * Creates a new board panel.
@@ -58,7 +61,7 @@ public class BoardPanel extends JPanel {
         boardGrid = new JPanel(new GridLayout(10, 9));
         sidePanel = new JPanel();
         hintButton = new JButton("HINT"); 
-        cells = new JButton[10][9];
+        cells = new JButton[10][9]; 
 
         notificationPanel = new JPanel(); 
         notificationLabel = new JLabel();
@@ -92,6 +95,10 @@ public class BoardPanel extends JPanel {
         this.add(sidePanel, BorderLayout.EAST);
         this.add(notificationPanel, BorderLayout.SOUTH); 
 
+        /*Timer section */
+        timer = new Timer(); 
+        timerPanel = timer.getTimerPanel();
+        this.add(timerPanel, BorderLayout.NORTH);
 }
 
     /**
@@ -377,6 +384,30 @@ public class BoardPanel extends JPanel {
         notificationLabel.setIcon(this.pathToIcon(path, w, h));
         notificationPanel.revalidate();
         notificationPanel.repaint();
+    }
+
+    /**
+     * {@link GameView#updateTimer(Player, long, long)} implementation.
+     * 
+     * @param player the player refers to
+     * @param turnRemaining seconds remaining for the current turn
+     * @param gameRemaining seconds remaing for the entire game
+     * @throws NullPointerException if {@code player} is null
+     */
+    void updateTimer(Player player, long turnRemaining, long gameRemaining){
+        Objects.requireNonNull(player); 
+        timer.updateTimer(player, turnRemaining, gameRemaining);
+    }
+
+    /**
+     * {@link GameView#showExpiredTime(Player)} implementation.
+     * 
+     * @param player the player refers to
+     * @throws NullPointerException if {@code player} is null
+     */
+    void showExpiredTime(Player player){
+        Objects.requireNonNull(player);
+        timer.showExpiredTime(player);
     }
     
 }
