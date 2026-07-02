@@ -7,13 +7,14 @@ import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
 public class Soldier extends AbstractPiece{
 
     private static final int VALUE = 10;
+
+    // river boundary: red stays on rows 5-9, black stays on rows 0-4
     private static final int RIVER_ROW_RED = 4;
     private static final int RIVER_ROW_BLACK = 5;
 
@@ -29,11 +30,11 @@ public class Soldier extends AbstractPiece{
         final int col = current.getCol();
         final boolean isRed = getOwner().getColor() == Color.RED;
 
-        // Forward direction: RED moves toward increasing rows, BLACK toward decreasing rows
-        final int forward = isRed ? 1 : -1;
-        tryAddMove(moves, board, current, row + forward , col);
+        // Soldiers always move one step forward
+        final int forward = isRed ? -1 : 1;
+        tryAddMove(moves, board, current, row + forward, col);
 
-        // Sideways moves are only allowed after crossing the river
+        // the soldier can move horizontally after has crossed the river
         if (hasCrossedRiver(row, isRed)) {
             tryAddMove(moves, board, current, row, col + 1);
             tryAddMove(moves, board, current, row, col - 1);
@@ -41,23 +42,8 @@ public class Soldier extends AbstractPiece{
         return moves;
     }
 
+    // Checks whether the soldier has crossed the river.
     private boolean hasCrossedRiver(final int row, final boolean isRed) {
-        return isRed ? row > RIVER_ROW_RED : row < RIVER_ROW_BLACK;
-    }
-
-    private void tryAddMove(final List<Move> moves, final Board board,
-            final Position from, final int toRow, final int toCol) {
-        // Manual bounds check before creating the Position
-        if (toRow < 0 || toRow >= Position.ROWS || toCol < 0 || toCol >= Position.COLS) {
-            return;
-        }
-
-        final Position to = new Position(toRow, toCol);
-        final Piece target = board.getPieceAt(to);
-
-        // Target cell must be empty or occupied by an enemy piece
-        if (target == null || !target.getOwner().equals(this.getOwner())) {
-            moves.add(new MoveImpl(from, to));
-        }
+        return isRed ? row <= RIVER_ROW_RED : row >= RIVER_ROW_BLACK;
     }
 }

@@ -26,8 +26,12 @@ public abstract class AbstractPiece implements Piece {
      * @param type     the type of this piece
      * @param owner    the player who owns this piece
      * @param position the starting position
+     * @param int      the initial value of this piece
      */
-    protected AbstractPiece(final PieceType type, final Player owner, final Position position, final int initialvalue) {
+    protected AbstractPiece(final PieceType type, 
+                            final Player owner, 
+                            final Position position, 
+                            final int initialvalue) {
         this.type = type;
         this.owner = owner;
         this.position = position;
@@ -81,5 +85,33 @@ public abstract class AbstractPiece implements Piece {
     @Override
     public String toString() {
         return this.type + "(" + this.owner + ")@" + this.position + "[" + this.currentvalue + "]";
+    }
+
+    /**
+     * Tries to add a move
+     * 
+     * @param moves the list to add the move to if valid
+     * @param board the current board state
+     * @param from the starting position of the piece
+     * @param toRow the destination row
+     * @param toCol the destination column
+     * @return true only if the destination was empty.
+     *         false if out of bounds, occupied by friendly piece or a capture occurred (stop)
+     */
+    protected boolean tryAddMove(final List<Move> moves, final Board board, 
+        final Position from, final int toRow, final int toCol) {
+        if (toRow < 0 || toRow >= Position.ROWS || toCol < 0 || toCol >= Position.COLS) {
+            return false;                                  // out of bounds
+        }
+        final Position to = new Position(toRow, toCol);
+        final Piece target = board.getPieceAt(to);
+        if (target == null) {
+            moves.add(new MoveImpl(from, to));
+            return true;                                   // empty → keep sliding
+        } else if (!target.getOwner().equals(this.getOwner())) {
+            moves.add(new MoveImpl(from, to));
+            return false;                                  // capture → stop
+        }
+        return false;                                      // friendly → stop
     }
 }

@@ -2,8 +2,10 @@ package it.unibo.xiangqi.model.api;
 
 import java.util.List;
 
+import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.common.api.GameStatus;
+import it.unibo.xiangqi.common.api.StoredPiece;
 
 /**
  * The central model of the Xiangqi game.
@@ -31,11 +33,15 @@ public interface GameModel {
 
     /**
      * Returns true if the game has ended (endGame() has been called).
+     * 
+     * @return true if the game ended
      */
     public boolean isOver();
 
     /**
      * Returns the current status of the game.
+     * 
+     * @return Status of game
      */
     public GameStatus getStatus();
 
@@ -47,6 +53,8 @@ public interface GameModel {
 
     /**
      * Returns the player whose turn it currently is.
+     * 
+     * @return player of current turn
      */
     public Player getCurrentPlayer();
 
@@ -70,11 +78,15 @@ public interface GameModel {
 
     /**
      * Returns the current state of the board.
+     * 
+     * @return Board the current state of board
      */
     public Board getBoard();
 
     /**
      * Returns both players. Red player is at index 0, black at index 1.
+     * 
+     * @return List of Players
      */
     public List<Player> getPlayers();
 
@@ -95,15 +107,30 @@ public interface GameModel {
     /**
      * Restores the game model to a previously saved state.
      *
-     * @param mode          the saved game mode
-     * @param players       the saved player list
-     * @param currentPlayer the player whose turn it was when the game was saved
-     * @param board         the saved board
-     * @param pieces        the saved list of pieces with their positions
+     * @param mode                  the saved game mode PVP or PVE
+     * @param currentPlayerColor    the color of the player whose turn it was when saved
+     * @param redHints              hints/suggestions saved for the red side
+     * @param blackHints            hints/suggestions saved for the black side
+     * @param pieces                the saved list of pieces with their positions
      */
-    void setStatus(GameModeType mode,
-                   List<Player> players,
-                   Player currentPlayer,
-                   Board board,
-                   List<Piece> pieces);
+    public void setStatus(GameModeType mode,
+                   Color currentPlayerColor,
+                   int redHints,
+                   int blackHints,
+                   List<StoredPiece> pieces);
+
+    /**
+    * Returns the number of hints remaining for the given player.
+    *
+    * @param player the player to check
+    * @return number of hints remaining (0-3)
+    */
+    public int getHintsRemaining(Player player);
+
+    /**
+    * Decrements the hint counter for the given player.
+    *
+    * @param player the player who used a hint
+    */
+    public void useHint(Player player);
 }
