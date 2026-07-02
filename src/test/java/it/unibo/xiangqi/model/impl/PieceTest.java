@@ -211,7 +211,7 @@ class PieceTest {
             m.getTo().getRow() >= 7 && m.getTo().getRow() <= 9 &&
             m.getTo().getCol() >= 3 && m.getTo().getCol() <= 5));
     }
-
+    
     /** Black advisor cannot leave the black palace (rows 0-2, cols 3-5). */
     @Test
     void blackAdvisorCannotLeavePalace() {
@@ -221,6 +221,28 @@ class PieceTest {
         assertTrue(moves.stream().allMatch(m ->
             m.getTo().getRow() >= 0 && m.getTo().getRow() <= 2 &&
             m.getTo().getCol() >= 3 && m.getTo().getCol() <= 5));
+    }
+
+    /** Advisor can capture an enemy piece. */
+    @Test
+    void AdvisorCanCaptureEnemy() {
+        final Piece advisor = new Advisor(red, new Position(8, 4));
+        final Piece enemy = new Soldier(black, new Position(7, 5));
+        final Board board = new BoardImpl(List.of(advisor, enemy));
+        final List<Move> moves = advisor.getMoves(board);
+
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(7, 5))));
+    }
+
+    /** Advisor can not capture a friendly piece. */
+    @Test
+    void AdvisorCannotCaptureFriendly() {
+        final Piece advisor = new Advisor(red, new Position(8, 4));
+        final Piece friendly = new Soldier(red, new Position(7, 5));
+        final Board board = new BoardImpl(List.of(advisor, friendly));
+        final List<Move> moves = advisor.getMoves(board);
+
+        assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 5))));
     }
 
     /** Advisor at a corner of the palace has only one move. */
@@ -257,6 +279,28 @@ class PieceTest {
         assertTrue(moves.stream().allMatch(m ->
             m.getTo().getRow() >= 7 && m.getTo().getRow() <= 9 &&
             m.getTo().getCol() >= 3 && m.getTo().getCol() <= 5));
+    }
+
+    /** General can capture an enemy piece. */
+    @Test
+    void GeneralCanCaptureEnemy() {
+        final Piece general = new General(red, new Position(9, 4));
+        final Piece enemy = new Chariot(black, new Position(8, 4));
+        final Board board = new BoardImpl(List.of(general, enemy));
+        final List<Move> moves = general.getMoves(board);
+
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(8, 4))));
+    }
+
+    /** General can not capture a friendly piece. */
+    @Test
+    void GeneralCannotCaptureFriendly() {
+        final Piece general = new General(red, new Position(9, 4));
+        final Piece friendly = new Chariot(red, new Position(8, 4));
+        final Board board = new BoardImpl(List.of(general, friendly));
+        final List<Move> moves = general.getMoves(board);
+
+        assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(8, 4))));
     }
 
     /** General at the corner of the palace has only 2 moves. */
