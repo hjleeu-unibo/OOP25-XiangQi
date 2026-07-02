@@ -1,8 +1,9 @@
 package it.unibo.xiangqi.model.impl;
 
-import java.awt.Color;
 import java.util.List;
 
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.common.api.StoredPiece;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
@@ -94,32 +95,49 @@ public final class PieceFactory {
 
     /**
      * Creates a copy of a piece at its current position.
+     * reuses createPiece
      *
      * @param p the piece to copy
      * @return a new piece instance with the same type, owner and position
      */
-    public static Piece copyPiece(final Piece p) {
-        return switch (p.getType()) {
-            case GENERAL -> new General(p.getOwner(), p.getPosition());
-            case ADVISOR -> new Advisor(p.getOwner(), p.getPosition());
-            case ELEPHANT -> new Elephant(p.getOwner(), p.getPosition());
-            case HORSE -> new Horse(p.getOwner(), p.getPosition());
-            case CHARIOT -> new Chariot(p.getOwner(), p.getPosition());
-            case CANNON -> new Cannon(p.getOwner(), p.getPosition());
-            case SOLDIER -> new Soldier(p.getOwner(), p.getPosition());
+    public static Piece copyPiece(final Piece piece) {
+        return createPiece(piece.getType(), piece.getOwner(), piece.getPosition());
+    }
+    
+    /**
+     * private base method — the single place where pieces are constructed
+     * 
+     * @param type type of piece to create
+     * @param owner owner of piece to create
+     * @param position position of piece to create
+     * @return a piece  instance with the giving type, owner, position
+    */
+    private static Piece createPiece(final PieceType type,
+                                    final Player owner,
+                                    final Position position) {
+        return switch (type) {
+            case GENERAL -> new General(owner, position);
+            case ADVISOR -> new Advisor(owner, position);
+            case ELEPHANT -> new Elephant(owner, position);
+            case HORSE -> new Horse(owner, position);
+            case CHARIOT -> new Chariot(owner, position);
+            case CANNON -> new Cannon(owner, position);
+            case SOLDIER -> new Soldier(owner, position);
         };
     }
 
-    public static Piece fromStoredPiece(final StoredPiece stored, final Player red, final Player black) {
+    /**
+     * create piece from stored piece information
+     * 
+     * @param stored a record contains the stored piece information(type, color, position)
+     * @param red the red player, assigned as owner if stored color is RED
+     * @param black the black player, assigned as owner if stored color is BLACK
+     * @return a piece instance matching the stored data
+     */
+    public static Piece fromStoredPiece(final StoredPiece stored, 
+                                        final Player red, 
+                                        final Player black) {
         final Player owner = stored.color() == Color.RED ? red : black;
-        return switch(stored.type()) {
-            case GENERAL -> new General(owner, stored.position());
-            case ADVISOR -> new Advisor(owner, stored.position());
-            case ELEPHANT -> new Elephant(owner, stored.position());
-            case HORSE -> new Horse(owner, stored.position());
-            case CHARIOT -> new Chariot(owner, stored.position());
-            case CANNON -> new Cannon(owner, stored.position());
-            case SOLDIER -> new Soldier(owner, stored.position());
-        };
+        return createPiece(stored.type(), owner, stored.position());
     }
 }
