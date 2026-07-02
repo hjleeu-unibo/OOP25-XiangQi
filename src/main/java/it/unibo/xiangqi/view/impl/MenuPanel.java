@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import it.unibo.xiangqi.common.GameModeType;
+import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.InputHandler;
 
 /**

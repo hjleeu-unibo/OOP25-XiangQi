@@ -1,6 +1,6 @@
 package it.unibo.xiangqi.controller.api;
 
-import it.unibo.xiangqi.common.GameModeType;
+import it.unibo.xiangqi.common.api.GameModeType;
 
 /**
  * Manages the overall game flow and controls the progression of

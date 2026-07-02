@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.common;
+package it.unibo.xiangqi.common.api;
 
 public enum GameStatus {
     NOT_STARTED,

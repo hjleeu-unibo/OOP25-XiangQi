@@ -3,7 +3,7 @@ package it.unibo.xiangqi.model;
 import java.util.List;
 import java.util.Objects;
 
-import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;

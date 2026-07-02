@@ -8,8 +8,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.unibo.xiangqi.common.Color;
-import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;

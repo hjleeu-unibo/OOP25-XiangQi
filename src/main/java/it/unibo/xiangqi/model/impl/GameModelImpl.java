@@ -127,33 +127,32 @@ public class GameModelImpl implements GameModel {
 
     @Override
     public void setStatus(GameModeType mode, Color currentPlayerColor, int redHints,
-            int blackHints, List<StoredPiece> storedPieces) {
-                this.mode = mode;
+        int blackHints, List<StoredPiece> storedPieces) {
+        this.mode = mode;
 
-                // build players from mode
-                final Player red   = new PlayerImpl(Color.RED,   true);
-                final Player black = new PlayerImpl(Color.BLACK,  mode == GameModeType.PVP);
-                this.players = List.of(red, black);
+        // build players from mode
+        final Player red   = new PlayerImpl(Color.RED,   true);
+        final Player black = new PlayerImpl(Color.BLACK,  mode == GameModeType.PVP);
+        this.players = List.of(red, black);
 
-                // restore current player by matching the saved color
-                this.currentPlayer = this.players.stream()
-                .filter(p -> p.getColor() == currentPlayerColor)
-                .findFirst()
-                .orElse(red);
+        // restore current player by matching the saved color
+        this.currentPlayer = this.players.stream()
+            .filter(p -> p.getColor() == currentPlayerColor)
+            .findFirst()
+            .orElse(red);
 
-                // restore board information
-                final List<Piece> pieces = storedPieces.stream()
-                .map(s -> PieceFactory.fromStoredPiece(s, red, black))
-                .toList();
+        // restore board information
+        final List<Piece> pieces = storedPieces.stream()
+            .map(s -> PieceFactory.fromStoredPiece(s, red, black))
+            .toList();
 
-                this.board = Board.createBoard(pieces);
+        this.board = Board.createBoard(pieces);
 
-                // restore hints information
-                this.redHints = redHints;
-                this.blackHints = blackHints;
+        // restore hints information
+        this.redHints = redHints;
+        this.blackHints = blackHints;
 
-                this.status = GameStatus.IN_PROGRESS;
-        return;
+        this.status = GameStatus.IN_PROGRESS;
     }
 
     @Override

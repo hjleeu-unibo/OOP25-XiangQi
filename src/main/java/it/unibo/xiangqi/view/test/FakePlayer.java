@@ -1,6 +1,6 @@
 package it.unibo.xiangqi.view.test;
 
-import it.unibo.xiangqi.common.Color;
+import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Player;
 
 /**

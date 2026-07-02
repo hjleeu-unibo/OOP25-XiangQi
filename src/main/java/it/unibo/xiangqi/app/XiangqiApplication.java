@@ -2,8 +2,8 @@ package it.unibo.xiangqi.app;
 
 import java.util.List;
 
-import it.unibo.xiangqi.common.Color;
-import it.unibo.xiangqi.common.PieceType;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;

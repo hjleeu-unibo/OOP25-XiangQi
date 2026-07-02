@@ -1,7 +1,7 @@
 package it.unibo.xiangqi.controller.impl;
 
 import it.unibo.xiangqi.ai.api.MoveCalculator;
-import it.unibo.xiangqi.common.GameModeType;
+import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.GameController;
 import it.unibo.xiangqi.controller.api.GameTimer;
 import it.unibo.xiangqi.model.api.Board;

@@ -15,8 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import it.unibo.xiangqi.common.Color;
-import it.unibo.xiangqi.common.Notification;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.Notification;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Move;
