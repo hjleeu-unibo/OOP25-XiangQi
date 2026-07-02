@@ -154,7 +154,7 @@ public final class GameControllerImpl implements GameController {
 
          if (ruleEngine.isCheckMate(currentPlayer, board)) {
             Player winner = getEnemy(currentPlayer);
-            gameView.showWinner(winner);
+            gameView.showWinner(winner.getColor());
             gameModel.endGame();
             return;
          }
