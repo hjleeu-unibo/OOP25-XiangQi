@@ -389,4 +389,55 @@ class PieceTest {
 
         assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 6))));
     }
+    
+    // Chariot Test:
+
+    /** Chariot can slide freely along a rank with no pieces in the way. */
+    @Test
+    void chariotSlidesFreely() {
+        final Piece chariot = new Chariot(red, new Position(7, 4));
+        final List<Move> moves = chariot.getMoves(emptyBoard);
+
+        // can reach all cells in the same row and column
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(7, 0))));
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(7, 8))));
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(0, 4))));
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(9, 4))));
+    }
+
+    /** Chariot cannot jump over a piece to move. */
+    @Test
+    void chariotCannotJumpOverPieceToMove() {
+        final Piece chariot  = new Chariot(red,   new Position(7, 4));
+        final Piece blocker = new Soldier(red,  new Position(7, 6));
+        final Board board   = new BoardImpl(List.of(chariot, blocker));
+        final List<Move> moves = chariot.getMoves(board);
+
+        // cannot move to cells beyond the blocker in the same row
+        assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 7))));
+    }
+
+    /** Chariot can capture an enemy piece*/
+    @Test
+    void chariotCanCaptureEnemy() {
+        final Piece chariot  = new Chariot(red,   new Position(7, 0));
+        final Piece enemy   = new Soldier(black, new Position(7, 6));
+        final Board board   = new BoardImpl(List.of(chariot, enemy));
+        final List<Move> moves = chariot.getMoves(board);
+
+        assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(7, 6))));
+        assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 7))));
+    }
+
+    /** Chariot cannot capture a friendly piece even with a screen. */
+    @Test
+    void chariotCannotCaptureFriendly() {
+        final Piece chariot   = new Chariot(red,  new Position(7, 0));
+        final Piece friendly = new Soldier(red, new Position(7, 6));
+        final Board board    = new BoardImpl(List.of(chariot, friendly));
+        final List<Move> moves = chariot.getMoves(board);
+
+        assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 6))));
+    }
+
 }
