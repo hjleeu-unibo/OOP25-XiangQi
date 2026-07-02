@@ -19,12 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Board layout reminder:
  *   black: rows 0-4, red: rows 5-9
  *   river boundary: RIVER_ROW_RED=4, RIVER_ROW_BLACK=5
- *
- * NOTE: this test class lives in it.unibo.xiangqi.model.impl (same package
- * as Soldier, Advisor, Elephant, General, Horse, Cannon, BoardImpl) because
- * those classes have protected constructors, only accessible from within
- * the package. Moving/keeping the test here avoids needing to weaken that
- * encapsulation just for testing.
  */
 class PieceTest {
 
