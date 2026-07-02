@@ -13,7 +13,7 @@ dependencies {
 
     // Mockito
     testImplementation("org.mockito:mockito-core:5.15.2")
-    testRuntimeOnly("org.mockito:mockito-junit-jupiter:5.15.2")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.15.2")
 }
 
 tasks.test {
