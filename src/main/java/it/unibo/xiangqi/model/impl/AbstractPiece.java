@@ -26,8 +26,12 @@ public abstract class AbstractPiece implements Piece {
      * @param type     the type of this piece
      * @param owner    the player who owns this piece
      * @param position the starting position
+     * @param int      the initial value of this piece
      */
-    protected AbstractPiece(final PieceType type, final Player owner, final Position position, final int initialvalue) {
+    protected AbstractPiece(final PieceType type, 
+                            final Player owner, 
+                            final Position position, 
+                            final int initialvalue) {
         this.type = type;
         this.owner = owner;
         this.position = position;
