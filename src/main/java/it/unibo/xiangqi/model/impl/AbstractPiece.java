@@ -83,8 +83,17 @@ public abstract class AbstractPiece implements Piece {
         return this.type + "(" + this.owner + ")@" + this.position + "[" + this.currentvalue + "]";
     }
 
-
-    //Tries to add a move. Returns true only if the cell was empty.
+    /**
+     * Tries to add a move
+     * 
+     * @param moves the list to add the move to if valid
+     * @param board the current board state
+     * @param from the starting position of the piece
+     * @param toRow the destination row
+     * @param toCol the destination column
+     * @return true only if the destination was empty.
+     *         false if out of bounds, occupied by friendly piece or a capture occurred (stop)
+     */
     protected boolean tryAddMove(final List<Move> moves, final Board board, 
         final Position from, final int toRow, final int toCol) {
         if (toRow < 0 || toRow >= Position.ROWS || toCol < 0 || toCol >= Position.COLS) {
