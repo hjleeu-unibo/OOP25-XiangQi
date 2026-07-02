@@ -1,7 +1,7 @@
 package it.unibo.xiangqi.model.api;
 
-import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
 
 /**
  * Represents the data required to recreate a piece when restoring
