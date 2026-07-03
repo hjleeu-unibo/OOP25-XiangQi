@@ -1,7 +1,5 @@
 package it.unibo.xiangqi.model.impl;
 
-import java.util.Objects;
-
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Position;
 
@@ -33,20 +31,6 @@ public class MoveImpl implements Move {
     @Override
     public Position getTo() {
         return to;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MoveImpl)) return false;
-        final MoveImpl other = (MoveImpl) o;
-        return this.from.equals(other.from)
-            && this.to.equals(other.to);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(from, to);
     }
 
     @Override
