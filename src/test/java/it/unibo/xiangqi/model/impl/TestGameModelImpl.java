@@ -102,7 +102,7 @@ class TestGameModelImpl {
     @Test
     void endGame_clearsBoard() {
         gameModel.startGame(GameModeType.PVP);
-        gameModel.endGame(); // may currently throw ConcurrentModificationException!
+        gameModel.endGame();
         assertTrue(gameModel.getBoard().getPieces().isEmpty());
     }
 
