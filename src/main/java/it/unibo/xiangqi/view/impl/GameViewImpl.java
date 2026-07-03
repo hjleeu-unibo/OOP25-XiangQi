@@ -11,11 +11,12 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.Color;
+import it.unibo.xiangqi.common.Move;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.Position;
+import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.view.api.GameView;
 
 /**
@@ -182,8 +183,16 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void showDraw() {
-        boardPanel.showDraw();
+    public void updateTimer(Player player, long turnRemaining, long gameRemaining) {
+        boardPanel.updateTimer(player, turnRemaining, gameRemaining);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showExpiredTime(Player player) {
+        boardPanel.showExpiredTime(player);
     }
 
 }

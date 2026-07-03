@@ -15,14 +15,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import it.unibo.xiangqi.common.api.Color;
-import it.unibo.xiangqi.common.api.Notification;
+import it.unibo.xiangqi.common.Color;
+import it.unibo.xiangqi.common.Move;
+import it.unibo.xiangqi.common.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
-import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.view.api.GameView;
 
 /**
@@ -345,14 +344,14 @@ public class BoardPanel extends JPanel {
      * {@link GameView#showCheck()} implementation.
      */
     public void showCheck(){
-        showNotification(Notification.CHECK);
-    }
-
-    /**
-     * {@link GameView#showDraw()} implementation.
-     */
-    public void showDraw(){
-        showNotification(Notification.DRAW);
+        String path = "notifications/check.png";
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int h = (int)(screenSize.height * 0.075);
+        int w = (int)(screenSize.height * 0.4);
+        
+        notificationLabel.setIcon(this.pathToIcon(path, w, h));
+        notificationPanel.revalidate();
+        notificationPanel.repaint();
     }
 
     /**
@@ -370,50 +369,17 @@ public class BoardPanel extends JPanel {
      * @param color the color of the winning player
      */
     public void showWinner(Color color){
-        if (color == Color.BLACK){
-            showNotification(Notification.BLACK_WINS);
-        }else{
-            showNotification(Notification.RED_WINS);
-        }
-    }
-
-    /**
-     * Internal helper method
-     * 
-     * @hidden
-     */
-    private void showNotification(Notification notification){
+        this.disableAll();
         String path; 
-        int w,h; 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        switch(notification){
-            case CHECK: 
-                path = "notifications/check.png";
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.4);
-                break; 
-            case RED_WINS: 
-                this.disableAll();
-                path = "notifications/red_wins.png"; 
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.65);
-                break; 
-            case BLACK_WINS: 
-                this.disableAll();
-                path = "notifications/black_wins.png"; 
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.65); 
-                break; 
-            case DRAW: 
-                this.disableAll();
-                path = "notifications/draw.png";
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.4);
-                break;  
-            default: 
-                throw new IllegalArgumentException("The argument is wrong"); 
+        if (color == Color.BLACK){
+            path = "notifications/black_wins.png"; 
+        }else{
+            path = "notifications/red_wins.png";
         }
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int h = (int)(screenSize.height * 0.075);
+        int w = (int)(screenSize.height * 0.65);
 
         notificationLabel.setIcon(this.pathToIcon(path, w, h));
         notificationPanel.revalidate();
