@@ -4,7 +4,7 @@ import java.util.List;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.common.api.StoredPiece;
+import it.unibo.xiangqi.model.api.StoredPiece;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;

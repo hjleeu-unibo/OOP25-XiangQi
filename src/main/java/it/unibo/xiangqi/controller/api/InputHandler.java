@@ -51,5 +51,4 @@ public interface InputHandler {
      * Handles the request to exit the game.
      */
     void onExit();
-
 }

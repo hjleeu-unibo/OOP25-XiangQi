@@ -5,7 +5,6 @@ import java.util.List;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.common.api.GameStatus;
-import it.unibo.xiangqi.common.api.StoredPiece;
 
 /**
  * The central model of the Xiangqi game.

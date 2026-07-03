@@ -7,7 +7,6 @@ import java.util.List;
  * Provides the logic for check, checkmate, draw,flying general
  * detection and legal moves selection.
  */
-
 public interface RuleEngine {
 
     /**
