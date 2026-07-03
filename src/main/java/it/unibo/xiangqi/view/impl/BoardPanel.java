@@ -19,7 +19,6 @@ import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.common.api.Notification;
 import it.unibo.xiangqi.model.api.Position;
-import it.unibo.xiangqi.model.impl.MoveImpl;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Piece;
@@ -335,7 +334,7 @@ public class BoardPanel extends JPanel {
             this.resetHighlights();
             this.selectedCell = null; 
         }else{
-            this.inputHandler.onMove(new MoveImpl(this.selectedCell, position)); 
+            this.inputHandler.onMove(new Move(this.selectedCell, position)); 
             this.selectedCell = null; 
             this.disableAll();
             this.resetHighlights();
