@@ -27,7 +27,7 @@ public class GameModelImpl implements GameModel {
     private int blackHints; 
 
 
-    protected GameModelImpl(final Board board, final List<Player> players) {
+    public GameModelImpl(final Board board, final List<Player> players) {
         this.board = board;
         this.players = players;
         this.currentPlayer = players.get(0); // red starts always at first
