@@ -11,7 +11,6 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.RuleEngine;
 import it.unibo.xiangqi.view.api.GameView;
-import it.unibo.xiangqi.view.api.TimerView;
 
 /**
  * Implementation of the game controller.
@@ -27,7 +26,6 @@ public final class GameControllerImpl implements GameController {
     private final MoveCalculator moveCalculator;
     private final GameLoader gameLoader;
     private final GameTimer gameTimer;
-    private final TimerView timerView;
 
     private boolean checkActive;
 
@@ -45,8 +43,7 @@ public final class GameControllerImpl implements GameController {
                               final RuleEngine ruleEngine,
                               final MoveCalculator moveCalculator,
                               final GameLoader gameLoader,
-                              final GameTimer gameTimer,
-                              final TimerView timerView) {
+                              final GameTimer gameTimer) {
 
         this.gameModel = gameModel;
         this.gameView = gameView;
@@ -54,7 +51,6 @@ public final class GameControllerImpl implements GameController {
         this.moveCalculator = moveCalculator;
         this.gameLoader = gameLoader;
         this.gameTimer = gameTimer;
-        this.timerView = timerView;
     }
 
     @Override
@@ -87,12 +83,12 @@ public final class GameControllerImpl implements GameController {
                 final long turnRemaining = gameTimer.getTurnRemaining(currentPlayer);
                 final long gameRemaining = gameTimer.getGameRemaining(currentPlayer);
 
-                timerView.updateTimer(currentPlayer, turnRemaining, gameRemaining);
+                gameView.updateTimer(currentPlayer, turnRemaining, gameRemaining);
 
                 if (gameTimer.isTurnExpired(currentPlayer) || gameTimer.isTotalExpired(currentPlayer)) {
                     gameTimer.stopTurn(currentPlayer);
                     gameModel.endGame();
-                    timerView.showExpiredTime(currentPlayer);
+                    gameView.showExpiredTime(currentPlayer);
                     return;
                 }
             }
