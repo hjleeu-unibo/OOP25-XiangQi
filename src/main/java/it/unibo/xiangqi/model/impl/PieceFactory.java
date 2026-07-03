@@ -1,5 +1,6 @@
 package it.unibo.xiangqi.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.xiangqi.common.api.Color;
@@ -55,7 +56,7 @@ public final class PieceFactory {
      * @return immutable list of all 32 pieces
      */
     public static List<Piece> initializePieces(final Player red, final Player black) {
-        return List.of(
+        return new ArrayList<>(List.of(
             // black pieces:
             new General(black, new Position(BACK_ROW_BLACK, GENERAL_COL)),
             new Advisor(black, new Position(BACK_ROW_BLACK, ADVISOR_COL_LEFT)),
@@ -90,7 +91,7 @@ public final class PieceFactory {
             new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[2])),
             new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[3])),
             new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[4]))
-        );
+        ));
     }
 
     /**
