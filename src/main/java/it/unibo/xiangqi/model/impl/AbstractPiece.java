@@ -106,10 +106,10 @@ public abstract class AbstractPiece implements Piece {
         final Position to = new Position(toRow, toCol);
         final Piece target = board.getPieceAt(to);
         if (target == null) {
-            moves.add(new MoveImpl(from, to));
+            moves.add(new Move(from, to));
             return true;                                   // empty → keep sliding
         } else if (!target.getOwner().equals(this.getOwner())) {
-            moves.add(new MoveImpl(from, to));
+            moves.add(new Move(from, to));
             return false;                                  // capture → stop
         }
         return false;                                      // friendly → stop

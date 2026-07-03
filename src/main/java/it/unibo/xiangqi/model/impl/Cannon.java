@@ -38,7 +38,7 @@ public class Cannon extends AbstractPiece{
                 // if the block is empty
                 if(target == null) {
                     if(!screenFound) {
-                        moves.add(new MoveImpl(current, to)); // // phase 1 move freely
+                        moves.add(new Move(current, to)); // // phase 1 move freely
                     }
                     // phase 2: empty cell after screen → skip, keep looking
                 } else {
@@ -47,7 +47,7 @@ public class Cannon extends AbstractPiece{
                     } else {
                         // second piece found after screen
                         if(!target.getOwner().equals(this.getOwner())) {
-                            moves.add(new MoveImpl(current, to)); // if enemy → capture
+                            moves.add(new Move(current, to)); // if enemy → capture
                         }
                         break; // stop move in this direction
                     }
