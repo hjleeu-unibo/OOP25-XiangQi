@@ -11,9 +11,9 @@ import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import it.unibo.xiangqi.common.Color;
-import it.unibo.xiangqi.common.Move;
-import it.unibo.xiangqi.common.Position;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Player;
