@@ -26,7 +26,7 @@ public class BoardImpl implements Board{
      */
     public BoardImpl(List<Piece> pieces) {
         Objects.requireNonNull(pieces);
-        this.pieces = pieces;
+        this.pieces = new ArrayList<>(pieces);
     }
 
     /**
