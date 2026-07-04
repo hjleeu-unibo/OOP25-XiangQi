@@ -2,52 +2,75 @@ package it.unibo.xiangqi.app;
 
 import java.util.List;
 
+import it.unibo.xiangqi.ai.api.MoveCalculator;
+import it.unibo.xiangqi.ai.impl.MoveCalculatorImpl;
 import it.unibo.xiangqi.common.api.Color;
-import it.unibo.xiangqi.common.api.PieceType;
+import it.unibo.xiangqi.controller.api.GameController;
+import it.unibo.xiangqi.controller.api.GameTimer;
 import it.unibo.xiangqi.controller.api.InputHandler;
-import it.unibo.xiangqi.model.api.Player;
-import it.unibo.xiangqi.model.api.Position;
+import it.unibo.xiangqi.controller.impl.GameControllerImpl;
+import it.unibo.xiangqi.controller.impl.GameTimerImpl;
+import it.unibo.xiangqi.controller.impl.InputHandlerImpl;
 import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.model.api.GameLoader;
+import it.unibo.xiangqi.model.api.GameModel;
+import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.RuleEngine;
+import it.unibo.xiangqi.model.impl.GameLoaderImpl;
+import it.unibo.xiangqi.model.impl.GameModelImpl;
+import it.unibo.xiangqi.model.impl.PlayerImpl;
+import it.unibo.xiangqi.model.impl.RuleEngineImpl;
 import it.unibo.xiangqi.view.api.GameView;
 import it.unibo.xiangqi.view.impl.GameViewImpl;
-import it.unibo.xiangqi.view.test.FakeBoard;
-import it.unibo.xiangqi.view.test.FakeInputHandler;
-import it.unibo.xiangqi.view.test.FakePiece;
-import it.unibo.xiangqi.view.test.FakePlayer;
 
 /**
- * temp
- * 
- * @hidden
+ * Application entry point.
+ * Creates and connects all MVC components together,
+ * then shows the main menu.
  */
-public class XiangqiApplication {
+public final class XiangqiApplication {
+
+    private XiangqiApplication() { }
+
     public static void main(String[] args) {
-        GameView view = new GameViewImpl();
 
-        InputHandler ih = new FakeInputHandler(view); 
-        view.setInputHandler(ih);
+        // Create the graphical user interface.
+        final GameView view = new GameViewImpl();
 
-        Player player1 = new FakePlayer(Color.RED);
-        Player player2 = new FakePlayer(Color.BLACK); 
-        
-        Piece p1 = new FakePiece(PieceType.GENERAL, player2, new Position(0, 2)); 
-        Piece p2 = new FakePiece(PieceType.ADVISOR, player1, new Position(0, 0));
-        Piece p3 = new FakePiece(PieceType.SOLDIER, player1, new Position(2, 3));
+        // Temporary players required to initialize the model.
+        // They will be replaced when a new game is started.
+        final Player placeholderRed = new PlayerImpl(Color.RED, true);
+        final Player placeholderBlack = new PlayerImpl(Color.BLACK, true);
 
-        Board board = new FakeBoard(List.of(p1, p2, p3)); 
+        // Create an initially empty game model.
+        final GameModel gameModel = new GameModelImpl(
+            Board.createBoard(List.of()),
+            List.of(placeholderRed, placeholderBlack)
+        );
 
-        view.updateBoard(board);
-        view.showCheck();
+        // Rule engine validates moves according to Xiangqi rules.
+        final RuleEngine ruleEngine = new RuleEngineImpl(gameModel);
 
-        //view.highlightCells(List.of(new Position(1, 3), new Position(0, 5)));
-        
-        //Move m = new Move(new Position(0, 0), new Position(2, 5));
-        //view.showSuggestedMove(m); 
+        // AI component computes moves using the rule engine.
+        final MoveCalculator moveCalculator = new MoveCalculatorImpl(ruleEngine);
 
-        //view.setHintButtonDisabled();
-        //view.setHintButtonEnabled();
-        //view.setPlayerEnabled(Color.RED);
+        // Components responsible for saving/loading games and time management.
+        final GameLoader gameLoader = new GameLoaderImpl();
+        final GameTimer gameTimer = new GameTimerImpl();
 
+        // Main controller coordinating interactions between model and view.
+        final GameController gameController = new GameControllerImpl(
+            gameModel, view, ruleEngine, moveCalculator, gameLoader, gameTimer
+        );
+
+        // Handles all user input coming from the graphical interface.
+        final InputHandler inputHandler = new InputHandlerImpl(
+            gameController, gameModel, ruleEngine, view
+        );
+
+        // Connect the view to the input handler.
+        // The application starts on the main menu, where the user can
+        // choose to start a new game or resume a saved one.
+        view.setInputHandler(inputHandler);
     }
 }
