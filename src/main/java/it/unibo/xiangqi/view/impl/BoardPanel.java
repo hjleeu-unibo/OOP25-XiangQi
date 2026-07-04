@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -167,7 +168,7 @@ public class BoardPanel extends JPanel {
      */
     public void highlightCells(List<Position> positions) {
         if(positions != null){
-            this.highlightedCells = positions;
+            this.highlightedCells = new ArrayList<>(positions);
         } else{
             throw new NullPointerException("positions is null"); 
         }
