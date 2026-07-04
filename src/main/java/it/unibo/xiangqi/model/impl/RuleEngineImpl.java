@@ -124,7 +124,7 @@ public class RuleEngineImpl implements RuleEngine {
 
         for(int y=start+1; y<end; y++) {
 
-            if (board.getPieceAt(new Position(redGeneral.getCol(), y)) != null) {
+            if (board.getPieceAt(new Position(y, redGeneral.getCol())) != null) {
                 return false;
             }
         }
