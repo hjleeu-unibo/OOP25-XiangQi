@@ -124,6 +124,7 @@ public class BoardPanel extends JPanel {
                 Piece piece = this.currentBoard.getPieceAt(pos); 
 
                 if (piece == null){
+                    cells[row][col].setIcon(null);
                     cells[row][col].setText("");
                 }else{
                     cells[row][col].setIcon(pieceToIcon(piece));  
@@ -337,7 +338,6 @@ public class BoardPanel extends JPanel {
         }else{
             this.inputHandler.onMove(new Move(this.selectedCell, position)); 
             this.selectedCell = null; 
-            this.disableAll();
             this.resetHighlights();
         }
     }
