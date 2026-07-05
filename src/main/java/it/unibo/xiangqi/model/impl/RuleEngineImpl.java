@@ -98,7 +98,7 @@ public class RuleEngineImpl implements RuleEngine {
     @Override
     public boolean isDraw(final Board board) {
         for(Piece piece : board.getPieces()) {
-            if (!piece.isDefensor()) {
+            if (piece.getType() != PieceType.GENERAL && !piece.isDefensor()) {
                 return false;
             }
         }
