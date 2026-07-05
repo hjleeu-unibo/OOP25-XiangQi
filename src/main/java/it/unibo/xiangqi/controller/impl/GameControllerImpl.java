@@ -213,7 +213,7 @@ public final class GameControllerImpl implements GameController {
          }
 
          if (ruleEngine.isCheckMate(currentPlayer, board)) {
-            Player winner = getEnemy(currentPlayer);
+            Player winner = gameModel.getOpponentPlayer();
             gameView.showWinner(winner.getColor());
             gameModel.endGame();
             return;
@@ -242,17 +242,6 @@ public final class GameControllerImpl implements GameController {
             }
      }
 
-     //returns the opponent of the given player
-     private Player getEnemy (final Player player) {
-        for (Player p : gameModel.getPlayers()) {
-
-            if (!p.equals(player)) {
-                return p;
-            }
-        }
-
-        throw new IllegalStateException("The enemy was not found");
-     }
 
      private List<Position> getLegalDestinations(final Position position) {
         final Board board = gameModel.getBoard();
