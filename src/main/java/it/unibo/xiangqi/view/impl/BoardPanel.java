@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -123,6 +124,7 @@ public class BoardPanel extends JPanel {
                 Piece piece = this.currentBoard.getPieceAt(pos); 
 
                 if (piece == null){
+                    cells[row][col].setIcon(null);
                     cells[row][col].setText("");
                 }else{
                     cells[row][col].setIcon(pieceToIcon(piece));  
@@ -167,7 +169,7 @@ public class BoardPanel extends JPanel {
      */
     public void highlightCells(List<Position> positions) {
         if(positions != null){
-            this.highlightedCells = positions;
+            this.highlightedCells = new ArrayList<>(positions);
         } else{
             throw new NullPointerException("positions is null"); 
         }
@@ -336,7 +338,6 @@ public class BoardPanel extends JPanel {
         }else{
             this.inputHandler.onMove(new Move(this.selectedCell, position)); 
             this.selectedCell = null; 
-            this.disableAll();
             this.resetHighlights();
         }
     }

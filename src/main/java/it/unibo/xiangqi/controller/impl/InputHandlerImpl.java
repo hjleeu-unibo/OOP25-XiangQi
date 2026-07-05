@@ -51,6 +51,7 @@ public final class InputHandlerImpl implements InputHandler{
     @Override
     public void onStart(final GameModeType mode) {
         gameController.start(mode);
+        gameView.showGamePanel();
     }
 
     @Override

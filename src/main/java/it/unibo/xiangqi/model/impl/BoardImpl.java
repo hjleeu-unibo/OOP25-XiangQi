@@ -1,5 +1,6 @@
 package it.unibo.xiangqi.model.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public class BoardImpl implements Board{
      */
     public BoardImpl(List<Piece> pieces) {
         Objects.requireNonNull(pieces);
-        this.pieces = pieces;
+        this.pieces = new ArrayList<>(pieces);
     }
 
     /**
@@ -33,7 +34,7 @@ public class BoardImpl implements Board{
      */
     @Override
     public List<Piece> getPieces() {
-        return this.pieces; 
+        return new ArrayList<>(this.pieces);
     }
 
     /**
