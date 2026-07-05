@@ -1,6 +1,8 @@
 package it.unibo.xiangqi.controller.api;
 
 import it.unibo.xiangqi.common.api.GameModeType;
+import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Position;
 
 /**
  * Manages the overall game flow and controls the progression of
@@ -20,22 +22,21 @@ public interface GameController {
     void start(GameModeType mode);
 
     /**
-     * Handles the turn of a bot player by computing the best
-     * legal move and advancing the game flow.
+     * Handles the selection of a cell on the board and asks the 
+     * view to highlight them for the user
+     * 
+     * @param position the cell selected by the user
      */
-    void botTurn();
+
+    void select(Position position);
 
     /**
-     * Handles the turn of a human player by allowing him to
-     * select and perform a move
+     * Concludes the current human player's turn: applies the given move,
+     * closes the interaction on the view and advances the game.
+     * 
+     * @param move the move chosen by the human player 
      */
-    void playerTurn();
-
-    /**
-     * Advances the game to the next turn and updates the game
-     * flow accordingly
-     */
-    void nextTurn();
+    void applyMove(Move move);
 
     /**
      * Saves the current game state to persistent storage.
@@ -48,7 +49,7 @@ public interface GameController {
      * 
      * @return true if a saved game exists and can be restored
      */
-    public boolean isResumeAvailable();
+    boolean isResumeAvailable();
 
     /**
      * Loads a previously saved game state from persistent storage
@@ -59,5 +60,7 @@ public interface GameController {
      * Provides a suggested move for the current human player.
      */
     void hint();
+
+
     
 }
