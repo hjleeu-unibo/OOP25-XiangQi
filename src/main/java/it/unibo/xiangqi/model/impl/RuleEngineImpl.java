@@ -3,7 +3,6 @@ package it.unibo.xiangqi.model.impl;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.PieceType;
 import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
@@ -12,6 +11,7 @@ import it.unibo.xiangqi.model.api.RuleEngine;
  
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 
@@ -22,20 +22,13 @@ import java.util.function.Predicate;
  */
 public class RuleEngineImpl implements RuleEngine {
 
-    
-    private final GameModel gameModel;
-
-    
-    // Builds a new rule engine bound to the given game model.
-    // It is used to simulate moves on a copy of the current game state. 
-    public RuleEngineImpl(GameModel gameModel) {
-        this.gameModel = gameModel;
-    }
-
-
     @Override
     public boolean isCheck(final Player player, final Board board) {
         Position generalPosition = findGeneralPosition(board, p -> p.getOwner().equals(player));
+
+        if (generalPosition == null) {
+            return false;
+        }
 
         for(Piece enemyPiece : selectPieces(board, p-> !p.getOwner().equals(player))) {
             
@@ -54,7 +47,7 @@ public class RuleEngineImpl implements RuleEngine {
         List<Move> legalMoves = new ArrayList<>();
 
         for(Move move : piece.getMoves(board)) {
-            if (isLegalMove(move, piece.getOwner())) {
+            if (isLegalMove(move, piece.getOwner(), board)) {
                 legalMoves.add(move);
             }
         }
@@ -64,19 +57,30 @@ public class RuleEngineImpl implements RuleEngine {
     // Verifies whether a move is legal by simulating it and checking 
     // that it does not leave the player's general in check or create
     // a flying general situation.
-    private boolean isLegalMove(final Move move, final Player player){
+    private boolean isLegalMove(final Move move, final Player player, final Board board){
 
-        Board simulatedBoard = simulateMove(move);
+        Board simulatedBoard = simulateMove(move, board);
         
         return !isCheck(player, simulatedBoard) && !isFlyingGeneral(simulatedBoard);
 
     }
 
-    //Simulates the execution of a move on a copy of the current game state.
-    private Board simulateMove(final Move move) {
+    //Simulates the execution of a move on a copy of the board.
+    private Board simulateMove(final Move move, final Board board) {
+        //copy the board to simulate on
+        List<Piece> copiedPieces = board.getPieces().stream()
+                                                    .map(PieceFactory::copyPiece)
+                                                    .toList();
+        Board simulationBoard = Board.createBoard(copiedPieces);
 
-        return gameModel.copyState().applyMove(move).getBoard();
+        // apply the move on the board's copy
+        if (simulationBoard.getPieceAt(move.getTo()) != null) {
+            simulationBoard.deletePiece(simulationBoard.getPieceAt(move.getTo()));
+        }
+        Piece piece = Objects.requireNonNull(simulationBoard.getPieceAt(move.getFrom()));
+        piece.setPosition(move.getTo());
 
+        return simulationBoard;
     }
 
     @Override
@@ -113,6 +117,10 @@ public class RuleEngineImpl implements RuleEngine {
         Position redGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.RED);
         Position blackGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.BLACK);
 
+        if (redGeneral == null || blackGeneral == null) {
+            return false;
+        }
+
         if (redGeneral.getCol() != blackGeneral.getCol()) {
 
             return false;
@@ -145,7 +153,8 @@ public class RuleEngineImpl implements RuleEngine {
         return selectedPieces;
      }
 
-     //Finds the position of the general belonging to the specified player
+     //Finds the position of the general belonging to the specified player,
+     //or null if it is not on the board (e.g. captured in a simulated position).
      private Position findGeneralPosition(final Board board, final Predicate<Piece> owner){
 
         for(Piece piece : board.getPieces()) {
@@ -154,7 +163,7 @@ public class RuleEngineImpl implements RuleEngine {
             }
         }
 
-        throw new  IllegalStateException("The General has not been found.");
+        return null;
 
      }
 

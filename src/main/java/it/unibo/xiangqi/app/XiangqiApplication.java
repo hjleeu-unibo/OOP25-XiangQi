@@ -49,7 +49,7 @@ public final class XiangqiApplication {
         );
 
         // Rule engine validates moves according to Xiangqi rules.
-        final RuleEngine ruleEngine = new RuleEngineImpl(gameModel);
+        final RuleEngine ruleEngine = new RuleEngineImpl();
 
         // AI component computes moves using the rule engine.
         final MoveCalculator moveCalculator = new MoveCalculatorImpl(ruleEngine);

@@ -1,5 +1,6 @@
 package it.unibo.xiangqi.model.impl;
 
+import java.util.List;
 import java.util.Objects;
 
 import it.unibo.xiangqi.model.api.Board;
@@ -61,16 +62,28 @@ public class GameStateImpl implements GameState{
     /**
      * {@inheritDoc}
      */
-    @Override
+   @Override
     public GameState applyMove(Move move) {
-        Objects.requireNonNull(move); 
-        if(this.board.getPieceAt(move.getTo()) != null){
-            this.board.deletePiece(this.board.getPieceAt(move.getTo()));
+        Objects.requireNonNull(move);
+
+        //copy the board to simulate on
+        List<Piece> copiedPieces = board.getPieces().stream()
+                                                    .map(PieceFactory::copyPiece)
+                                                    .toList();
+        Board simulationBoard = Board.createBoard(copiedPieces);
+
+        // apply the move on the board's copy
+        if (simulationBoard.getPieceAt(move.getTo()) != null) {
+            simulationBoard.deletePiece(simulationBoard.getPieceAt(move.getTo()));
         }
-        Piece piece = Objects.requireNonNull(this.board.getPieceAt(move.getFrom()));
+        Piece piece = Objects.requireNonNull(simulationBoard.getPieceAt(move.getFrom()));
         piece.setPosition(move.getTo());
-        this.switchTurn();
-        return this; 
+
+        GameStateImpl simulation = new GameStateImpl(simulationBoard, player1, player2, currentPlayer);
+        simulation.switchTurn();
+
+        return simulation;
+
     }
 
     /**
