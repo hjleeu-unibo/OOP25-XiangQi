@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -101,6 +102,8 @@ public class BoardPanel extends JPanel {
         timer = new Timer(); 
         timerPanel = timer.getTimerPanel();
         this.add(timerPanel, BorderLayout.NORTH);
+
+        this.highlightBoardAreas();
 }
 
     /**
@@ -443,6 +446,68 @@ public class BoardPanel extends JPanel {
     void showExpiredTime(Player player){
         Objects.requireNonNull(player);
         timer.showExpiredTime(player);
+    }
+
+    /**
+     * Highlights the borders of the river and the two palaces.
+     */
+    private void highlightBoardAreas() {
+
+        final int thickness = 3;
+        final java.awt.Color palaceColor = java.awt.Color.RED;
+        final java.awt.Color riverColor = java.awt.Color.BLUE;
+
+        // ---------- Black palace (rows 0-2, cols 3-5) ----------
+        for (int row = 0; row <= 2; row++) {
+            for (int col = 3; col <= 5; col++) {
+
+                int top = (row == 0) ? thickness : 1;
+                int bottom = (row == 2) ? thickness : 1;
+                int left = (col == 3) ? thickness : 1;
+                int right = (col == 5) ? thickness : 1;
+
+                cells[row][col].setBorder(
+                    BorderFactory.createMatteBorder(
+                        top, left, bottom, right, palaceColor
+                    )
+                );
+            }
+        }
+
+        // ---------- Red palace (rows 7-9, cols 3-5) ----------
+        for (int row = 7; row <= 9; row++) {
+            for (int col = 3; col <= 5; col++) {
+
+                int top = (row == 7) ? thickness : 1;
+                int bottom = (row == 9) ? thickness : 1;
+                int left = (col == 3) ? thickness : 1;
+                int right = (col == 5) ? thickness : 1;
+
+                cells[row][col].setBorder(
+                    BorderFactory.createMatteBorder(
+                        top, left, bottom, right, palaceColor
+                    )
+                );
+            }
+        }
+
+        // ---------- River ----------
+        for (int col = 0; col < 9; col++) {
+
+            // Bottom border of row 4
+            cells[4][col].setBorder(
+                BorderFactory.createMatteBorder(
+                    1, 1, thickness, 1, riverColor
+                )
+            );
+
+            // Top border of row 5
+            cells[5][col].setBorder(
+                BorderFactory.createMatteBorder(
+                    thickness, 1, 1, 1, riverColor
+                )
+            );
+        }
     }
     
 }
