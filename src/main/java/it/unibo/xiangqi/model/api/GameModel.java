@@ -132,4 +132,11 @@ public interface GameModel {
     * @param player the player who used a hint
     */
     public void useHint(Player player);
+
+    /**
+    * Returns the opponent of the player whose turn it currently is.
+    *
+    * @return the player who is not currently taking their turn
+    */
+    public Player getOpponentPlayer();
 }

@@ -148,4 +148,31 @@ class TestGameModelImpl {
         assertEquals(1, gameModel.getBoard().getPieces().size());
         assertEquals(GameStatus.IN_PROGRESS, gameModel.getStatus());
     }
+
+    /* Test that getOpponentPlayer returns the player who is not currently taking their turn. */
+    @Test
+    void getOpponentPlayer_returnsTheOtherPlayer() {
+        gameModel.startGame(GameModeType.PVP);
+
+        Player current = gameModel.getCurrentPlayer();
+        Player opponent = gameModel.getOpponentPlayer();
+
+        assertNotEquals(current, opponent);
+        assertTrue(gameModel.getPlayers().contains(opponent));
+    }
+
+    /* Test that getOpponentPlayer keeps returning the correct player after switchTurn. */
+    @Test
+    void getOpponentPlayer_updatesAfterSwitchTurn() {
+        gameModel.startGame(GameModeType.PVP);
+
+        Player redAsCurrent = gameModel.getCurrentPlayer();
+        Player blackAsOpponent = gameModel.getOpponentPlayer();
+
+        gameModel.switchTurn();
+
+        // after switching turn, current and opponent should have swapped
+        assertEquals(blackAsOpponent, gameModel.getCurrentPlayer());
+        assertEquals(redAsCurrent, gameModel.getOpponentPlayer());
+    }
 }
