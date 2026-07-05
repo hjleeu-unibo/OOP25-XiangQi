@@ -8,9 +8,14 @@ import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameLoader;
 import it.unibo.xiangqi.model.api.GameModel;
 import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.api.RuleEngine;
 import it.unibo.xiangqi.view.api.GameView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of the game controller.
@@ -56,71 +61,28 @@ public final class GameControllerImpl implements GameController {
     @Override
     public void start(final GameModeType mode) {
         gameModel.startGame(mode);
+        gameView.showGamePanel();
         dispatchTurn();
     }
 
-    @Override
-    public void playerTurn() {
-        final Player currentPlayer = gameModel.getCurrentPlayer();
+     @Override
+    public void applyMove(final Move move) {
+        final Player currentPlayer= gameModel.getCurrentPlayer();
 
-        gameView.setPlayerEnabled(currentPlayer.getColor());
-        updateHintState(currentPlayer);
-
-        /* Haojie-Liu | Game Timer section. */
-        gameTimer.startTurn(currentPlayer);
-        /* Using Thread, this block will run at the same time of other methods. */
-        new Thread(() -> {
-            /* This loop will never stop until something happens (see below). */
-            while (true) {
-                try {
-                    /* Wait 1s between every loop. */
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    return;
-                }
-
-                final long turnRemaining = gameTimer.getTurnRemaining(currentPlayer);
-                final long gameRemaining = gameTimer.getGameRemaining(currentPlayer);
-
-                gameView.updateTimer(currentPlayer, turnRemaining, gameRemaining);
-
-                if (gameTimer.isTurnExpired(currentPlayer) || gameTimer.isTotalExpired(currentPlayer)) {
-                    gameTimer.stopTurn(currentPlayer);
-                    gameModel.endGame();
-                    gameView.showExpiredTime(currentPlayer);
-                    return;
-                }
-            }
-        }).start();
-    }
-
-    @Override
-    public void botTurn() {
+        gameView.setPlayerDisabled(currentPlayer.getColor());
         gameView.setHintButtonDisabled();
 
-        final Move botMove = moveCalculator.getBestMove(gameModel);
-
-        //reaching this branch indicates an unexpected state
-        if (botMove == null) {
-
-            gameModel.endGame();  
-            return;
-        }
-
-        gameModel.movePiece(botMove);
+        gameModel.movePiece(move);
         nextTurn();
+
     }
 
     @Override
-    public void nextTurn() {
-        /* Haojie-Liu | Game timer section. */
-        final Player currentPlayer = gameModel.getCurrentPlayer();
-        gameTimer.stopTurn(currentPlayer);
-
-        gameModel.switchTurn();
-        dispatchTurn();
+    public void select(Position position) {
+        List<Position> destinations=getLegalDestinations(position);
+        gameView.highlightCells(destinations);
     }
+
 
     @Override
     public void save() {
@@ -169,6 +131,68 @@ public final class GameControllerImpl implements GameController {
         gameView.showSuggestedMove(suggestedMove);
 
     }
+
+   private void playerTurn() {
+        final Player currentPlayer = gameModel.getCurrentPlayer();
+
+        gameView.setPlayerEnabled(currentPlayer.getColor());
+        updateHintState(currentPlayer);
+
+        /* Haojie-Liu | Game Timer section. */
+        gameTimer.startTurn(currentPlayer);
+        /* Using Thread, this block will run at the same time of other methods. */
+        new Thread(() -> {
+            /* This loop will never stop until something happens (see below). */
+            while (true) {
+                try {
+                    /* Wait 1s between every loop. */
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+
+                final long turnRemaining = gameTimer.getTurnRemaining(currentPlayer);
+                final long gameRemaining = gameTimer.getGameRemaining(currentPlayer);
+
+                gameView.updateTimer(currentPlayer, turnRemaining, gameRemaining);
+
+                if (gameTimer.isTurnExpired(currentPlayer) || gameTimer.isTotalExpired(currentPlayer)) {
+                    gameTimer.stopTurn(currentPlayer);
+                    gameModel.endGame();
+                    gameView.showExpiredTime(currentPlayer);
+                    return;
+                }
+            }
+        }).start();
+    }
+
+    private void botTurn() {
+        gameView.setHintButtonDisabled();
+
+        final Move botMove = moveCalculator.getBestMove(gameModel);
+
+        //reaching this branch indicates an unexpected state
+        if (botMove == null) {
+
+            gameModel.endGame();  
+            return;
+        }
+
+        gameModel.movePiece(botMove);
+        nextTurn();
+    }
+
+    
+    private void nextTurn() {
+        /* Haojie-Liu | Game timer section. */
+        final Player currentPlayer = gameModel.getCurrentPlayer();
+        gameTimer.stopTurn(currentPlayer);
+
+        gameModel.switchTurn();
+        dispatchTurn();
+    }
+
 
     //triggers the current turn after checking the game state
     private void dispatchTurn() {
@@ -229,5 +253,28 @@ public final class GameControllerImpl implements GameController {
 
         throw new IllegalStateException("The enemy was not found");
      }
+
+     private List<Position> getLegalDestinations(final Position position) {
+        final Board board = gameModel.getBoard();
+        final Piece selectedPiece = board.getPieceAt(position);
+
+        if (selectedPiece == null ||
+                !selectedPiece.getOwner().equals(gameModel.getCurrentPlayer())) {
+
+            return List.of();
+        }
+
+        final List<Move> legalMoves = ruleEngine.getLegalMoves(selectedPiece, board);
+        return toDestinations(legalMoves);
+    }
+
+    private List<Position> toDestinations (final List<Move> moves) {
+        final List<Position> destinations = new ArrayList<>();
+        for (Move move: moves) {
+            destinations.add(move.getTo());
+        }
+
+        return destinations;
+    }
   
 }
