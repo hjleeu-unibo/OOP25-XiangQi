@@ -36,7 +36,7 @@ public interface GameController {
      * 
      * @param move the move chosen by the human player 
      */
-    void applyMove(Move move);
+    void makeMove(Move move);
 
     /**
      * Saves the current game state to persistent storage.

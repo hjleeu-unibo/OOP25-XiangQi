@@ -39,7 +39,7 @@ public final class InputHandlerImpl implements InputHandler{
 
     @Override
     public void onMove(final Move move) {
-        gameController.applyMove(move);
+        gameController.makeMove(move);
     }
 
     @Override
