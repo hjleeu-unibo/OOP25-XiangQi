@@ -108,6 +108,7 @@ public final class GameControllerImpl implements GameController {
     @Override
     public void load() {
         gameLoader.restore(gameModel);
+        gameView.showGamePanel();
 
         dispatchTurn();
     }
