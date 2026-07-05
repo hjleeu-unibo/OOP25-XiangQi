@@ -168,4 +168,14 @@ public class GameModelImpl implements GameModel {
             blackHints--;
         }
     }
+
+    @Override
+    public Player getOpponentPlayer() {
+        return this.players.stream()
+        .filter(p -> !p.equals(this.currentPlayer))
+        .findFirst()
+        .orElseThrow(() -> new IllegalStateException("The opponent was not found"));
+    }
+
+    
 }
