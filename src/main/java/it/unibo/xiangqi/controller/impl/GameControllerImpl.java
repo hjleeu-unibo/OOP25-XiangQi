@@ -66,7 +66,7 @@ public final class GameControllerImpl implements GameController {
     }
 
      @Override
-    public void applyMove(final Move move) {
+    public void makeMove(final Move move) {
         final Player currentPlayer= gameModel.getCurrentPlayer();
 
         gameView.setPlayerDisabled(currentPlayer.getColor());
