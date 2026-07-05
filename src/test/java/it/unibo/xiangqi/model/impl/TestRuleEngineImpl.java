@@ -66,10 +66,12 @@ public final class TestRuleEngineImpl {
         when(redGeneral.getType()).thenReturn(PieceType.GENERAL);
         when(redGeneral.getOwner()).thenReturn(redPlayer);
         when(redGeneral.getPosition()).thenReturn(redGeneralPos);
+        when(redGeneral.isDefensor()).thenReturn(false);
  
         when(blackGeneral.getType()).thenReturn(PieceType.GENERAL);
         when(blackGeneral.getOwner()).thenReturn(blackPlayer);
         when(blackGeneral.getPosition()).thenReturn(blackGeneralPos);
+        when(blackGeneral.isDefensor()).thenReturn(false);
  
         // Enemy cannon belongs to black
         when(blackCannon.getOwner()).thenReturn(blackPlayer);
@@ -157,26 +159,39 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isDraw_whenAllPiecesAreDefensive_returnsTrue() {
-        Piece defensiveRed   = mock(Piece.class);
-        Piece defensiveBlack = mock(Piece.class);
-        when(defensiveRed.isDefensor()).thenReturn(true);
-        when(defensiveBlack.isDefensor()).thenReturn(true);
+    void isDraw_withOnlyGeneralsAndDefenders_returnsTrue() {
+        Piece redAdvisor = mock(Piece.class);
+        Piece blackElephant = mock(Piece.class);
+
+        when(redAdvisor.isDefensor()).thenReturn(true);
+        when(blackElephant.isDefensor()).thenReturn(true);
+    
+        // di default il getType degli altri ritorna null - il codice
+        // di isDraw deve escludere solo i Generali
+        when(redAdvisor.getType()).thenReturn(PieceType.ADVISOR);
+        when(blackElephant.getType()).thenReturn(PieceType.ELEPHANT);
  
-        when(board.getPieces()).thenReturn(List.of(defensiveRed, defensiveBlack));
+        when(board.getPieces()).thenReturn(List.of(redGeneral, blackGeneral, redAdvisor, blackElephant));
  
         assertTrue(ruleEngine.isDraw(board));
     }
 
     @Test
     void isDraw_whenAtLeastOneOffensivePiece_returnsFalse() {
-        Piece defensivePiece = mock(Piece.class);
-        Piece offensivePiece = mock(Piece.class);
-        when(defensivePiece.isDefensor()).thenReturn(true);
-        when(offensivePiece.isDefensor()).thenReturn(false);
- 
-        when(board.getPieces()).thenReturn(List.of(defensivePiece, offensivePiece));
- 
+
+        Piece redChariot = mock(Piece.class);   // pezzo offensivo
+        Piece blackElephant = mock(Piece.class);
+
+        when(redChariot.getType()).thenReturn(PieceType.CHARIOT);
+        when(redChariot.isDefensor()).thenReturn(false);
+
+        when(blackElephant.getType()).thenReturn(PieceType.ELEPHANT);
+        when(blackElephant.isDefensor()).thenReturn(true);
+
+        when(board.getPieces()).thenReturn(
+            List.of(redGeneral, blackGeneral, redChariot, blackElephant)
+        );
+
         assertFalse(ruleEngine.isDraw(board));
     }
 
