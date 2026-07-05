@@ -64,9 +64,7 @@ public final class XiangqiApplication {
         );
 
         // Handles all user input coming from the graphical interface.
-        final InputHandler inputHandler = new InputHandlerImpl(
-            gameController, gameModel, ruleEngine, view
-        );
+        final InputHandler inputHandler = new InputHandlerImpl(gameController);
 
         // Connect the view to the input handler.
         // The application starts on the main menu, where the user can
