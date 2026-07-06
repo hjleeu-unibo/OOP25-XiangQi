@@ -177,10 +177,10 @@ public final class TestMoveCalculator {
         /**
          * Base value: 90 (not aligned with the enemy general)
          * Horse: 40 + (32 - 2) = 70 -> min(70, 65) = 65
-         * Threatening the horse: 1.5 * 65 = 97
-         * Expected: 90 + 97 = 187
+         * Threatening the horse: 3.0 * 65 = 195
+         * Expected: 90 + 195 = 285
          */
-        assertEquals(187, score);
+        assertEquals(285, score);
     }
 
     /* Test cannon aligned with enemy general, and decreasing value due to dead pieces. */
@@ -365,11 +365,15 @@ public final class TestMoveCalculator {
         int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
-         * Base value: 90 (not aligned with the enemy general)
-         * Threatening but protected: 0
-         * Expected: 90
-         */
-        assertEquals(90, score);
+        * Base value: 90
+        * Horse value: 40 + (32 - 4) = 68 -> min(68, 65) = 65
+        * Protected penalty: 0.8
+        * Unsafe move (can be captured back): 
+        *  - targetValue (65) > myValue (90)? No, so 0.5x penalty
+        * Attack bonus: 2.0 * 65 * 0.8 * 0.5 = 52
+        * Expected: 90 + 52 = 142
+        */
+        assertEquals(142, score);
     }
 
     /* Test threatening multiple not protected pieces. */
@@ -425,12 +429,16 @@ public final class TestMoveCalculator {
 
         /**
          * Base: 90
-         * Horse: 40 + (30 - 3) = 69 -> 65
-         * Soldier: 20
-         * Threatening not protected: 1.5 * (65 + 20) = 127
-         * Expected: 90 + 127 = 217
+        * Horse: 40 + (32 - 4) = 68 -> 65
+        * Soldier: 10 (not over river, not threatening)
+        * Both moves are SAFE (no enemy can capture back)
+        * Threatening not protected: 
+        *  - Horse: 2.0 * 65 = 130
+        *  - Soldier: 2.0 * 10 = 20
+        * Total attack bonus: 150
+        * Expected: 90 + 130 + 20 = 240
          */
-        assertEquals(217, score);
+        assertEquals(240, score);
     }
 
     /* Test under threaten but protected. */
@@ -482,10 +490,10 @@ public final class TestMoveCalculator {
 
         /**
          * Base: soldier 10, chariot 90
-         * Threatening protected: 90
-         * Expected: 10 + 90 + 90 = 190
+         * Threatening protected: 0
+         * Expected: 100
          */
-        assertEquals(190, score);
+        assertEquals(100, score);
     }
 
     /* Test threatened not protected. */
@@ -644,10 +652,9 @@ public final class TestMoveCalculator {
         /**
          * Base: chariot 90, cannon 45
          * Cannon real value: 45 - (32 - 4) = 28 -> max(40, 28) = 40
-         * Threatening protected: 90
-         * Expected: 90 + 40 + 90 = 220
+         * Expected: 90 + 40 = 130
          */
-        assertEquals(220, score);
+        assertEquals(130, score);
     }
 
     /* Test getBestMove. */
