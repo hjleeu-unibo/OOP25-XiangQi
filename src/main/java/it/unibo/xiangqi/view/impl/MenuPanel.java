@@ -1,17 +1,19 @@
 package it.unibo.xiangqi.view.impl;
 
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.util.Objects;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.InputHandler;
+import it.unibo.xiangqi.view.api.GameView;
 
 /**
  * Represents the graphical menu panel of the game.
@@ -27,6 +29,8 @@ public class MenuPanel extends JPanel{
     private JButton resumeButton;
     private InputHandler inputHandler; 
     private Image backgroundImage; 
+    private JPanel notificationPanel;
+    private JLabel notificationLabel;
 
     /**
      * Creates a new menu panel.
@@ -39,22 +43,36 @@ public class MenuPanel extends JPanel{
         pveButton = new JButton("Player vs AI");
         resumeButton = new JButton("Resume Game");
 
+        notificationPanel = new JPanel();
+        notificationPanel.setOpaque(false); //shows the background
+
+        notificationLabel = new JLabel();
+        notificationLabel.setText("There are no games to resume");
+        notificationLabel.setForeground(java.awt.Color.RED);
+        notificationLabel.setVisible(false);
+        notificationPanel.add(notificationLabel);
+
         this.backgroundImage = new ImageIcon(
             ClassLoader.getSystemResource("menu/menu.png")
         ).getImage();
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        Box box = Box.createVerticalBox();
+
+        box.add(pvpButton);
+        box.add(Box.createVerticalStrut(10));
+        box.add(pveButton);
+        box.add(Box.createVerticalStrut(10));
+        box.add(resumeButton);
+        box.add(Box.createVerticalStrut(20));
+        box.add(notificationPanel);
+
         pvpButton.setAlignmentX(CENTER_ALIGNMENT);
         pveButton.setAlignmentX(CENTER_ALIGNMENT);
         resumeButton.setAlignmentX(CENTER_ALIGNMENT);
+        notificationPanel.setAlignmentX(CENTER_ALIGNMENT);
 
-        this.add(Box.createVerticalGlue());
-        this.add(pvpButton);
-        this.add(Box.createVerticalStrut(10));
-        this.add(pveButton);
-        this.add(Box.createVerticalStrut(10));
-        this.add(resumeButton);
-        this.add(Box.createVerticalGlue());
+        this.setLayout(new GridBagLayout());
+        this.add(box);
 
         /*Event listeners */
         pvpButton.addActionListener(e -> {
@@ -75,6 +93,13 @@ public class MenuPanel extends JPanel{
      */
     public void setInputHandler(InputHandler inputHandler) {
         this.inputHandler = inputHandler;
+    }
+
+    /**
+     * {@link GameView#showResumeNotification()} implementation.
+     */
+    public void showResumeNotification(){
+        this.notificationLabel.setVisible(true);
     }
 
     /**
