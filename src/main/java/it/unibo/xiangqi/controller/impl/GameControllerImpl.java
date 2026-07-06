@@ -19,8 +19,8 @@ import java.util.List;
 
 /**
  * Implementation of the game controller.
- * 
- * Manages the game flow by delegating operations to the 
+ *
+ * <p>Manages the game flow by delegating operations to the
  * underlying model components and updating the view.
  */
 public final class GameControllerImpl implements GameController {
@@ -36,12 +36,13 @@ public final class GameControllerImpl implements GameController {
 
     /**
      * Builds a new game controller with the given collaborators.
-     * 
+     *
      * @param gameModel the model holding the game state
      * @param gameView the view rendering the game
      * @param ruleEngine the engine evaluating game rules
      * @param moveCalculator the calculator computing bot moves and hints
      * @param gameLoader the loader managing save and load of the game state
+     * @param gameTimer the timer tracking turn and game time
      */
     public GameControllerImpl(final GameModel gameModel,
                               final GameView gameView,
@@ -65,30 +66,28 @@ public final class GameControllerImpl implements GameController {
         dispatchTurn();
     }
 
-     @Override
+    @Override
     public void makeMove(final Move move) {
-        final Player currentPlayer= gameModel.getCurrentPlayer();
+        final Player currentPlayer = gameModel.getCurrentPlayer();
 
         gameView.setPlayerDisabled(currentPlayer.getColor());
         gameView.setHintButtonDisabled();
 
         gameModel.movePiece(move);
         nextTurn();
-
     }
 
     @Override
-    public void select(Position position) {
-        List<Position> destinations=getLegalDestinations(position);
+    public void select(final Position position) {
+        final List<Position> destinations = getLegalDestinations(position);
         gameView.highlightCells(destinations);
     }
 
-
     @Override
     public void save() {
-        switch(gameModel.getStatus()) {
+        switch (gameModel.getStatus()) {
             case NOT_STARTED:
-                break;  
+                break;
             case IN_PROGRESS:
                 gameLoader.store(gameModel);
                 break;
@@ -123,14 +122,13 @@ public final class GameControllerImpl implements GameController {
 
         final Move suggestedMove = moveCalculator.getBestMove(gameModel);
 
-        if (suggestedMove == null) {  
+        if (suggestedMove == null) {
             return;
         }
 
         gameModel.useHint(currentPlayer);
         gameView.setHintButtonDisabled();
         gameView.showSuggestedMove(suggestedMove);
-
     }
 
     private void playerTurn() {
@@ -171,7 +169,7 @@ public final class GameControllerImpl implements GameController {
     private void botTurn() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
         gameView.setHintButtonDisabled();
-        
+
         /* Haojie-Liu | Bot timer section. */
         gameTimer.startTurn(currentPlayer);
         new Thread(() -> {
@@ -203,10 +201,10 @@ public final class GameControllerImpl implements GameController {
         new Thread(() -> {
             final Move botMove = moveCalculator.getBestMove(gameModel);
 
-            //reaching this branch indicates an unexpected state
+            // reaching this branch indicates an unexpected state
             if (botMove == null) {
                 gameTimer.stopTurn(currentPlayer);
-                gameModel.endGame();  
+                gameModel.endGame();
                 return;
             }
 
@@ -215,7 +213,6 @@ public final class GameControllerImpl implements GameController {
         }).start();
     }
 
-    
     private void nextTurn() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
         gameTimer.stopTurn(currentPlayer);
@@ -224,62 +221,59 @@ public final class GameControllerImpl implements GameController {
         dispatchTurn();
     }
 
-    //triggers the current turn after checking the game state
+    // triggers the current turn after checking the game state
     private void dispatchTurn() {
-         final Player currentPlayer = gameModel.getCurrentPlayer();
-         final Board board = gameModel.getBoard();
+        final Player currentPlayer = gameModel.getCurrentPlayer();
+        final Board board = gameModel.getBoard();
 
-         gameView.updateBoard(board);
+        gameView.updateBoard(board);
 
-         if (checkActive) {
+        if (checkActive) {
             gameView.resetCheck();
             checkActive = false;
-         }
+        }
 
-         if (ruleEngine.isDraw(board)) {
+        if (ruleEngine.isDraw(board)) {
             gameView.showDraw();
             gameModel.endGame();
             return;
-         }
+        }
 
-         if (ruleEngine.isCheckMate(currentPlayer, board)) {
-            Player winner = gameModel.getOpponentPlayer();
+        if (ruleEngine.isCheckMate(currentPlayer, board)) {
+            final Player winner = gameModel.getOpponentPlayer();
             gameView.showWinner(winner.getColor());
             gameModel.endGame();
             return;
-         }
+        }
 
-         if (ruleEngine.isCheck(currentPlayer, board)) {
-            gameView.showCheck(); 
+        if (ruleEngine.isCheck(currentPlayer, board)) {
+            gameView.showCheck();
             checkActive = true;
-         }   
+        }
 
-         if (currentPlayer.isHuman()) {
+        if (currentPlayer.isHuman()) {
             playerTurn();
-         } else {
+        } else {
             botTurn();
-         }
+        }
     }
-    
+
     // enables or disables the hint button based on how many
-    // hints the player has left in this game 
+    // hints the player has left in this game
     private void updateHintState(final Player currentPlayer) {
+        if (gameModel.getHintsRemaining(currentPlayer) > 0) {
+            gameView.setHintButtonEnabled();
+        } else {
+            gameView.setHintButtonDisabled();
+        }
+    }
 
-            if (gameModel.getHintsRemaining(currentPlayer) > 0){
-                gameView.setHintButtonEnabled();
-            } else {
-                gameView.setHintButtonDisabled();
-            }
-     }
-
-
-     private List<Position> getLegalDestinations(final Position position) {
+    private List<Position> getLegalDestinations(final Position position) {
         final Board board = gameModel.getBoard();
         final Piece selectedPiece = board.getPieceAt(position);
 
-        if (selectedPiece == null ||
-                !selectedPiece.getOwner().equals(gameModel.getCurrentPlayer())) {
-
+        if (selectedPiece == null
+                || !selectedPiece.getOwner().equals(gameModel.getCurrentPlayer())) {
             return List.of();
         }
 
@@ -287,13 +281,13 @@ public final class GameControllerImpl implements GameController {
         return toDestinations(legalMoves);
     }
 
-    private List<Position> toDestinations (final List<Move> moves) {
+    private List<Position> toDestinations(final List<Move> moves) {
         final List<Position> destinations = new ArrayList<>();
-        for (Move move: moves) {
+        for (final Move move : moves) {
             destinations.add(move.getTo());
         }
 
         return destinations;
     }
-  
+
 }
