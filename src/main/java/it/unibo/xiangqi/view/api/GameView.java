@@ -103,6 +103,11 @@ public interface GameView {
      */
     void showGamePanel();
 
+    /**
+     * Shows a notification if there isn't any game to resume. 
+     */
+    void showResumeNotification();
+
     /** Show the updated timer on view.
      * 
      * @param player the player refers to

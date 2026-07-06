@@ -94,7 +94,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
                         captureBonus = (int)(getThreateningMultiplier(capturedPiece.getType()) * calculatePositionalValue(capturedPiece, board));
                     }
 
-                    final GameState simulation = currentState.applyMove(m);
+                    final GameState simulation = currentState.applyTurn(m);
                     final int newBoardScore = calculateBoardScore(simulation, currentPlayer) + captureBonus;
                     if (newBoardScore >= maxSimulatedScore) {
                         maxSimulatedScore = newBoardScore;

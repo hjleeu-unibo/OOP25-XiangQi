@@ -203,4 +203,12 @@ public class GameViewImpl implements GameView{
         boardPanel.showDraw();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void showResumeNotification() {
+        this.menuPanel.showResumeNotification();
+    }
+
 }

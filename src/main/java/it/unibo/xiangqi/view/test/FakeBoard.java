@@ -3,6 +3,7 @@ package it.unibo.xiangqi.view.test;
 import java.util.List;
 
 import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Position;
 
@@ -45,6 +46,11 @@ public class FakeBoard implements Board{
     @Override
     public void addPiece(Piece piece) {
         throw new UnsupportedOperationException("Unimplemented method 'addPiece'");
-    } 
-    
+    }
+
+    @Override
+    public Board afterMove(Move move) {
+        throw new UnsupportedOperationException("Unimplemented method 'afterMove'");
+    }
+
 }

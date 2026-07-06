@@ -11,7 +11,6 @@ import it.unibo.xiangqi.model.api.RuleEngine;
  
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 
@@ -59,28 +58,10 @@ public class RuleEngineImpl implements RuleEngine {
     // a flying general situation.
     private boolean isLegalMove(final Move move, final Player player, final Board board){
 
-        Board simulatedBoard = simulateMove(move, board);
-        
+        Board simulatedBoard = board.afterMove(move);
+
         return !isCheck(player, simulatedBoard) && !isFlyingGeneral(simulatedBoard);
 
-    }
-
-    //Simulates the execution of a move on a copy of the board.
-    private Board simulateMove(final Move move, final Board board) {
-        //copy the board to simulate on
-        List<Piece> copiedPieces = board.getPieces().stream()
-                                                    .map(PieceFactory::copyPiece)
-                                                    .toList();
-        Board simulationBoard = Board.createBoard(copiedPieces);
-
-        // apply the move on the board's copy
-        if (simulationBoard.getPieceAt(move.getTo()) != null) {
-            simulationBoard.deletePiece(simulationBoard.getPieceAt(move.getTo()));
-        }
-        Piece piece = Objects.requireNonNull(simulationBoard.getPieceAt(move.getFrom()));
-        piece.setPosition(move.getTo());
-
-        return simulationBoard;
     }
 
     @Override

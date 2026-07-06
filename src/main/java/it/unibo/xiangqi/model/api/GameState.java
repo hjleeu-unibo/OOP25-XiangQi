@@ -37,11 +37,12 @@ public interface GameState {
     Player getCurrentPlayer(); 
 
     /**
-     * Applies the specified move and returns the resulting game state.
+     * Applies the specified move and advances to the next player's turn.
      *
      * @param move the move to apply
-     * @return the game state resulting from the move
+     * @return the game state resulting from the move, with the turn switched
+     *         to the other player
      * @throws NullPointerException if {@code move} is {@code null}
      */
-    GameState applyMove(Move move); 
+    GameState applyTurn(Move move);
 }
