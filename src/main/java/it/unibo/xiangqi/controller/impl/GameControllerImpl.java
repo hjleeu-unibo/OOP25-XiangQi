@@ -106,6 +106,10 @@ public final class GameControllerImpl implements GameController {
 
     @Override
     public void load() {
+        if (!isResumeAvailable()) {
+            gameView.showResumeNotification();
+            return;
+        }
         gameLoader.restore(gameModel);
         gameView.showGamePanel();
 
