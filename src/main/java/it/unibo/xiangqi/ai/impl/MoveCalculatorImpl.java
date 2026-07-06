@@ -30,7 +30,8 @@ package it.unibo.xiangqi.ai.impl;
  * Above, these are the value of each piece during the game.
  * But they can get some extra value:
  *  - when they are protecting some ally pieces: own_positional_value + protecting_pieces_positional_value
- *  - when they are threatening some enemy pieces: own_positional_value + 1.5 x threatening_pieces_positional_value
+ *  - when they are threatening some enemy pieces: own_positional_value + K x threatening_pieces_positional_value
+ * The K changes due to the piece type.
  * The positional value depends only by their position in the board.
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
  */
@@ -47,6 +48,7 @@ import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.api.RuleEngine;
 
 public class MoveCalculatorImpl implements MoveCalculator {
@@ -124,6 +126,22 @@ public class MoveCalculatorImpl implements MoveCalculator {
             final Piece capturedPiece = board.getPieceAt(move.getTo());
             boolean isProtected = false;
             if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
+                double threatening_multiplier = 2.0;
+                switch (capturedPiece.getType()) {
+                    case GENERAL:
+                        threatening_multiplier = 6.0;
+                        break;
+                    case CHARIOT:
+                        threatening_multiplier = 4.0;
+                        break;
+                    case CANNON:
+                    case HORSE:
+                        threatening_multiplier = 3.0;
+                        break;
+                    default:
+                        break;
+                }
+
                 /* IS PROTECTED? */
                 for (final Piece p : enemyPieces) {
                     for (final Move m : ruleEngine.getLegalMoves(p, board)) {
@@ -133,50 +151,80 @@ public class MoveCalculatorImpl implements MoveCalculator {
                         }
                     }
                     if (isProtected) {
+                        threatening_multiplier *= 0.8;
                         break;
                     }
                 }
 
-                if (!isProtected) {
-                    newValue += (int)(1.5 * calculatePositionalValue(capturedPiece, board));
+                int targetValue = calculatePositionalValue(capturedPiece, board);
+                int attackBonus = (int)(threatening_multiplier * targetValue);
+
+                boolean isSafeMove = true;
+                Position newPos = capturedPiece.getPosition();
+
+                /* Is this move take me to a dangerous state? */
+                for (final Piece pp: enemyPieces) {
+                    for (final Move mm : ruleEngine.getLegalMoves(pp, board)) {
+                        if (mm.getTo().equals(newPos)) {
+                            isSafeMove = false;
+                            break;
+                        }
+                    }
+                    if (!isSafeMove) {
+                        break;
+                    }
                 }
+
+                if (!isSafeMove) {
+                    int myValue = calculatePositionalValue(piece, board);
+
+                    if (targetValue > myValue) {
+                        /* If this is a more valuable piece. */
+                        attackBonus = (int)(attackBonus * 0.7);
+                    } else if (targetValue <= myValue) {
+                        attackBonus = (int)(attackBonus * 0.5);
+                    }
+                }
+
+                newValue += attackBonus;
             }
         }
 
         /* IS THREATENED? */
+        boolean isThreatened = false;
+        boolean isProtected = false;
         for (final Piece p : enemyPieces) {
-            boolean isThreatened = false;
-            boolean isProtected = false;
             for (final Move m : ruleEngine.getLegalMoves(p, board)) {
                 if (m.getTo().equals(piece.getPosition())) {
                     isThreatened = true;
-                    /* IS PROTECTED? */
-                    for (final Piece myP : myPieces) {
-                        for (final Move myM : ruleEngine.getLegalMoves(myP, board)) {
-                            if (myM.getTo().equals(piece.getPosition())) {
-                                isProtected = true;
-                                break;
-                            }
-                        }
-                        if (isProtected) {
-                            break;
-                        }
+                    break;
+                }
+            }
+            if (isThreatened) {
+                break;
+            }
+        }
+
+        /* IS PROTECTED? */
+        if (isThreatened) {
+            for (final Piece myP : myPieces) {
+                for (final Move myM : ruleEngine.getLegalMoves(myP, board)) {
+                    if (myM.getTo().equals(piece.getPosition())) {
+                        isProtected = true;
+                        break;
                     }
                 }
                 if (isProtected) {
                     break;
                 }
             }
-            
-            /* We have two cases. */
-            if (isThreatened && isProtected) {
-                newValue += positionalValue;
-                break;
-            } else if (isThreatened && !isProtected) {
+
+            if (!isProtected) {
                 newValue -= positionalValue;
-                break;
             }
         }
+
+
 
         /* Update the piece currentValue with the new calculated value. */
         piece.setValue(newValue);
