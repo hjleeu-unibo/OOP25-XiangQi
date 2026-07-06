@@ -72,4 +72,16 @@ public interface Board {
      * @throws NullPointerException if {@code piece} is {@code null}
      */
     void addPiece(Piece piece);
+
+    /**
+     * Returns a new board representing the result of applying the given
+     * move. 
+     * {@code this} board is not modified: the
+     * move is applied to an internal copy, which is returned instead.
+     *
+     * @param move the move to apply
+     * @return the board after the move
+     * @throws NullPointerException if {@code move} is {@code null}
+     */
+    Board afterMove(Move move);
 }

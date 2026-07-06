@@ -84,7 +84,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
         for (final Piece p : board.getPieces()) {
             if (p.getOwner().equals(currentPlayer)) {
                 for (final Move m : ruleEngine.getLegalMoves(p, board)) {
-                    final GameState simulation = currentState.applyMove(m);
+                    final GameState simulation = currentState.applyTurn(m);
                     int newBoardScore = calculateBoardScore(simulation, currentPlayer);
                     if (newBoardScore >= maxSimulatedScore) {
                         maxSimulatedScore = newBoardScore;
