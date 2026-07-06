@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Position;
 
@@ -67,7 +68,33 @@ public class BoardImpl implements Board{
     @Override
     public void addPiece(Piece piece) {
         Objects.requireNonNull(piece);
-        this.pieces.add(piece); 
+        this.pieces.add(piece);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Board afterMove(Move move) {
+        Objects.requireNonNull(move);
+
+        Board newBoard = copyBoard();
+
+        if (newBoard.getPieceAt(move.getTo()) != null) {
+            newBoard.deletePiece(newBoard.getPieceAt(move.getTo()));
+        }
+        Piece piece = Objects.requireNonNull(newBoard.getPieceAt(move.getFrom()));
+        piece.setPosition(move.getTo());
+
+        return newBoard;
+    }
+
+    // Creates a new board containing a fresh copy of this board's pieces.
+    private Board copyBoard() {
+        List<Piece> copiedPieces = this.getPieces().stream()
+            .map(PieceFactory::copyPiece)
+            .toList();
+        return Board.createBoard(copiedPieces);
+    }
+
 }

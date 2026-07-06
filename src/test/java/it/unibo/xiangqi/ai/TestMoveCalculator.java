@@ -722,7 +722,7 @@ public final class TestMoveCalculator {
          * Threatening not protected: 1.5 * 65 = 97
          * Expected: 90 + 97 = 187 (the higher one)
          */
-        when(gameState.applyMove(captureHorse)).thenReturn(sim1);
+        when(gameState.applyTurn(captureHorse)).thenReturn(sim1);
         when(sim1.getBoard()).thenReturn(board1);
         when(sim1.getCurrentPlayer()).thenReturn(redPlayer);
         when(board1.getPieces()).thenReturn(List.of(chariot1, enemyHorse));
@@ -736,7 +736,7 @@ public final class TestMoveCalculator {
          * Soldier (not threatened): 10
          * Expected: 90
          */
-        when(gameState.applyMove(captureSoldier)).thenReturn(sim2);
+        when(gameState.applyTurn(captureSoldier)).thenReturn(sim2);
         when(sim2.getBoard()).thenReturn(board2);
         when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
         when(board2.getPieces()).thenReturn(List.of(enemySoldier, chariot2));
@@ -776,12 +776,12 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(chariot));
         when(ruleEngine.getLegalMoves(chariot, board)).thenReturn(List.of(move1, move2));
 
-        when(gameState.applyMove(move1)).thenReturn(sim1);
+        when(gameState.applyTurn(move1)).thenReturn(sim1);
         when(sim1.getBoard()).thenReturn(board1);
         when(sim1.getCurrentPlayer()).thenReturn(redPlayer);
         when(board1.getPieces()).thenReturn(List.of());
 
-        when(gameState.applyMove(move2)).thenReturn(sim2);
+        when(gameState.applyTurn(move2)).thenReturn(sim2);
         when(sim2.getBoard()).thenReturn(board2);
         when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
         when(board2.getPieces()).thenReturn(List.of());
@@ -817,7 +817,7 @@ public final class TestMoveCalculator {
         when(ruleEngine.getLegalMoves(piece1, board)).thenReturn(List.of(moveFromPiece1));
         when(ruleEngine.getLegalMoves(piece2, board)).thenReturn(List.of(moveFromPiece2));
 
-        when(gameState.applyMove(moveFromPiece1)).thenReturn(sim1);
+        when(gameState.applyTurn(moveFromPiece1)).thenReturn(sim1);
         when(sim1.getBoard()).thenReturn(simBoard1);
         when(sim1.getCurrentPlayer()).thenReturn(redPlayer);
         when(simPiece1.getOwner()).thenReturn(redPlayer);
@@ -831,7 +831,7 @@ public final class TestMoveCalculator {
         mockSetValue(simPiece1);
 
         /* The move with higher score. */
-        when(gameState.applyMove(moveFromPiece2)).thenReturn(sim2);
+        when(gameState.applyTurn(moveFromPiece2)).thenReturn(sim2);
         when(sim2.getBoard()).thenReturn(simBoard2);
         when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
         when(simPiece2.getOwner()).thenReturn(redPlayer);
