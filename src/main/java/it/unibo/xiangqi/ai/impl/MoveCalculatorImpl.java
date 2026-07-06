@@ -31,6 +31,8 @@ package it.unibo.xiangqi.ai.impl;
  * But they can get some extra value:
  *  - when they are protecting some ally pieces: own_positional_value + protecting_pieces_positional_value
  *  - when they are threatening some enemy pieces: own_positional_value + K x threatening_pieces_positional_value
+ *  - if protected: own_value + (K * 0.8) x target_value
+ *  - unsafe move: bonus reduced by 0.7 (target > attacker) or 0.5 (target <= attacker)
  * The K changes due to the piece type.
  * The positional value depends only by their position in the board.
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
