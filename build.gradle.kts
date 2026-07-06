@@ -1,9 +1,10 @@
 plugins { 
-    java 
+    java
     application
+    id("org.danilopianini.gradle-java-qa") version "1.155.0"
 }
 
-application{
+application {
     mainClass.set("it.unibo.xiangqi.app.XiangqiApplication")
 }
 
