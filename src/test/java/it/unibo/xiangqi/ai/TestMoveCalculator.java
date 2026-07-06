@@ -84,7 +84,7 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(red1, red2, black));
         when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /* ASSERTS. */
         assertEquals(30, score, "Should only sum red pieces values");
@@ -110,7 +110,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(chariot);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(90, score);
     }
@@ -131,7 +131,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(soldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(20, score);
     }
@@ -172,8 +172,7 @@ public final class TestMoveCalculator {
         mockSetValue(chariot);
         mockSetValue(enemyHorse);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
-        System.out.println(score);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base value: 90 (not aligned with the enemy general)
@@ -220,7 +219,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(cannon);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base value: 45
@@ -259,7 +258,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(horse);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 40
@@ -288,7 +287,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(elephant);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(30, score);
     }
@@ -310,7 +309,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(advisor);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(30, score);
     }
@@ -363,7 +362,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base value: 90 (not aligned with the enemy general)
@@ -422,7 +421,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 90
@@ -479,7 +478,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(soldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: soldier 10, chariot 90
@@ -521,7 +520,7 @@ public final class TestMoveCalculator {
         mockSetValue(chariot);
         mockSetValue(enemyHorse);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 90
@@ -574,7 +573,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 90
@@ -640,7 +639,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState);
+        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: chariot 90, cannon 45
