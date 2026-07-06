@@ -133,7 +133,7 @@ public final class GameControllerImpl implements GameController {
 
     }
 
-   private void playerTurn() {
+    private void playerTurn() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
 
         gameView.setPlayerEnabled(currentPlayer.getColor());
@@ -169,31 +169,60 @@ public final class GameControllerImpl implements GameController {
     }
 
     private void botTurn() {
+        final Player currentPlayer = gameModel.getCurrentPlayer();
         gameView.setHintButtonDisabled();
+        
+        /* Haojie-Liu | Bot timer section. */
+        gameTimer.startTurn(currentPlayer);
+        new Thread(() -> {
+            /* This loop will never stop until something happens (see below). */
+            while (true) {
+                try {
+                    /* Wait 1s between every loop. */
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
 
-        final Move botMove = moveCalculator.getBestMove(gameModel);
+                final long turnRemaining = gameTimer.getTurnRemaining(currentPlayer);
+                final long gameRemaining = gameTimer.getGameRemaining(currentPlayer);
 
-        //reaching this branch indicates an unexpected state
-        if (botMove == null) {
+                gameView.updateTimer(currentPlayer, turnRemaining, gameRemaining);
 
-            gameModel.endGame();  
-            return;
-        }
+                if (gameTimer.isTurnExpired(currentPlayer) || gameTimer.isTotalExpired(currentPlayer)) {
+                    gameTimer.stopTurn(currentPlayer);
+                    gameModel.endGame();
+                    gameView.showExpiredTime(currentPlayer);
+                    return;
+                }
+            }
+        }).start();
 
-        gameModel.movePiece(botMove);
-        nextTurn();
+        /* Haojie-Liu | Using thread to avoid that the ui will be blocked for async. */
+        new Thread(() -> {
+            final Move botMove = moveCalculator.getBestMove(gameModel);
+
+            //reaching this branch indicates an unexpected state
+            if (botMove == null) {
+                gameTimer.stopTurn(currentPlayer);
+                gameModel.endGame();  
+                return;
+            }
+
+            gameModel.movePiece(botMove);
+            nextTurn();
+        }).start();
     }
 
     
     private void nextTurn() {
-        /* Haojie-Liu | Game timer section. */
         final Player currentPlayer = gameModel.getCurrentPlayer();
         gameTimer.stopTurn(currentPlayer);
 
         gameModel.switchTurn();
         dispatchTurn();
     }
-
 
     //triggers the current turn after checking the game state
     private void dispatchTurn() {
