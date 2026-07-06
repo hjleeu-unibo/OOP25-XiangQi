@@ -193,6 +193,11 @@ public class GameViewImpl implements GameView{
     @Override
     public void showExpiredTime(Player player) {
         boardPanel.showExpiredTime(player);
+        Color enemyColor = Color.RED;
+        if (player.getColor().equals(Color.RED)) {
+            enemyColor = Color.BLACK;
+        }
+        showWinner(enemyColor);
     }
 
     /**
