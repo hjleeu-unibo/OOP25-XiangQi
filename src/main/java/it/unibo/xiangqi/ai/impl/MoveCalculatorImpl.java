@@ -86,8 +86,15 @@ public class MoveCalculatorImpl implements MoveCalculator {
         for (final Piece p : board.getPieces()) {
             if (p.getOwner().equals(currentPlayer)) {
                 for (final Move m : ruleEngine.getLegalMoves(p, board)) {
+                    /* Added a capture bonus to encourage capture move instead of threatening moves. */
+                    int captureBonus = 0;
+                    final Piece capturedPiece = board.getPieceAt(m.getTo());
+                    if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
+                        captureBonus = (int)(getThreateningMultiplier(capturedPiece.getType()) * calculatePositionalValue(capturedPiece, board));
+                    }
+
                     final GameState simulation = currentState.applyMove(m);
-                    int newBoardScore = calculateBoardScore(simulation, currentPlayer);
+                    final int newBoardScore = calculateBoardScore(simulation, currentPlayer) + captureBonus;
                     if (newBoardScore >= maxSimulatedScore) {
                         maxSimulatedScore = newBoardScore;
                         bestMove = m;
@@ -128,21 +135,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
             final Piece capturedPiece = board.getPieceAt(move.getTo());
             boolean isProtected = false;
             if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
-                double threatening_multiplier = 2.0;
-                switch (capturedPiece.getType()) {
-                    case GENERAL:
-                        threatening_multiplier = 6.0;
-                        break;
-                    case CHARIOT:
-                        threatening_multiplier = 4.0;
-                        break;
-                    case CANNON:
-                    case HORSE:
-                        threatening_multiplier = 3.0;
-                        break;
-                    default:
-                        break;
-                }
+                double threatening_multiplier = getThreateningMultiplier(capturedPiece.getType());
 
                 /* IS PROTECTED? */
                 for (final Piece p : enemyPieces) {
@@ -226,8 +219,6 @@ public class MoveCalculatorImpl implements MoveCalculator {
             }
         }
 
-
-
         /* Update the piece currentValue with the new calculated value. */
         piece.setValue(newValue);
     }
@@ -304,5 +295,29 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 break;
         }
         return positionalValue;
+    }
+
+    /**
+     * Return the threatening multiplier due to piece type.
+     * @param type the piece type
+     * @return the threatening multiplier
+     */
+    private double getThreateningMultiplier(PieceType type) {
+        double threatening_multiplier = 2.0;
+        switch (type) {
+            case GENERAL:
+                threatening_multiplier = 6.0;
+                break;
+            case CHARIOT:
+                threatening_multiplier = 4.0;
+                break;
+            case CANNON:
+            case HORSE:
+                threatening_multiplier = 3.0;
+                break;
+            default:
+                break;
+        }
+        return threatening_multiplier;
     }
 }

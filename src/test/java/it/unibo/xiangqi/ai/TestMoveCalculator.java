@@ -366,14 +366,13 @@ public final class TestMoveCalculator {
 
         /**
         * Base value: 90
-        * Horse value: 40 + (32 - 4) = 68 -> min(68, 65) = 65
-        * Protected penalty: 0.8
-        * Unsafe move (can be captured back): 
-        *  - targetValue (65) > myValue (90)? No, so 0.5x penalty
-        * Attack bonus: 2.0 * 65 * 0.8 * 0.5 = 52
-        * Expected: 90 + 52 = 142
+        * Horse value: 40 + (32 - 3) = 69 -> min(69, 65) = 65
+        * Threatening multiplier (protected): 3.0 * 0.8 = 2.4
+        * Unsafe move: target 65, own 90 -> 0.5 penalty
+        * Attack bonus: 2.4 * 65 * 0.5 = 78
+        * Expected: 90 + 78 = 168
         */
-        assertEquals(142, score);
+        assertEquals(168, score);
     }
 
     /* Test threatening multiple not protected pieces. */
@@ -429,16 +428,14 @@ public final class TestMoveCalculator {
 
         /**
          * Base: 90
-        * Horse: 40 + (32 - 4) = 68 -> 65
-        * Soldier: 10 (not over river, not threatening)
-        * Both moves are SAFE (no enemy can capture back)
-        * Threatening not protected: 
-        *  - Horse: 2.0 * 65 = 130
-        *  - Soldier: 2.0 * 10 = 20
-        * Total attack bonus: 150
-        * Expected: 90 + 130 + 20 = 240
+         * Horse: 40 + (32 - 3) = 69 -> 65
+         * Soldier: 20
+         * Threatening not protected:
+         *  - Horse: 3.0 * 65 = 195
+         *  - Soldier: 2.0 * 20 = 40
+         * Expected: 90 + 195 + 40 = 325
          */
-        assertEquals(240, score);
+        assertEquals(325, score);
     }
 
     /* Test under threaten but protected. */
