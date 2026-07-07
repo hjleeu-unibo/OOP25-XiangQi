@@ -1,6 +1,9 @@
 package it.unibo.xiangqi.model.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
@@ -11,17 +14,23 @@ import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.common.api.GameStatus;
 import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.model.api.*;
+import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.GameModel;
+import it.unibo.xiangqi.model.api.GameState;
+import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
+import it.unibo.xiangqi.model.api.StoredPiece;
 
 class TestGameModelImpl {
-
     private GameModel gameModel;
 
     @BeforeEach
     void setUp() {
         // Placeholder players/board;
-        Player placeholderRed = new PlayerImpl(Color.RED, true);
-        Player placeholderBlack = new PlayerImpl(Color.BLACK, true);
+        final Player placeholderRed = new PlayerImpl(Color.RED, true);
+        final Player placeholderBlack = new PlayerImpl(Color.BLACK, true);
         gameModel = new GameModelImpl(
             Board.createBoard(List.of()),
             List.of(placeholderRed, placeholderBlack)
@@ -30,38 +39,38 @@ class TestGameModelImpl {
 
     /* Test that the red player always moves first after starting a new game. */
     @Test
-    void startGame_redPlayerGoesFirst() {
+    void startGameRedPlayerGoesFirst() {
         gameModel.startGame(GameModeType.PVP);
         assertEquals(Color.RED, gameModel.getCurrentPlayer().getColor());
     }
 
     /* Test that both players start with the full amount of hints. */
     @Test
-    void startGame_bothPlayersHaveFullHints() {
+    void startGameBothPlayersHaveFullHints() {
         gameModel.startGame(GameModeType.PVP);
-        Player red = gameModel.getPlayers().get(0);
-        Player black = gameModel.getPlayers().get(1);
+        final Player red = gameModel.getPlayers().get(0);
+        final Player black = gameModel.getPlayers().get(1);
         assertEquals(3, gameModel.getHintsRemaining(red));
         assertEquals(3, gameModel.getHintsRemaining(black));
     }
 
     /* Test that the game status becomes IN_PROGRESS after starting a new game. */
     @Test
-    void startGame_statusIsInProgress() {
+    void startGameStatusIsInProgress() {
         gameModel.startGame(GameModeType.PVE);
         assertEquals(GameStatus.IN_PROGRESS, gameModel.getStatus());
     }
 
     /* Test that the board is populated with all 32 pieces after starting a new game. */
     @Test
-    void startGame_boardHas32Pieces() {
+    void startGameBoardHas32Pieces() {
         gameModel.startGame(GameModeType.PVP);
         assertEquals(32, gameModel.getBoard().getPieces().size());
     }
 
     /* Test that switchTurn alternates the current player between red and black. */
     @Test
-    void switchTurn_alternatesBetweenPlayers() {
+    void switchTurnAlternatesBetweenPlayers() {
         gameModel.startGame(GameModeType.PVP);
         Player first = gameModel.getCurrentPlayer();
 
@@ -74,7 +83,7 @@ class TestGameModelImpl {
 
     /* Test that movePiece captures the enemy piece present at the destination. */
     @Test
-    void movePiece_capturesEnemyPieceAtDestination() {
+    void movePieceCapturesEnemyPieceAtDestination() {
         gameModel.startGame(GameModeType.PVP);
         Board board = gameModel.getBoard();
 
@@ -91,7 +100,7 @@ class TestGameModelImpl {
 
     /* Test that endGame sets the game status to FINISHED. */
     @Test
-    void endGame_setsStatusToFinished() {
+    void endGameSetsStatusToFinished() {
         gameModel.startGame(GameModeType.PVP);
         gameModel.endGame();
         assertEquals(GameStatus.FINISHED, gameModel.getStatus());
@@ -100,7 +109,7 @@ class TestGameModelImpl {
 
     /* Test that endGame removes all pieces from the board. */
     @Test
-    void endGame_clearsBoard() {
+    void endGameClearsBoard() {
         gameModel.startGame(GameModeType.PVP);
         gameModel.endGame();
         assertTrue(gameModel.getBoard().getPieces().isEmpty());
@@ -108,7 +117,7 @@ class TestGameModelImpl {
 
     /* Test that copyState returns an independent snapshot, unaffected by later mutations to the real board. */
     @Test
-    void copyState_isIndependentSnapshot() {
+    void copyStateIsIndependentSnapshot() {
         gameModel.startGame(GameModeType.PVP);
         GameState snapshot = gameModel.copyState();
 
@@ -124,7 +133,7 @@ class TestGameModelImpl {
 
     /* Test that useHint decrements the hint count only for the given player. */
     @Test
-    void useHint_decrementsCorrectPlayerCount() {
+    void useHintDecrementsCorrectPlayerCount() {
         gameModel.startGame(GameModeType.PVP);
         Player red = gameModel.getPlayers().get(0);
 
@@ -135,7 +144,7 @@ class TestGameModelImpl {
 
     /* Test that setStatus restores mode, current player, hints and pieces from the given saved data. */
     @Test
-    void setStatus_restoresGivenState() {
+    void setStatusRestoresGivenState() {
         gameModel.startGame(GameModeType.PVP); // run once first so player references exist for comparison
         List<StoredPiece> stored = List.of(
             new StoredPiece(PieceType.GENERAL, Color.RED, new Position(9, 4))
@@ -151,7 +160,7 @@ class TestGameModelImpl {
 
     /* Test that getOpponentPlayer returns the player who is not currently taking their turn. */
     @Test
-    void getOpponentPlayer_returnsTheOtherPlayer() {
+    void getOpponentPlayerReturnsTheOtherPlayer() {
         gameModel.startGame(GameModeType.PVP);
 
         Player current = gameModel.getCurrentPlayer();
@@ -163,11 +172,11 @@ class TestGameModelImpl {
 
     /* Test that getOpponentPlayer keeps returning the correct player after switchTurn. */
     @Test
-    void getOpponentPlayer_updatesAfterSwitchTurn() {
+    void getOpponentPlayerUpdatesAfterSwitchTurn() {
         gameModel.startGame(GameModeType.PVP);
 
-        Player redAsCurrent = gameModel.getCurrentPlayer();
-        Player blackAsOpponent = gameModel.getOpponentPlayer();
+        final Player redAsCurrent = gameModel.getCurrentPlayer();
+        final Player blackAsOpponent = gameModel.getOpponentPlayer();
 
         gameModel.switchTurn();
 

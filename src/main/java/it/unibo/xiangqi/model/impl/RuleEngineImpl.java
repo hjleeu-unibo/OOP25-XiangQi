@@ -18,8 +18,7 @@ import java.util.function.Predicate;
  * Responsible for validating legal moves and evaluating game states
  * as check, checkmate, draw, and the flying gneral rule.
  */
-public class RuleEngineImpl implements RuleEngine {
-
+public final class RuleEngineImpl implements RuleEngine {
     @Override
     public boolean isCheck(final Player player, final Board board) {
         final Position generalPosition = findGeneralPosition(board, p -> p.getOwner().equals(player));
@@ -34,7 +33,8 @@ public class RuleEngineImpl implements RuleEngine {
                     return true;
                 }
             }
-        }  
+        }
+
         return false;
     }
 
@@ -100,7 +100,7 @@ public class RuleEngineImpl implements RuleEngine {
 
         final int start = Math.min(redGeneral.getRow(), blackGeneral.getRow());
         final int end = Math.max(redGeneral.getRow(), blackGeneral.getRow());
-    
+
         for (int y = start + 1; y < end; y++) {
 
             if (board.getPieceAt(new Position(y, redGeneral.getCol())) != null) {

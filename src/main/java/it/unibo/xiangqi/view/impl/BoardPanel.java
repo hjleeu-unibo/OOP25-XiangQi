@@ -38,6 +38,8 @@ import it.unibo.xiangqi.view.api.GameView;
  * components used to display the game.</p>
  */
 public class BoardPanel extends JPanel {
+    private static final int ROWS = 10;
+    private static final int COLS = 9;
 
     private JButton[][] cells;
     private JButton hintButton;
@@ -60,9 +62,6 @@ public class BoardPanel extends JPanel {
      * notification area, and cell listeners.</p>
      */
     public BoardPanel() {
-        final int ROWS = 10;
-        final int COLS = 9;
-
         boardGrid = new JPanel(new GridLayout(ROWS, COLS));
         sidePanel = new JPanel();
         hintButton = new JButton("HINT"); 
@@ -86,7 +85,7 @@ public class BoardPanel extends JPanel {
 
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                JButton button = new JButton();
+                final JButton button = new JButton();
                 button.addActionListener(new CellListener(this, new Position(row, col)));
                 cells[row][col] = button;
                 boardGrid.add(button);
@@ -130,7 +129,7 @@ public class BoardPanel extends JPanel {
                     cells[row][col].setIcon(null);
                     cells[row][col].setText("");
                 } else {
-                    cells[row][col].setIcon(pieceToIcon(piece));  
+                    cells[row][col].setIcon(pieceToIcon(piece));
                 }
             }
         }
@@ -143,10 +142,10 @@ public class BoardPanel extends JPanel {
      */
     private ImageIcon pathToIcon(String path, int width, int height) {
         Objects.requireNonNull(path); 
-        final URL url = ClassLoader.getSystemResource(path); 
-        final ImageIcon icon = new ImageIcon(url); 
+        final URL url = ClassLoader.getSystemResource(path);
+        final ImageIcon icon = new ImageIcon(url);
         final Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaled); 
+        return new ImageIcon(scaled);
     }
 
     /**

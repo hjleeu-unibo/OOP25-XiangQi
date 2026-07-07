@@ -17,7 +17,7 @@ import it.unibo.xiangqi.model.api.Player;
  * The implementation of the GameModel interface.
  * GameModelImpl
  */
-public class GameModelImpl implements GameModel {
+public final class GameModelImpl implements GameModel {
     private static final int INITIAL_HINTS = 3;
 
     private Board board;
@@ -25,10 +25,16 @@ public class GameModelImpl implements GameModel {
     private Player currentPlayer;
     private GameModeType mode;
     private GameStatus status;
-    
+
     private int redHints;
     private int blackHints;
 
+    /**
+     * Constructor.
+     * 
+     * @param board game board
+     * @param players list of players
+     */
     public GameModelImpl(final Board board, final List<Player> players) {
         this.board = board;
         this.players = players;
@@ -52,7 +58,7 @@ public class GameModelImpl implements GameModel {
         // both players start with full hints
         this.blackHints = INITIAL_HINTS;
         this.redHints = INITIAL_HINTS;
-        
+
         // create all pieces at standard starting positions
         this.board = Board.createBoard(PieceFactory.initializePieces(red, black));
         this.status = GameStatus.IN_PROGRESS;

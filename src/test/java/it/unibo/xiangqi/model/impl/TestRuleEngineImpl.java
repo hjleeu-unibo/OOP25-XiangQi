@@ -18,15 +18,22 @@ import org.mockito.quality.Strictness;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+/**
+ * Test class for RuleEngineImpl
+ * TestRuleEngineImpl
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 public final class TestRuleEngineImpl {
-
-    @Mock private Board     board;
+    @Mock private Board board;
 
     @Mock private Player redPlayer;
     @Mock private Player blackPlayer;
@@ -84,7 +91,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isCheck_whenEnemyCanReachGeneral_returnsTrue() {
+    void isCheckWhenEnemyCanReachGeneralReturnsTrue() {
         when(board.getPieces()).thenReturn(List.of(redGeneral, blackCannon));
         when(blackCannon.getMoves(board)).thenReturn(List.of(threatMove));
 
@@ -92,7 +99,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isCheck_whenNoEnemyCanReachGeneral_returnsFalse() {
+    void isCheckWhenNoEnemyCanReachGeneralReturnsFalse() {
         when(board.getPieces()).thenReturn(List.of(redGeneral, blackCannon));
         when(blackCannon.getMoves(board)).thenReturn(List.of(safeMove));
 
@@ -100,7 +107,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isCheck_whenEnemyHasNoMoves_returnsFalse() {
+    void isCheckWhenEnemyHasNoMovesReturnsFalse() {
         when(board.getPieces()).thenReturn(List.of(redGeneral, blackCannon));
         when(blackCannon.getMoves(board)).thenReturn(List.of());
 
@@ -119,7 +126,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isCheckMate_whenInCheckWithNoEscape_returnsTrue() {
+    void isCheckMateWhenInCheckWithNoEscapeReturnsTrue() {
         when(board.getPieces()).thenReturn(List.of(redGeneral, redSoldier, blackCannon));
         when(blackCannon.getMoves(board)).thenReturn(List.of(threatMove));
 
@@ -130,7 +137,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isCheckMate_whenInCheckButHasEscape_returnsFalse() {
+    void isCheckMateWhenInCheckButHasEscapeReturnsFalse() {
         when(board.getPieces()).thenReturn(List.of(redGeneral, redSoldier, blackCannon));
         when(blackCannon.getMoves(board)).thenReturn(List.of(threatMove));
         when(redSoldier.getMoves(board)).thenReturn(List.of(blockingMove));
@@ -150,7 +157,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isDraw_withOnlyGeneralsAndDefenders_returnsTrue() {
+    void isDrawWithOnlyGeneralsAndDefendersReturnsTrue() {
         Piece redAdvisor = mock(Piece.class);
         Piece blackElephant = mock(Piece.class);
 
@@ -168,7 +175,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void isDraw_whenAtLeastOneOffensivePiece_returnsFalse() {
+    void isDrawWhenAtLeastOneOffensivePieceReturnsFalse() {
 
         Piece redChariot = mock(Piece.class);   // pezzo offensivo
         Piece blackElephant = mock(Piece.class);
@@ -187,7 +194,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void getLegalMoves_includesMoveThatDoesNotLeaveInCheck() {
+    void getLegalMovesIncludesMoveThatDoesNotLeaveInCheck() {
         when(redSoldier.getMoves(board)).thenReturn(List.of(safeMove));
 
         // Simulate: no check, no flying general
@@ -206,7 +213,7 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void getLegalMoves_excludesMoveThatLeavesInCheck() {
+    void getLegalMovesExcludesMoveThatLeavesInCheck() {
         when(redSoldier.getMoves(board)).thenReturn(List.of(safeMove));
         stubSimulationAlwaysInCheck();
 
@@ -215,11 +222,10 @@ public final class TestRuleEngineImpl {
     }
 
     @Test
-    void getLegalMoves_whenNoCandidateMoves_returnsEmpty() {
+    void getLegalMovesWhenNoCandidateMovesReturnsEmpty() {
         when(redSoldier.getMoves(board)).thenReturn(List.of());
 
         List<Move> legal = ruleEngine.getLegalMoves(redSoldier, board);
         assertTrue(legal.isEmpty());
     }
-
 }

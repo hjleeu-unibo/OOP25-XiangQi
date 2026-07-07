@@ -14,7 +14,7 @@ import it.unibo.xiangqi.model.api.Position;
  * 
  * @hidden
  */
-public class FakePiece implements Piece {
+public final class FakePiece implements Piece {
 
     private PieceType type; 
     private Player owner; 

@@ -14,9 +14,9 @@ import it.unibo.xiangqi.model.api.Position;
  * Rapresenting the elephant piece in Xiangqi.
  * Elephant
  */
-public class Elephant extends AbstractPiece {
+public final class Elephant extends AbstractPiece {
     private static final int VALUE = 20;
-    
+
     // river boundary: red stays on rows 5-9, black stays on rows 0-4
     private static final int RIVER_ROW_RED = 4;
     private static final int RIVER_ROW_BLACK = 5;
@@ -24,6 +24,12 @@ public class Elephant extends AbstractPiece {
     // 4 diagonal moves of magnitude 2; the eye is exactly halfway (dir/2)
     private static final int[][] DIRECTIONS = {{2, 2}, {2, -2}, {-2, 2}, {-2, -2}};
 
+    /**
+     * Constructor.
+     * 
+     * @param owner the owner
+     * @param position initial position
+     */
     protected Elephant(final Player owner, final Position position) {
         super(PieceType.ELEPHANT, owner, position, VALUE);
     }

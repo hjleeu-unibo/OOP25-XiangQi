@@ -14,7 +14,10 @@ import it.unibo.xiangqi.model.api.Player;
  * The timer view component.
  * Timer
  */
-public class Timer {
+public final class Timer {
+    private static final String LOST_MSG = "LOST!";
+    private static final int TIME_DIVIDER = 60;
+
     private JPanel timerPanel;
     private JLabel redTurnLabel;
     private JLabel blackTurnLabel;
@@ -42,7 +45,7 @@ public class Timer {
         timerPanel.add(new JLabel("RED"));
         timerPanel.add(redTurnLabel);
         timerPanel.add(redGameLabel);
-        
+
         timerPanel.add(new JLabel(" | "));
 
         timerPanel.add(new JLabel("BLACK"));
@@ -52,6 +55,13 @@ public class Timer {
         timerPanel.add(Box.createHorizontalGlue());
     }
 
+    /**
+     * Update the timer on the view.
+     * 
+     * @param player the player refers to
+     * @param turnRemaining the remaining time for that turn
+     * @param gameRemaining the remaining time for that game
+     */
     public void updateTimer(final Player player, final long turnRemaining, final long gameRemaining) {
         /* The invokeLater method make async update of the view with threads. */
         SwingUtilities.invokeLater(() -> {
@@ -68,21 +78,30 @@ public class Timer {
         });
     }
 
+    /**
+     * Show something at time expired.
+     * 
+     * @param player whos' time expired
+     */
     public void showExpiredTime(final Player player) {
         SwingUtilities.invokeLater(() -> {
             switch (player.getColor()) {
                 case RED:
-                    redTurnLabel.setText("LOST!");
-                    redGameLabel.setText("LOST!");
+                    redTurnLabel.setText(LOST_MSG);
+                    redGameLabel.setText(LOST_MSG);
                     break;
                 case BLACK:
-                    blackTurnLabel.setText("LOST!");
-                    blackGameLabel.setText("LOST!");
+                    blackTurnLabel.setText(LOST_MSG);
+                    blackGameLabel.setText(LOST_MSG);
                     break;
             }
         });
     }
 
+    /**
+     * Returs the panel of the time.
+     * @return the JPanel component
+     */
     public JPanel getTimerPanel() {
         return timerPanel;
     }
@@ -94,8 +113,8 @@ public class Timer {
      * @return the formatted time string
      */
     private String timeToString(final long time) {
-        long minutes = Math.max(0, time) / 60;
-        long seconds = Math.max(0, time) % 60;
+        final long minutes = Math.max(0, time) / TIME_DIVIDER;
+        final long seconds = Math.max(0, time) % TIME_DIVIDER;
         return String.format("%02d:%02d", minutes, seconds);
     }
 }

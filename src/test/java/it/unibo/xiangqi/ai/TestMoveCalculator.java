@@ -1,9 +1,14 @@
 package it.unibo.xiangqi.ai;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,10 @@ import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.api.RuleEngine;
 
+/**
+ * The test class for MoveCalculator.
+ * TestMoveCalculator
+ */
 public final class TestMoveCalculator {
     private MoveCalculatorImpl moveCalculator;
     private RuleEngine ruleEngine;
@@ -57,10 +66,10 @@ public final class TestMoveCalculator {
 
     /* Test if calculatebBoardScore() sums only the current players' pieces. */
     @Test
-    void testCalculateBoardScore_onlySumCurrentPlayerPieces() {
-        Piece red1 = mock(Piece.class);
-        Piece red2 = mock(Piece.class);
-        Piece black = mock(Piece.class);
+    void testCalculateBoardScoreOnlySumCurrentPlayerPieces() {
+        final Piece red1 = mock(Piece.class);
+        final Piece red2 = mock(Piece.class);
+        final Piece black = mock(Piece.class);
 
         when(red1.getOwner()).thenReturn(redPlayer);
         when(red1.getType()).thenReturn(PieceType.SOLDIER);
@@ -84,7 +93,7 @@ public final class TestMoveCalculator {
         when(board.getPieces()).thenReturn(List.of(red1, red2, black));
         when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /* ASSERTS. */
         assertEquals(30, score, "Should only sum red pieces values");
@@ -98,7 +107,7 @@ public final class TestMoveCalculator {
     /* Test the initial value of the red chariot. */
     @Test
     void testChariotAtStartingPositionHasInitialValue() {
-        Piece chariot = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
@@ -110,7 +119,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(chariot);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(90, score);
     }
@@ -118,8 +127,8 @@ public final class TestMoveCalculator {
     /* Test if the red soldier over the river, changes its value or not. */
     @Test
     void testRedSoldierOverRiver() {
-        Piece soldier = mock(Piece.class);
-        
+        final Piece soldier = mock(Piece.class);
+
         when(soldier.getOwner()).thenReturn(redPlayer);
         when(soldier.getType()).thenReturn(PieceType.SOLDIER);
         when(soldier.getInitialValue()).thenReturn(10);
@@ -131,7 +140,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(soldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(20, score);
     }
@@ -219,7 +228,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(cannon);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base value: 45
@@ -309,7 +318,7 @@ public final class TestMoveCalculator {
 
         mockSetValue(advisor);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         assertEquals(30, score);
     }
@@ -362,7 +371,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
         * Base value: 90
@@ -424,7 +433,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 90
@@ -483,7 +492,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(soldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: soldier 10, chariot 90
@@ -525,7 +534,7 @@ public final class TestMoveCalculator {
         mockSetValue(chariot);
         mockSetValue(enemyHorse);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 90
@@ -578,7 +587,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: 90
@@ -644,7 +653,7 @@ public final class TestMoveCalculator {
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /**
          * Base: chariot 90, cannon 45
@@ -740,7 +749,7 @@ public final class TestMoveCalculator {
         when(ruleEngine.getLegalMoves(chariot2, board2)).thenReturn(List.of());
         when(ruleEngine.getLegalMoves(enemySoldier, board2)).thenReturn(List.of());
 
-        Move bestMove = moveCalculator.getBestMove(gameModel);
+        final Move bestMove = moveCalculator.getBestMove(gameModel);
 
         assertEquals(captureHorse, bestMove);
     }
@@ -783,7 +792,7 @@ public final class TestMoveCalculator {
         when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
         when(board2.getPieces()).thenReturn(List.of());
 
-        Move bestMove = moveCalculator.getBestMove(gameModel);
+        final Move bestMove = moveCalculator.getBestMove(gameModel);
 
         assertNotNull(bestMove);
     }
@@ -842,7 +851,7 @@ public final class TestMoveCalculator {
         
         mockSetValue(simPiece2);
 
-        Move result = moveCalculator.getBestMove(gameModel);
+        final Move result = moveCalculator.getBestMove(gameModel);
 
         assertEquals(moveFromPiece2, result);
     }

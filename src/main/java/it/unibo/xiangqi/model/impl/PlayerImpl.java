@@ -7,7 +7,7 @@ import it.unibo.xiangqi.model.api.Player;
  * The implementation of the player interface.
  * PlayerImpl
  */
-public class PlayerImpl implements Player {
+public final class PlayerImpl implements Player {
 
     private final Color color;
     private final Boolean isHuman;
