@@ -43,17 +43,17 @@ public class BoardPanel extends JPanel {
 
     private JButton[][] cells;
     private JButton hintButton;
-    private JPanel boardGrid; 
-    private JPanel sidePanel; 
-    private Board currentBoard; 
+    private JPanel boardGrid;
+    private JPanel sidePanel;
+    private Board currentBoard;
     private List<Position> highlightedCells;
-    private Position selectedCell; 
-    private InputHandler inputHandler; 
-    private int cellSize; 
-    private JPanel notificationPanel; 
+    private Position selectedCell;
+    private InputHandler inputHandler;
+    private int cellSize;
+    private JPanel notificationPanel;
     private JLabel notificationLabel;
-    private Timer timer; 
-    private JPanel timerPanel; 
+    private Timer timer;
+    private JPanel timerPanel;
 
     /**
      * Creates a new board panel.
@@ -62,19 +62,21 @@ public class BoardPanel extends JPanel {
      * notification area, and cell listeners.</p>
      */
     public BoardPanel() {
+        /* Initialize the main Swing components */
         boardGrid = new JPanel(new GridLayout(ROWS, COLS));
         sidePanel = new JPanel();
-        hintButton = new JButton("HINT"); 
-        cells = new JButton[ROWS][COLS]; 
-
-        notificationPanel = new JPanel(); 
+        hintButton = new JButton("HINT");
+        cells = new JButton[ROWS][COLS];
+        notificationPanel = new JPanel();
         notificationLabel = new JLabel();
         notificationPanel.add(notificationLabel);
 
+        /* Configure component dimensions according to the screen size */
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.cellSize = (int) (screenSize.height * 0.05);
         notificationPanel.setPreferredSize(new Dimension(0, (int) (screenSize.height * 0.075)));
 
+        /* Register the hint button listener */
         hintButton.addActionListener(e -> {
             if (this.inputHandler != null) {
                 inputHandler.onHint(); 
@@ -83,6 +85,7 @@ public class BoardPanel extends JPanel {
             }
         });
 
+        /* Create the board cells and associate each one with its listener */
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
                 final JButton button = new JButton();
@@ -92,18 +95,21 @@ public class BoardPanel extends JPanel {
             }
         }
 
+        /* Arrange the board layout */
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.add(hintButton);
+
         this.setLayout(new BorderLayout());
         this.add(boardGrid, BorderLayout.CENTER); 
         this.add(sidePanel, BorderLayout.EAST);
         this.add(notificationPanel, BorderLayout.SOUTH); 
 
-        /*Timer section */
+        /* Initialize and place the game timer */
         timer = new Timer(); 
         timerPanel = timer.getTimerPanel();
         this.add(timerPanel, BorderLayout.NORTH);
 
+        /* Highlight the fixed board areas (river and palaces) */
         this.highlightBoardAreas();
 }
 
@@ -120,8 +126,8 @@ public class BoardPanel extends JPanel {
             throw new NullPointerException("argument 'board' is null"); 
         }
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 final Position pos = new Position(row, col); 
                 final Piece piece = this.currentBoard.getPieceAt(pos); 
 
@@ -327,14 +333,20 @@ public class BoardPanel extends JPanel {
      */
     public void handleCellClick(final Position position) {
         Objects.requireNonNull(position); 
+
+        /* First click: select the piece and request its legal moves */
         if (this.selectedCell == null) {
             this.selectedCell = position; 
             this.inputHandler.onSelect(position);
+
+        /* Clicking the selected piece again cancels the selection */
         } else if (this.selectedCell.equals(position)) {
             final Color c = this.currentBoard.getPieceAt(position).getOwner().getColor(); 
             this.setPlayerEnabled(c);
             this.resetHighlights();
             this.selectedCell = null; 
+
+        /* Second click on a different cell: perform the move */
         } else {
             this.inputHandler.onMove(new Move(this.selectedCell, position)); 
             this.selectedCell = null; 
@@ -453,7 +465,7 @@ public class BoardPanel extends JPanel {
         final java.awt.Color palaceColor = java.awt.Color.RED;
         final java.awt.Color riverColor = java.awt.Color.BLUE;
 
-        // ---------- Black palace (rows 0-2, cols 3-5) ----------
+        // Black palace (rows 0-2, cols 3-5) 
         for (int row = 0; row <= 2; row++) {
             for (int col = 3; col <= 5; col++) {
 
@@ -470,7 +482,7 @@ public class BoardPanel extends JPanel {
             }
         }
 
-        // ---------- Red palace (rows 7-9, cols 3-5) ----------
+        // Red palace (rows 7-9, cols 3-5)
         for (int row = 7; row <= 9; row++) {
             for (int col = 3; col <= 5; col++) {
 
@@ -487,7 +499,7 @@ public class BoardPanel extends JPanel {
             }
         }
 
-        // ---------- River ----------
+        // River
         for (int col = 0; col < 9; col++) {
             // Bottom border of row 4
             cells[4][col].setBorder(
