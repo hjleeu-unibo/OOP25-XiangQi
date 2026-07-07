@@ -54,6 +54,8 @@ public class BoardPanel extends JPanel {
     private JPanel timerPanel; 
     private final int ROWS = 10;
     private final int COLS = 9;
+    private final double CELL_SIZE_RATIO = 0.05;
+    private final double NOTIFICATION_PANEL_RATIO = 0.075;
 
     /**
      * Creates a new board panel.
@@ -74,8 +76,8 @@ public class BoardPanel extends JPanel {
 
         /* Configure component dimensions according to the screen size */
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.cellSize = (int) (screenSize.height * 0.05);
-        notificationPanel.setPreferredSize(new Dimension(0, (int) (screenSize.height * 0.075)));
+        this.cellSize = (int) (screenSize.height * this.CELL_SIZE_RATIO);
+        notificationPanel.setPreferredSize(new Dimension(0, (int) (screenSize.height * this.NOTIFICATION_PANEL_RATIO)));
 
         /* Register the hint button listener */
         hintButton.addActionListener(e -> {
@@ -143,11 +145,17 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
-     * 
+     * Creates an image icon from a resource path and scales it to the given size.
+     *
+     * @param path the path of the image resource
+     * @param width the desired width of the icon
+     * @param height the desired height of the icon
+     * @return a scaled image icon created from the resource
+     * @throws NullPointerException if {@code path} is null
+     *
      * @hidden
      */
-    private ImageIcon pathToIcon(String path, int width, int height) {
+    private ImageIcon pathToIcon(final String path, final  int width, final int height) {
         Objects.requireNonNull(path); 
         final URL url = ClassLoader.getSystemResource(path); 
         final ImageIcon icon = new ImageIcon(url); 
@@ -156,8 +164,12 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
-     * 
+     * Converts a game piece into its corresponding image icon.
+     *
+     * @param piece the piece to convert into an icon
+     * @return the image icon representing the given piece
+     * @throws NullPointerException if the piece color or type is not defined
+     *
      * @hidden
      */
     private ImageIcon pieceToIcon(final Piece piece) {
@@ -184,8 +196,8 @@ public class BoardPanel extends JPanel {
         }
 
         this.disableAll();
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < this.ROWS; row++) {
+            for (int col = 0; col < this.COLS; col++) {
                 final Position pos = new Position(row, col); 
                 if (this.highlightedCells.contains(pos)) {
                     highlightCell(pos, java.awt.Color.YELLOW);
@@ -200,13 +212,13 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
+     * Disables all board cells. 
      * 
      * @hidden
      */
     private void disableAll() {
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < this.ROWS; row++) {
+            for (int col = 0; col < this.COLS; col++) {
                 cells[row][col].setEnabled(false);
             }
         }
@@ -227,8 +239,11 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
-     * 
+     * Highlights a board cell by changing its background color.
+     *
+     * @param pos the position of the cell to highlight
+     * @param color the color to apply to the cell background
+     *
      * @hidden
      */
     private void highlightCell(final Position pos, final java.awt.Color color) {
@@ -238,13 +253,13 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
+     * Resets all board cells highlights
      * 
      * @hidden
      */
     private void resetHighlights() {
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < this.ROWS; row++) {
+            for (int col = 0; col < this.COLS; col++) {
                 cells[row][col].setBackground(null);
             }
         }
@@ -273,15 +288,18 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
-     * 
+     * Enables or disables all cells containing pieces owned by the specified player color.
+     *
+     * @param enable {@code true} to enable the player's cells, {@code false} to disable them
+     * @param c the color of the player whose pieces should be updated
+     *
      * @hidden
      */
     private void setPlayer(final boolean enable, final Color c) {
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 9; col++) {
-                final Position pos = new Position(row, col); 
-                final Piece piece = this.currentBoard.getPieceAt(pos); 
+        for (int row = 0; row < this.ROWS; row++) {
+            for (int col = 0; col < this.COLS; col++) {
+                final Position pos = new Position(row, col);
+                final Piece piece = this.currentBoard.getPieceAt(pos);
                 
                 if (piece != null && piece.getOwner().getColor() == c) {
                     cells[row][col].setEnabled(enable);
@@ -317,7 +335,7 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
+     * Returns the input handler
      * 
      * @return the current input handler
      * @hidden
@@ -327,7 +345,7 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method
+     * Handles the inputs on board cells
      * 
      * @param position the clicked cell position
      * @hidden
@@ -392,41 +410,46 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method.
+     * Shows the specified notification on the notification panel. 
      * 
+     * @param notification the notification to display
      * @hidden
      */
     private void showNotification(final Notification notification) {
-        String path; 
-        int w, h; 
+        final String path;
+        final int w;
+        final int h;
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final double HEIGHT_RATIO = 0.075;
+        final double LOW_WIDTH_RATIO = 0.4;
+        final double HIGH_WIDTH_RATIO = 0.65;
 
         switch (notification) {
-            case CHECK: 
+            case CHECK:
                 path = "notifications/check.png";
-                h = (int) (screenSize.height * 0.075);
-                w = (int) (screenSize.height * 0.4);
+                h = (int) (screenSize.height * HEIGHT_RATIO);
+                w = (int) (screenSize.height * LOW_WIDTH_RATIO);
                 break; 
-            case RED_WINS: 
+            case RED_WINS:
                 this.disableAll();
-                path = "notifications/red_wins.png"; 
-                h = (int) (screenSize.height * 0.075);
-                w = (int) (screenSize.height * 0.65);
+                path = "notifications/red_wins.png";
+                h = (int) (screenSize.height * HEIGHT_RATIO);
+                w = (int) (screenSize.height * HIGH_WIDTH_RATIO);
                 break; 
-            case BLACK_WINS: 
+            case BLACK_WINS:
                 this.disableAll();
                 path = "notifications/black_wins.png"; 
-                h = (int) (screenSize.height * 0.075);
-                w = (int) (screenSize.height * 0.65); 
-                break; 
-            case DRAW: 
+                h = (int) (screenSize.height * HEIGHT_RATIO);
+                w = (int) (screenSize.height * HIGH_WIDTH_RATIO); 
+                break;
+            case DRAW:
                 this.disableAll();
                 path = "notifications/draw.png";
-                h = (int) (screenSize.height * 0.075);
-                w = (int) (screenSize.height * 0.4);
-                break;  
-            default: 
-                throw new IllegalArgumentException("The argument is wrong"); 
+                h = (int) (screenSize.height * HEIGHT_RATIO);
+                w = (int) (screenSize.height * LOW_WIDTH_RATIO);
+                break;
+            default:
+                throw new IllegalArgumentException("The argument is wrong");
         }
 
         notificationLabel.setIcon(this.pathToIcon(path, w, h));
@@ -462,18 +485,32 @@ public class BoardPanel extends JPanel {
      * Highlights the borders of the river and the two palaces.
      */
     private void highlightBoardAreas() {
-        final int thickness = 3;
         final java.awt.Color palaceColor = java.awt.Color.RED;
         final java.awt.Color riverColor = java.awt.Color.BLUE;
 
-        // Black palace (rows 0-2, cols 3-5) 
-        for (int row = 0; row <= 2; row++) {
-            for (int col = 3; col <= 5; col++) {
+        final int THICK_BORDER = 3;
+        final int NORMAL_BORDER = 1;
 
-                final int top = (row == 0) ? thickness : 1;
-                final int bottom = (row == 2) ? thickness : 1;
-                final int left = (col == 3) ? thickness : 1;
-                final int right = (col == 5) ? thickness : 1;
+        final int PALACE_START_COL = 3;
+        final int PALACE_END_COL = 5;
+
+        final int BLACK_PALACE_START_ROW = 0;
+        final int BLACK_PALACE_END_ROW = 2;
+
+        final int RED_PALACE_START_ROW = 7;
+        final int RED_PALACE_END_ROW = 9;
+
+        final int RIVER_LOWER_ROW = 5;
+        final int RIVER_UPPER_ROW = 4;
+
+        // Black palace
+        for (int row = BLACK_PALACE_START_ROW; row <= BLACK_PALACE_END_ROW; row++) {
+            for (int col = PALACE_START_COL; col <= PALACE_END_COL; col++) {
+
+                final int top = (row == BLACK_PALACE_START_ROW) ? THICK_BORDER : NORMAL_BORDER;
+                final int bottom = (row == BLACK_PALACE_END_ROW) ? THICK_BORDER : NORMAL_BORDER;
+                final int left = (col == PALACE_START_COL) ? THICK_BORDER : NORMAL_BORDER;
+                final int right = (col == PALACE_END_COL) ? THICK_BORDER : NORMAL_BORDER;
 
                 cells[row][col].setBorder(
                     BorderFactory.createMatteBorder(
@@ -483,14 +520,14 @@ public class BoardPanel extends JPanel {
             }
         }
 
-        // Red palace (rows 7-9, cols 3-5)
-        for (int row = 7; row <= 9; row++) {
-            for (int col = 3; col <= 5; col++) {
+        // Red palace
+        for (int row = RED_PALACE_START_ROW; row <= RED_PALACE_END_ROW; row++) {
+            for (int col = PALACE_START_COL; col <= PALACE_END_COL; col++) {
 
-                final int top = (row == 7) ? thickness : 1;
-                final int bottom = (row == 9) ? thickness : 1;
-                final int left = (col == 3) ? thickness : 1;
-                final int right = (col == 5) ? thickness : 1;
+                final int top = (row == RED_PALACE_START_ROW) ? THICK_BORDER : NORMAL_BORDER;
+                final int bottom = (row == RED_PALACE_END_ROW) ? THICK_BORDER : NORMAL_BORDER;
+                final int left = (col == PALACE_START_COL) ? THICK_BORDER : NORMAL_BORDER;
+                final int right = (col == PALACE_END_COL) ? THICK_BORDER : NORMAL_BORDER;
 
                 cells[row][col].setBorder(
                     BorderFactory.createMatteBorder(
@@ -501,18 +538,16 @@ public class BoardPanel extends JPanel {
         }
 
         // River
-        for (int col = 0; col < 9; col++) {
-            // Bottom border of row 4
-            cells[4][col].setBorder(
+        for (int col = 0; col < this.COLS; col++) {
+            cells[RIVER_UPPER_ROW][col].setBorder(
                 BorderFactory.createMatteBorder(
-                    1, 1, thickness, 1, riverColor
+                    NORMAL_BORDER, NORMAL_BORDER, THICK_BORDER, NORMAL_BORDER, riverColor
                 )
             );
-
-            // Top border of row 5
-            cells[5][col].setBorder(
+            
+            cells[RIVER_LOWER_ROW][col].setBorder(
                 BorderFactory.createMatteBorder(
-                    thickness, 1, 1, 1, riverColor
+                    THICK_BORDER, NORMAL_BORDER, NORMAL_BORDER, NORMAL_BORDER, riverColor
                 )
             );
         }
