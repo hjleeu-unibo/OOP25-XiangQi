@@ -8,11 +8,11 @@ import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Position;
 
 /**
- * test class
+ * test class.
  * 
  * @hidden
  */
-public class FakeBoard implements Board {
+public final class FakeBoard implements Board {
 
     private List<Piece> pieces;
 

@@ -74,7 +74,7 @@ public class GameViewImpl implements GameView {
             }
         });
     }
-    
+
     /**
      * {@inheritDoc}
      */

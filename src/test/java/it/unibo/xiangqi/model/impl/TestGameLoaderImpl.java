@@ -9,7 +9,7 @@ import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.api.StoredPiece;
- 
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,21 +18,30 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
- 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
- 
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-
+/**
+ * Test class for GameLoaderImpl.
+ * TestGameLoaderImpl
+ */
 @ExtendWith(MockitoExtension.class)
-public class TestGameLoaderImpl {
+public final class TestGameLoaderImpl {
     @TempDir
     Path tempDir;
 
@@ -62,18 +71,18 @@ public class TestGameLoaderImpl {
     }
 
     @Test
-    void hasStoredGame_whenFileDoesNotExist_returnsFalse() {
+    void hasStoredGameWhenFileDoesNotExistReturnsFalse() {
         assertFalse(loader.hasStoredGame());
     }
 
     @Test
-    void hasStoredGame_whenFileIsEmpty_returnsFalse() throws IOException {
+    void hasStoredGameWhenFileIsEmptyReturnsFalse() throws IOException {
         storeFile.createNewFile();   // empty file
         assertFalse(loader.hasStoredGame());
     }
 
     @Test
-    void hasStoredGame_whenFileHasContent_returnsTrue() throws IOException {
+    void hasStoredGameWhenFileHasContentReturnsTrue() throws IOException {
         try (FileWriter writer = new FileWriter(storeFile)) {
             writer.write("scacchi"); //pk non usa buffered
         }
@@ -81,7 +90,7 @@ public class TestGameLoaderImpl {
     }
 
     @Test
-    void discardSave_removesExistingFile() throws IOException {
+    void discardSaveRemovesExistingFile() throws IOException {
         storeFile.createNewFile();
         assertTrue(storeFile.exists());
  
@@ -92,7 +101,7 @@ public class TestGameLoaderImpl {
 
     //anche senza file da cancellare non deve esplodere
     @Test
-    void discardSave_whenFileDoesNotExist_doesNothing() {
+    void discardSaveWhenFileDoesNotExistDoesNothing() {
         assertFalse(storeFile.exists());
         //riceve lambda esegue lui e osserva se lancia eccezioni, se 
         //scrivesssi direttamente la funzione avrei void ed eccezione non ci arriverebbe
@@ -100,7 +109,7 @@ public class TestGameLoaderImpl {
     }
 
     @Test
-    void store_writesAllFieldsInExpectedFormat() {
+    void storeWritesAllFieldsInExpectedFormat() {
         stubGameModelForStore(GameModeType.PVE, Color.RED, 3, 2, buildPieces());
  
         loader.store(gameModel);
@@ -110,47 +119,47 @@ public class TestGameLoaderImpl {
     }
 
     @Test
-    void restore_whenFileDoesNotExist_throws() {
+    void restoreWhenFileDoesNotExistThrows() {
         assertThrows(IllegalStateException.class, () -> loader.restore(gameModel));
     }
 
     @Test
-    void restore_passesReadDataToSetStatus() throws IOException {
+    void restorePassesReadDataToSetStatus() throws IOException {
         writeSampleFile();
- 
+
         loader.restore(gameModel);
- 
+
         // capture arguments passed to setStatus and check them  
         //a sx compile-time a dx run-time quindi scrivo entrambi
-        ArgumentCaptor<GameModeType> modeCaptor = ArgumentCaptor.forClass(GameModeType.class);
-        ArgumentCaptor<Color> colorCaptor = ArgumentCaptor.forClass(Color.class);
+        final ArgumentCaptor<GameModeType> modeCaptor = ArgumentCaptor.forClass(GameModeType.class);
+        final ArgumentCaptor<Color> colorCaptor = ArgumentCaptor.forClass(Color.class);
         //generici non supportano i prmitivi -> autoboxing
-        ArgumentCaptor<Integer> redHintsCaptor = ArgumentCaptor.forClass(Integer.class);
-        ArgumentCaptor<Integer> blackHintsCaptor = ArgumentCaptor.forClass(Integer.class);
+        final ArgumentCaptor<Integer> redHintsCaptor = ArgumentCaptor.forClass(Integer.class);
+        final ArgumentCaptor<Integer> blackHintsCaptor = ArgumentCaptor.forClass(Integer.class);
         @SuppressWarnings("unchecked") //a runtime i tipi genereci non ci sono quindi spprimo il warning che partirebbe
-        ArgumentCaptor<List<StoredPiece>> piecesCaptor = ArgumentCaptor.forClass(List.class);
- 
-        verify(gameModel).setStatus(  //come funziona
+        final ArgumentCaptor<List<StoredPiece>> piecesCaptor = ArgumentCaptor.forClass(List.class);
+
+        verify(gameModel).setStatus(//come funziona
                 modeCaptor.capture(),
                 colorCaptor.capture(),
                 redHintsCaptor.capture(),
                 blackHintsCaptor.capture(),
                 piecesCaptor.capture()
         );
- 
+
         assertEquals(GameModeType.PVE, modeCaptor.getValue());
         assertEquals(Color.RED, colorCaptor.getValue());
         assertEquals(3, redHintsCaptor.getValue());
         assertEquals(2, blackHintsCaptor.getValue());
         assertEquals(2, piecesCaptor.getValue().size());
- 
+
         final StoredPiece firstPiece = piecesCaptor.getValue().get(0);
         assertEquals(PieceType.GENERAL, firstPiece.type());
         assertEquals(Color.RED, firstPiece.color());
     }
 
     @Test
-    void restore_withCorruptedPieceLine_throws() throws IOException {
+    void restoreWithCorruptedPieceLineThrows() throws IOException {
         try (FileWriter writer = new FileWriter(storeFile)) {
             writer.write("PVE\n");
             writer.write("RED\n");
@@ -164,26 +173,26 @@ public class TestGameLoaderImpl {
     }
 
     @Test
-    void restore_withTruncatedFile_throws() throws IOException {
+    void restoreWithTruncatedFileThrows() throws IOException {
         try (FileWriter writer = new FileWriter(storeFile)) {
             writer.write("PVE\n");
             writer.write("RED\n");
             // file ends prematurely
         }
- 
+
         assertThrows(IllegalStateException.class, () -> loader.restore(gameModel));
     }
 
     //round-trip test
     @Test
-    void storeAndRestore_preservesData() {
+    void storeAndRestorePreservesData() {
         stubGameModelForStore(GameModeType.PVP, Color.BLACK, 1, 0, buildPieces());
- 
+
         loader.store(gameModel);
- 
+
         GameModel restoredModel = mock(GameModel.class);
         loader.restore(restoredModel);
- 
+
         //come funziona e perche farla cosi
         verify(restoredModel).setStatus(
                 //uso eq pk se non posso mischiare any (matcher) con valori
@@ -195,7 +204,6 @@ public class TestGameLoaderImpl {
         );
     }
 
-    
     private void stubGameModelForStore(final GameModeType mode,
                                        final Color currentColor,
                                        final int redHints,
@@ -221,7 +229,7 @@ public class TestGameLoaderImpl {
         when(general.getPosition()).thenReturn(generalPos); //pk fare questo e anche col e row
         when(generalPos.getCol()).thenReturn(4);
         when(generalPos.getRow()).thenReturn(0);
- 
+
         final Piece cannon = mock(Piece.class);
         final Position cannonPos = mock(Position.class);
         when(cannon.getType()).thenReturn(PieceType.CANNON);
@@ -229,7 +237,7 @@ public class TestGameLoaderImpl {
         when(cannon.getPosition()).thenReturn(cannonPos);
         when(cannonPos.getCol()).thenReturn(1);
         when(cannonPos.getRow()).thenReturn(7);
- 
+
         return List.of(general, cannon);
     }
 
@@ -244,5 +252,4 @@ public class TestGameLoaderImpl {
             writer.write("CANNON,BLACK,1,7\n");
         }
     }
-
 }

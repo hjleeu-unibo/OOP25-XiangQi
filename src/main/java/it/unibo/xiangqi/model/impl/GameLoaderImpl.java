@@ -74,7 +74,7 @@ public final class GameLoaderImpl implements GameLoader {
 
             writer.write(Integer.toString(gameModel.getHintsRemaining(redPlayer)));
             writer.newLine();
-            
+
             writer.write(Integer.toString(gameModel.getHintsRemaining(blackPlayer)));
             writer.newLine();
 

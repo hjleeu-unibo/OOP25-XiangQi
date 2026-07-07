@@ -12,7 +12,7 @@ import it.unibo.xiangqi.model.impl.BoardImpl;
 public interface Board {
     int ROWS = 10;
     int COLS = 9;
-    
+
     /**
      * Creates a new board containing the specified pieces.
      *

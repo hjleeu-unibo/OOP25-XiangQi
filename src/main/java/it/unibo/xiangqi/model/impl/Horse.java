@@ -13,16 +13,15 @@ import it.unibo.xiangqi.model.api.Position;
  * Rapresenting the horse piece in Xiangqi.
  * Horse
  */
-public class Horse extends AbstractPiece {
-
+public final class Horse extends AbstractPiece {
     private static final int VALUE = 40;
     // 8 possible L-shaped moves: the axis with magnitude 2 is the straight step (leg),
     // the axis with magnitude 1 is the diagonal step.
     private static final int[][] DIRECTIONS = {
-        {-2,  1}, {-2, -1},  // up 2
-        { 2,  1}, { 2, -1},  // down 2
-        { 1,  2}, {-1,  2},  // right 2
-        { 1, -2}, {-1, -2},  // left 2
+        {-2, 1}, {-2, -1},  // up 2
+        { 2, 1}, { 2, -1},  // down 2
+        { 1, 2}, {-1, 2},  // right 2
+        { 1, 2}, {-1, -2},  // left 2
     };
 
     protected Horse(final Player owner, final Position position) {

@@ -44,6 +44,7 @@ public final class PieceFactory {
 
     // soldier columns (even columns: 0, 2, 4, 6, 8)
     private static final int[] SOLDIER_COLS = {0, 2, 4, 6, 8};
+
     private PieceFactory() { } // utility class
 
     /**
@@ -102,7 +103,7 @@ public final class PieceFactory {
     public static Piece copyPiece(final Piece piece) {
         return createPiece(piece.getType(), piece.getOwner(), piece.getPosition());
     }
-    
+
     /**
      * private base method — the single place where pieces are constructed.
      * 

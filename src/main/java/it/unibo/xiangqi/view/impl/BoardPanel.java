@@ -38,17 +38,16 @@ import it.unibo.xiangqi.view.api.GameView;
  * components used to display the game.</p>
  */
 public class BoardPanel extends JPanel {
-
     private JButton[][] cells;
     private JButton hintButton;
-    private JPanel boardGrid; 
-    private JPanel sidePanel; 
-    private Board currentBoard; 
+    private JPanel boardGrid;
+    private JPanel sidePanel;
+    private Board currentBoard;
     private List<Position> highlightedCells;
-    private Position selectedCell; 
-    private InputHandler inputHandler; 
-    private int cellSize; 
-    private JPanel notificationPanel; 
+    private Position selectedCell;
+    private InputHandler inputHandler;
+    private int cellSize;
+    private JPanel notificationPanel;
     private JLabel notificationLabel;
     private Timer timer; 
     private JPanel timerPanel; 
@@ -64,13 +63,12 @@ public class BoardPanel extends JPanel {
      * notification area, and cell listeners.</p>
      */
     public BoardPanel() {
-
         /* Initialize the main Swing components */
         boardGrid = new JPanel(new GridLayout(ROWS, COLS));
         sidePanel = new JPanel();
-        hintButton = new JButton("HINT"); 
-        cells = new JButton[ROWS][COLS]; 
-        notificationPanel = new JPanel(); 
+        hintButton = new JButton("HINT");
+        cells = new JButton[ROWS][COLS];
+        notificationPanel = new JPanel();
         notificationLabel = new JLabel();
         notificationPanel.add(notificationLabel);
 
@@ -91,7 +89,7 @@ public class BoardPanel extends JPanel {
         /* Create the board cells and associate each one with its listener */
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLS; col++) {
-                JButton button = new JButton();
+                final JButton button = new JButton();
                 button.addActionListener(new CellListener(this, new Position(row, col)));
                 cells[row][col] = button;
                 boardGrid.add(button);
@@ -129,8 +127,8 @@ public class BoardPanel extends JPanel {
             throw new NullPointerException("argument 'board' is null"); 
         }
 
-        for (int row = 0; row < this.ROWS; row++) {
-            for (int col = 0; col < this.COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 final Position pos = new Position(row, col); 
                 final Piece piece = this.currentBoard.getPieceAt(pos); 
 
@@ -138,7 +136,7 @@ public class BoardPanel extends JPanel {
                     cells[row][col].setIcon(null);
                     cells[row][col].setText("");
                 } else {
-                    cells[row][col].setIcon(pieceToIcon(piece));  
+                    cells[row][col].setIcon(pieceToIcon(piece));
                 }
             }
         }
@@ -157,10 +155,10 @@ public class BoardPanel extends JPanel {
      */
     private ImageIcon pathToIcon(final String path, final  int width, final int height) {
         Objects.requireNonNull(path); 
-        final URL url = ClassLoader.getSystemResource(path); 
-        final ImageIcon icon = new ImageIcon(url); 
+        final URL url = ClassLoader.getSystemResource(path);
+        final ImageIcon icon = new ImageIcon(url);
         final Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        return new ImageIcon(scaled); 
+        return new ImageIcon(scaled);
     }
 
     /**
@@ -544,7 +542,7 @@ public class BoardPanel extends JPanel {
                     NORMAL_BORDER, NORMAL_BORDER, THICK_BORDER, NORMAL_BORDER, riverColor
                 )
             );
-            
+
             cells[RIVER_LOWER_ROW][col].setBorder(
                 BorderFactory.createMatteBorder(
                     THICK_BORDER, NORMAL_BORDER, NORMAL_BORDER, NORMAL_BORDER, riverColor

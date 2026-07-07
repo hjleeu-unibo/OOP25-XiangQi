@@ -10,9 +10,10 @@ import it.unibo.xiangqi.model.api.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 /**
  * Unit tests for all Xiangqi piece movement rules.
@@ -21,15 +22,14 @@ import static org.junit.jupiter.api.Assertions.*;
  *   river boundary: RIVER_ROW_RED=4, RIVER_ROW_BLACK=5
  */
 class PieceTest {
-
     private Player red;
     private Player black;
     private Board emptyBoard;
 
     @BeforeEach
     void setUp() {
-        red        = new PlayerImpl(Color.RED,   true);
-        black      = new PlayerImpl(Color.BLACK, true);
+        red = new PlayerImpl(Color.RED, true);
+        black = new PlayerImpl(Color.BLACK, true);
         emptyBoard = Board.createBoard(List.of());
     }
 
@@ -91,9 +91,9 @@ class PieceTest {
     /** Soldier cannot capture a friendly piece. */
     @Test
     void soldierCannotCaptureFriendly() {
-        final Piece soldier  = new Soldier(red, new Position(6, 4));
+        final Piece soldier = new Soldier(red, new Position(6, 4));
         final Piece friendly = new Soldier(red, new Position(5, 4));
-        final Board board    = new BoardImpl(List.of(soldier, friendly));
+        final Board board = new BoardImpl(List.of(soldier, friendly));
         final List<Move> moves = soldier.getMoves(board);
 
         assertTrue(moves.isEmpty());
@@ -102,9 +102,9 @@ class PieceTest {
     /** Soldier can capture an enemy piece. */
     @Test
     void soldierCanCaptureEnemy() {
-        final Piece soldier = new Soldier(red,   new Position(6, 4));
-        final Piece enemy   = new Soldier(black, new Position(5, 4));
-        final Board board   = new BoardImpl(List.of(soldier, enemy));
+        final Piece soldier = new Soldier(red, new Position(6, 4));
+        final Piece enemy = new Soldier(black, new Position(5, 4));
+        final Board board = new BoardImpl(List.of(soldier, enemy));
         final List<Move> moves = soldier.getMoves(board);
 
         assertEquals(1, moves.size());
@@ -205,7 +205,7 @@ class PieceTest {
             m.getTo().getRow() >= 7 && m.getTo().getRow() <= 9 &&
             m.getTo().getCol() >= 3 && m.getTo().getCol() <= 5));
     }
-    
+
     /** Black advisor cannot leave the black palace (rows 0-2, cols 3-5). */
     @Test
     void blackAdvisorCannotLeavePalace() {
@@ -219,7 +219,7 @@ class PieceTest {
 
     /** Advisor can capture an enemy piece. */
     @Test
-    void AdvisorCanCaptureEnemy() {
+    void advisorCanCaptureEnemy() {
         final Piece advisor = new Advisor(red, new Position(8, 4));
         final Piece enemy = new Soldier(black, new Position(7, 5));
         final Board board = new BoardImpl(List.of(advisor, enemy));
@@ -230,7 +230,7 @@ class PieceTest {
 
     /** Advisor can not capture a friendly piece. */
     @Test
-    void AdvisorCannotCaptureFriendly() {
+    void advisorCannotCaptureFriendly() {
         final Piece advisor = new Advisor(red, new Position(8, 4));
         final Piece friendly = new Soldier(red, new Position(7, 5));
         final Board board = new BoardImpl(List.of(advisor, friendly));
@@ -277,7 +277,7 @@ class PieceTest {
 
     /** General can capture an enemy piece. */
     @Test
-    void GeneralCanCaptureEnemy() {
+    void generalCanCaptureEnemy() {
         final Piece general = new General(red, new Position(9, 4));
         final Piece enemy = new Chariot(black, new Position(8, 4));
         final Board board = new BoardImpl(List.of(general, enemy));
@@ -288,7 +288,7 @@ class PieceTest {
 
     /** General can not capture a friendly piece. */
     @Test
-    void GeneralCannotCaptureFriendly() {
+    void generalCannotCaptureFriendly() {
         final Piece general = new General(red, new Position(9, 4));
         final Piece friendly = new Chariot(red, new Position(8, 4));
         final Board board = new BoardImpl(List.of(general, friendly));
@@ -320,10 +320,10 @@ class PieceTest {
     /** Horse cannot move if the leg cell is blocked. */
     @Test
     void horseBlockedByPieceOnLeg() {
-        final Piece horse   = new Horse(red,   new Position(7, 4));
+        final Piece horse = new Horse(red, new Position(7, 4));
         // block the upward leg
         final Piece blocker = new Soldier(red, new Position(6, 4));
-        final Board board   = new BoardImpl(List.of(horse, blocker));
+        final Board board = new BoardImpl(List.of(horse, blocker));
         final List<Move> moves = horse.getMoves(board);
 
         // two moves upward (up2+right1, up2+left1) are blocked
@@ -343,7 +343,7 @@ class PieceTest {
     /** Horse can capture an enemy piece. */
     @Test
     void horseCanCaptureEnemy() {
-        final Piece horse = new Horse(red,   new Position(7, 4));
+        final Piece horse = new Horse(red, new Position(7, 4));
         final Piece enemy = new Soldier(black, new Position(5, 5));
         final Board board = new BoardImpl(List.of(horse, enemy));
         final List<Move> moves = horse.getMoves(board);
@@ -354,9 +354,9 @@ class PieceTest {
     /** Horse cannot capture a friendly piece. */
     @Test
     void horseCannotCaptureFriendly() {
-        final Piece horse    = new Horse(red,   new Position(7, 4));
+        final Piece horse = new Horse(red, new Position(7, 4));
         final Piece friendly = new Soldier(red, new Position(5, 5));
-        final Board board    = new BoardImpl(List.of(horse, friendly));
+        final Board board = new BoardImpl(List.of(horse, friendly));
         final List<Move> moves = horse.getMoves(board);
 
         assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(5, 5))));
@@ -380,9 +380,9 @@ class PieceTest {
     /** Cannon cannot jump over a piece to move (only to capture). */
     @Test
     void cannonCannotJumpOverPieceToMove() {
-        final Piece cannon  = new Cannon(red,   new Position(7, 4));
-        final Piece blocker = new Soldier(red,  new Position(7, 6));
-        final Board board   = new BoardImpl(List.of(cannon, blocker));
+        final Piece cannon = new Cannon(red, new Position(7, 4));
+        final Piece blocker = new Soldier(red, new Position(7, 6));
+        final Board board = new BoardImpl(List.of(cannon, blocker));
         final List<Move> moves = cannon.getMoves(board);
 
         // cannot move to cells beyond the blocker in the same row
@@ -393,10 +393,10 @@ class PieceTest {
     /** Cannon can capture an enemy piece by jumping over exactly one piece and then will stop. */
     @Test
     void cannonCapturesOverScreen() {
-        final Piece cannon  = new Cannon(red,   new Position(7, 0));
-        final Piece screen  = new Soldier(red,  new Position(7, 3));
-        final Piece enemy   = new Soldier(black, new Position(7, 6));
-        final Board board   = new BoardImpl(List.of(cannon, screen, enemy));
+        final Piece cannon = new Cannon(red, new Position(7, 0));
+        final Piece screen = new Soldier(red, new Position(7, 3));
+        final Piece enemy = new Soldier(black, new Position(7, 6));
+        final Board board = new BoardImpl(List.of(cannon, screen, enemy));
         final List<Move> moves = cannon.getMoves(board);
 
         assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(7, 6))));
@@ -406,10 +406,10 @@ class PieceTest {
     /** Cannon cannot capture a friendly piece even with a screen. */
     @Test
     void cannonCannotCaptureFriendlyOverScreen() {
-        final Piece cannon   = new Cannon(red,  new Position(7, 0));
-        final Piece screen   = new Soldier(red, new Position(7, 3));
+        final Piece cannon = new Cannon(red, new Position(7, 0));
+        final Piece screen = new Soldier(red, new Position(7, 3));
         final Piece friendly = new Soldier(red, new Position(7, 6));
-        final Board board    = new BoardImpl(List.of(cannon, screen, friendly));
+        final Board board = new BoardImpl(List.of(cannon, screen, friendly));
         final List<Move> moves = cannon.getMoves(board);
 
         assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 6))));
@@ -418,16 +418,16 @@ class PieceTest {
     /** Cannon cannot capture if there are two pieces between it and the target. */
     @Test
     void cannonCannotCaptureOverTwoPieces() {
-        final Piece cannon  = new Cannon(red,    new Position(7, 0));
-        final Piece screen1 = new Soldier(red,   new Position(7, 2));
-        final Piece screen2 = new Soldier(red,   new Position(7, 4));
-        final Piece enemy   = new Soldier(black, new Position(7, 6));
-        final Board board   = new BoardImpl(List.of(cannon, screen1, screen2, enemy));
+        final Piece cannon = new Cannon(red, new Position(7, 0));
+        final Piece screen1 = new Soldier(red, new Position(7, 2));
+        final Piece screen2 = new Soldier(red, new Position(7, 4));
+        final Piece enemy = new Soldier(black, new Position(7, 6));
+        final Board board = new BoardImpl(List.of(cannon, screen1, screen2, enemy));
         final List<Move> moves = cannon.getMoves(board);
 
         assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 6))));
     }
-    
+
     // Chariot Test:
 
     /** Chariot can slide freely along a rank with no pieces in the way. */
@@ -446,9 +446,9 @@ class PieceTest {
     /** Chariot cannot jump over a piece to move. */
     @Test
     void chariotCannotJumpOverPieceToMove() {
-        final Piece chariot  = new Chariot(red,   new Position(7, 4));
-        final Piece blocker = new Soldier(red,  new Position(7, 6));
-        final Board board   = new BoardImpl(List.of(chariot, blocker));
+        final Piece chariot = new Chariot(red, new Position(7, 4));
+        final Piece blocker = new Soldier(red, new Position(7, 6));
+        final Board board = new BoardImpl(List.of(chariot, blocker));
         final List<Move> moves = chariot.getMoves(board);
 
         // cannot move to cells beyond the blocker in the same row
@@ -458,9 +458,9 @@ class PieceTest {
     /** Chariot can capture an enemy piece*/
     @Test
     void chariotCanCaptureEnemy() {
-        final Piece chariot  = new Chariot(red,   new Position(7, 0));
-        final Piece enemy   = new Soldier(black, new Position(7, 6));
-        final Board board   = new BoardImpl(List.of(chariot, enemy));
+        final Piece chariot = new Chariot(red, new Position(7, 0));
+        final Piece enemy = new Soldier(black, new Position(7, 6));
+        final Board board = new BoardImpl(List.of(chariot, enemy));
         final List<Move> moves = chariot.getMoves(board);
 
         assertTrue(moves.stream().anyMatch(m -> m.getTo().equals(new Position(7, 6))));
@@ -470,12 +470,11 @@ class PieceTest {
     /** Chariot cannot capture a friendly piece even with a screen. */
     @Test
     void chariotCannotCaptureFriendly() {
-        final Piece chariot   = new Chariot(red,  new Position(7, 0));
+        final Piece chariot = new Chariot(red, new Position(7, 0));
         final Piece friendly = new Soldier(red, new Position(7, 6));
-        final Board board    = new BoardImpl(List.of(chariot, friendly));
+        final Board board = new BoardImpl(List.of(chariot, friendly));
         final List<Move> moves = chariot.getMoves(board);
 
         assertTrue(moves.stream().noneMatch(m -> m.getTo().equals(new Position(7, 6))));
     }
-
 }

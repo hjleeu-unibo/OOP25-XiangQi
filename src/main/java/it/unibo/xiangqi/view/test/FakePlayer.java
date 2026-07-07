@@ -8,7 +8,7 @@ import it.unibo.xiangqi.model.api.Player;
  * 
  * @hidden
  */
-public class FakePlayer implements Player {
+public final class FakePlayer implements Player {
 
     private Color color; 
 

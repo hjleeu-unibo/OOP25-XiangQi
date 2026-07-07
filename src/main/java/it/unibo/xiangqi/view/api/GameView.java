@@ -23,7 +23,7 @@ public interface GameView {
      * @throws NullPointerException if board is null
      */
     void updateBoard(Board board);
-    
+
     /**
      * Enables the interaction with pieces owned by the specified player.
      *
@@ -108,7 +108,8 @@ public interface GameView {
      */
     void showResumeNotification();
 
-    /** Show the updated timer on view.
+    /**
+     * Show the updated timer on view.
      * 
      * @param player the player refers to
      * @param turnRemaining seconds remaining for the current turn

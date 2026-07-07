@@ -13,8 +13,7 @@ import it.unibo.xiangqi.view.api.GameView;
  * 
  * @hidden
  */
-public class FakeInputHandler implements InputHandler {
-
+public final class FakeInputHandler implements InputHandler {
     private GameView view; 
 
     public FakeInputHandler(final GameView view) {

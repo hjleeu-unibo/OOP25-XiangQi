@@ -14,7 +14,7 @@ import it.unibo.xiangqi.model.api.Position;
  * Rapresenting the general piece in Xiangqi.
  * General
  */
-public class General extends AbstractPiece {
+public final class General extends AbstractPiece {
 
     private static final int VALUE = 1000;
 

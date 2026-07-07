@@ -16,14 +16,20 @@ import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.impl.PlayerImpl;
 import it.unibo.xiangqi.model.api.Piece;
 
-public class UseBoard {
-    private Player redPlayer; 
-    private Player blackPlayer; 
-    private Board board; 
-    private Piece p1, p2, p3; 
-    
+/**
+ * Test class for Board.
+ * UseBoard
+ */
+public final class UseBoard {
+    private Player redPlayer;
+    private Player blackPlayer;
+    private Board board;
+    private Piece p1;
+    private Piece p2;
+    private Piece p3;
+
     @BeforeEach
-    void setup(){
+    void setup() {
         this.blackPlayer = new PlayerImpl(Color.BLACK, true); 
         this.redPlayer = new PlayerImpl(Color.RED, true); 
         this.p1 = new FakePiece(PieceType.ADVISOR, this.blackPlayer, new Position(0, 3)); 
@@ -33,7 +39,7 @@ public class UseBoard {
     }
 
     @Test
-    void test1(){
+    void test1() {
         assertEquals(board.getPieceAt(new Position(7, 2)), p3);
         assertNotEquals(board.getPieceAt(new Position(0, 3)), p2);
     }
