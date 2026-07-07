@@ -70,7 +70,7 @@ public abstract class AbstractPiece implements Piece {
     public int getInitialValue() {
         return this.initialvalue;
     }
-    
+
     @Override
     public int getCurrentValue() {
         return this.currentvalue;

@@ -14,8 +14,7 @@ import it.unibo.xiangqi.model.api.Position;
  * Rapresenting the cannon piece in Xiangqi.
  * Cannon
  */
-public class Cannon extends AbstractPiece {
-
+public final class Cannon extends AbstractPiece {
     private static final int VALUE = 45;
 
     // Up, down, left, right
@@ -44,7 +43,7 @@ public class Cannon extends AbstractPiece {
             while (row >= 0 && row < Position.ROWS && col >= 0 && col < Position.COLS) {
                 final Position to = new Position(row, col);
                 final Piece target = board.getPieceAt(to);
-                
+
                 // if the block is empty
                 if (target == null) {
                     if (!screenFound) {

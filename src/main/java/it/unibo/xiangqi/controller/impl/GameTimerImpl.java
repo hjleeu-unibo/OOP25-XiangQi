@@ -10,7 +10,7 @@ import it.unibo.xiangqi.model.api.Player;
  * The implementation of the game timer interface.
  * GameTimerImpl
  */
-public class GameTimerImpl implements GameTimer {
+public final class GameTimerImpl implements GameTimer {
     private static final long TURN_LIMIT_SECONDS = 30;
     private static final long GAME_LIMIT_SECONDS = 600; /* 10min. */
 

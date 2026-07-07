@@ -52,7 +52,33 @@ import it.unibo.xiangqi.model.api.RuleEngine;
  * The positional value depends only by their position in the board.
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
  */
-public class MoveCalculatorImpl implements MoveCalculator {
+public final class MoveCalculatorImpl implements MoveCalculator {
+    private static final int RED_RIVER_ROW = 4; /* The row that rapresents that the red pieces is over the river. */
+    private static final int BLACK_RIVER_ROW = 5; /* The row that rapresents that the black pieces is over the river. */
+    private static final int BLACK_BOTTOM_ROW = 0; /* The bottom row for the black player. */
+    private static final int RED_BOTTOM_ROW = 9; /* The bottom row for the red player. */
+    private static final int MAX_PIECES = 32; /* The max number of the pieces in the game. */
+
+    private static final double PROTECTED_PENALTY = 0.8; /* Penalty multiplier for threatening protected. */
+    private static final double ATTACK_PROTECTED_GREATER = 0.7; /* Multiplier for attack a target with greater value. */
+    private static final double ATTACK_PROTECTED_LOWER = 0.5; /* Multiplier for attack a target with lower value. */
+    /* Threatening multiplier. */
+    private static final double THREATENING_DEFAULT = 2.0;
+    private static final double THREATENING_GENERAL = 6.0;
+    private static final double THREATENING_CHARIOT = 4.0;
+    private static final double THREATENING_CANNON = 3.0;
+    private static final double THREATENING_HORSE = 3.0;
+
+    /* Positional value. */
+    private static final int SOLDIER_OVER_RIVER = 20;
+    private static final int CANNON_ALIGNED_GENERAL = 50;
+    private static final int CANNON_LOWER_LIMIT = 40;
+    private static final int CHARIOT_ALIGNED_GENERAL = 100;
+    private static final int HORSE_OVER_RIVER = 50;
+    private static final int HORSE_UPPER_LIMIT = 65;
+    private static final int ELEPHANT_OUT_BOTTOM = 30;
+    private static final int ADVISOR_OUT_BOTTOM = 30;
+
     private final RuleEngine ruleEngine;
 
     /**
@@ -116,8 +142,6 @@ public class MoveCalculatorImpl implements MoveCalculator {
      * @param board the game board
      */
     private void updatePieceValue(final Piece piece, final Board board) {
-        final double PROTECTED_PENALTY = 0.8;
-
         int newValue = 0; /* The returning variable. */
         final Player currentPlayer = piece.getOwner();
         final List<Piece> myPieces = new ArrayList<>();
@@ -181,9 +205,9 @@ public class MoveCalculatorImpl implements MoveCalculator {
 
                     if (targetValue > myValue) {
                         /* If this is a more valuable piece. */
-                        attackBonus = (int) (attackBonus * 0.7);
+                        attackBonus = (int) (attackBonus * ATTACK_PROTECTED_GREATER);
                     } else if (targetValue <= myValue) {
-                        attackBonus = (int) (attackBonus * 0.5);
+                        attackBonus = (int) (attackBonus * ATTACK_PROTECTED_LOWER);
                     }
                 }
 
@@ -237,12 +261,6 @@ public class MoveCalculatorImpl implements MoveCalculator {
      * @return the positional value
      */
     private int calculatePositionalValue(final Piece piece, final Board board) {
-        final int RED_RIVER_ROW = 4; /* The row that rapresents that the red pieces is over the river. */
-        final int BLACK_RIVER_ROW = 5; /* The row that rapresents that the black pieces is over the river. */
-        final int BLACK_BOTTOM_ROW = 0; /* The bottom row for the black player. */
-        final int RED_BOTTOM_ROW = 9; /* The bottom row for the red player. */
-        final int MAX_PIECES = 32; /* The max number of the pieces in the game. */
-
         final Player currentPlayer = piece.getOwner();
         final Color currentPlayerColor = currentPlayer.getColor();
         Piece enemyGeneral = null;
@@ -258,10 +276,10 @@ public class MoveCalculatorImpl implements MoveCalculator {
         switch (piece.getType()) {
             case SOLDIER:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
-                    positionalValue = 20;
+                    positionalValue = SOLDIER_OVER_RIVER;
                 } else if (currentPlayerColor.equals(Color.BLACK)
                             && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
-                    positionalValue = 20;
+                    positionalValue = SOLDIER_OVER_RIVER;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }
@@ -270,42 +288,50 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 if (enemyGeneral != null
                     && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol()
                         || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
-                    positionalValue = 50;
+                    positionalValue = CANNON_ALIGNED_GENERAL;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }
                 positionalValue -= MAX_PIECES - board.getPieces().size();
-                positionalValue = Math.max(positionalValue, 40);
+                positionalValue = Math.max(positionalValue, CANNON_LOWER_LIMIT);
                 break;
             case CHARIOT:
                 if (enemyGeneral != null
                     && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol()
                         || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
-                    positionalValue = 100;
+                    positionalValue = CHARIOT_ALIGNED_GENERAL;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }
                 break;
             case HORSE:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
-                    positionalValue = 50;
+                    positionalValue = HORSE_OVER_RIVER;
                 } else if (currentPlayerColor.equals(Color.BLACK)
                             && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
-                    positionalValue = 50;
+                    positionalValue = HORSE_OVER_RIVER;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }
                 positionalValue += MAX_PIECES - board.getPieces().size();
-                positionalValue = Math.min(positionalValue, 65);
+                positionalValue = Math.min(positionalValue, HORSE_UPPER_LIMIT);
                 break;
-            /* For Elephant and Advisor, the logic is the same. */
             case ELEPHANT:
-            case ADVISOR:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
-                    positionalValue = 30;
+                    positionalValue = ELEPHANT_OUT_BOTTOM;
                 } else if (currentPlayerColor.equals(Color.BLACK)
                             && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
-                    positionalValue = 30;
+                    positionalValue = ELEPHANT_OUT_BOTTOM;
+                } else {
+                    positionalValue = piece.getInitialValue();
+                }
+                break;
+            case ADVISOR:
+                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
+                    positionalValue = ADVISOR_OUT_BOTTOM;
+                } else if (currentPlayerColor.equals(Color.BLACK)
+                            && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
+                    positionalValue = ADVISOR_OUT_BOTTOM;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }
@@ -324,21 +350,17 @@ public class MoveCalculatorImpl implements MoveCalculator {
      * @return the threatening multiplier
      */
     private double getThreateningMultiplier(final PieceType type) {
-        double threateningMultiplier = 2.0;
         switch (type) {
             case GENERAL:
-                threateningMultiplier = 6.0;
-                break;
+                return THREATENING_GENERAL;
             case CHARIOT:
-                threateningMultiplier = 4.0;
-                break;
+                return THREATENING_CHARIOT;
             case CANNON:
+                return THREATENING_CANNON;
             case HORSE:
-                threateningMultiplier = 3.0;
-                break;
+                return THREATENING_HORSE;
             default:
-                break;
+                return THREATENING_DEFAULT;
         }
-        return threateningMultiplier;
     }
 }

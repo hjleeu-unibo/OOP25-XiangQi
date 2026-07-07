@@ -21,26 +21,29 @@ public interface Piece {
      * @return the owner
      */
     Player getOwner();
+
     /**
      * Returns the current position of this piece on the board.
      * 
      * @return the position of the piece
      */
     Position getPosition();
+
     /**
      * Moves this piece to a new position.
-     *
+     * 
      * @param position the new position
      */
     void setPosition(Position position);
+
     /**
      * Returns all legal moves for this piece given the current board state.
-     *
+     * 
      * @param board the current board
      * @return list of legal moves
      */
     List<Move> getMoves(Board board);
-    
+
     /**
      * Returns true if this piece has a defensive role
      * (i.e. Advisor or Elephant, which protect the King).
@@ -52,7 +55,6 @@ public interface Piece {
     /**
      * Returns the strategic value of this piece, used by the AI scoring system.
      * Each subclass defines its own value.
-     *
      * Default values:
      *   General          = 1000
      *   Chariot          = 90

@@ -5,8 +5,9 @@ package it.unibo.xiangqi.model.api;
  * Move
  */
 public class Move {
-    private final Position from; 
+    private final Position from;
     private final Position to;
+
     /**
      * Constructor.
      * 
@@ -34,5 +35,5 @@ public class Move {
      */
     public Position getTo() {
         return to;
-    } 
+    }
 }

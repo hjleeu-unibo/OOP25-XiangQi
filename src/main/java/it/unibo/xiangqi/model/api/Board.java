@@ -10,6 +10,9 @@ import it.unibo.xiangqi.model.impl.BoardImpl;
  * the pieces placed on it.
  */
 public interface Board {
+    int ROWS = 10;
+    int COLS = 9;
+    
     /**
      * Creates a new board containing the specified pieces.
      *
@@ -34,7 +37,7 @@ public interface Board {
         final int col = position.getCol(); 
         final int row = position.getRow(); 
 
-        return (row >= 0 && row < 10 && col >= 0 && col < 9);
+        return row >= 0 && row < ROWS && col >= 0 && col < COLS;
     }
 
     /**

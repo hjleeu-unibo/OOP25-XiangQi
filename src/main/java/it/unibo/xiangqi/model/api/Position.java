@@ -26,11 +26,13 @@ public final class Position {
     public Position(final int row, final int col) {
         if (row < 0 || row >= ROWS) {
             throw new IllegalArgumentException(
-                "Row out of bounds: " + row + " (must be 0–" + (ROWS - 1) + ")");
+                String.format("Row out of bounds: %d (must be 0-%d).", row, ROWS - 1)
+            );
         }
         if (col < 0 || col >= COLS) {
             throw new IllegalArgumentException(
-                "Column out of bounds: " + col + " (must be 0–" + (COLS - 1) + ")");
+                String.format("Column out of bounds: %d (must be 0-%d).", col, COLS - 1)
+            );
         }
         this.row = row;
         this.col = col;
@@ -39,7 +41,7 @@ public final class Position {
     /**
      * Returns the row number.
      * 
-     * @return row number.
+     * @return row number
      */
     public int getRow() {
         return row;
@@ -47,6 +49,7 @@ public final class Position {
 
     /**
      * Returns the column number.
+     * 
      * @return the column number
      */
     public int getCol() {

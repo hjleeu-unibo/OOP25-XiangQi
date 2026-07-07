@@ -8,7 +8,6 @@ import java.util.List;
  * detection and legal moves selection.
  */
 public interface RuleEngine {
-
     /**
      * Filters a list of candidate moves, keeping only legal ones.
      * A move is illegal if after simulating it:
@@ -30,6 +29,7 @@ public interface RuleEngine {
      * @return true if the player is in check
      */
     boolean isCheck(Player player, Board board);
+
     /**
      * Returns true if the player is in check and has no legal move
      * that resolves it.

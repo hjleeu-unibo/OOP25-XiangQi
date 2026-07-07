@@ -14,7 +14,7 @@ import it.unibo.xiangqi.model.api.Position;
  * The advisor in Xiangqi.
  * Advisor
  */
-public class Advisor extends AbstractPiece {
+public final class Advisor extends AbstractPiece {
     private static final int VALUE = 20;
 
     // the palace spans columns 3-5 for both sides
@@ -51,7 +51,7 @@ public class Advisor extends AbstractPiece {
        final int row = current.getRow();
        final int col = current.getCol();
        final boolean isRed = getOwner().getColor() == Color.RED;
-       
+
        for (final int[] dir : DIRECTIONS) {
             final int toRow = row + dir[0];
             final int toCol = col + dir[1];
