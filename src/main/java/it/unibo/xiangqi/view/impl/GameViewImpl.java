@@ -40,17 +40,20 @@ public class GameViewImpl implements GameView {
      */
     public GameViewImpl() {
 
+        /* Main window and panels initialization */
         frame = new JFrame("Xiangqi");
         cardLayout = new CardLayout();
         rootPanel = new JPanel(cardLayout);
         menuPanel = new MenuPanel();
         boardPanel = new BoardPanel();
 
+        /* Register the application views */
         rootPanel.add(menuPanel, "MENU");
         rootPanel.add(boardPanel, "GAME");
         frame.setContentPane(rootPanel);
         cardLayout.show(rootPanel, "MENU");
 
+        /* Configure the window size relative to the screen resolution */
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final int height = (int) (screenSize.height * 0.6); 
         final int width = (int) (screenSize.width * 0.6);
@@ -60,6 +63,7 @@ public class GameViewImpl implements GameView {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
+        /* Notify the controller before closing the application */
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(final WindowEvent e) {

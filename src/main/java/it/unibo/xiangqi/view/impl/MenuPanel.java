@@ -39,12 +39,13 @@ public class MenuPanel extends JPanel {
      * loads the background image and registers the required action listeners.</p>
      */
     public MenuPanel() {
+        /* Initialize menu buttons and notification components */
         pvpButton = new JButton("Player vs Player");
         pveButton = new JButton("Player vs AI");
         resumeButton = new JButton("Resume Game");
 
         notificationPanel = new JPanel();
-        notificationPanel.setOpaque(false); //shows the background
+        notificationPanel.setOpaque(false); 
 
         notificationLabel = new JLabel();
         notificationLabel.setText("There are no games to resume");
@@ -52,10 +53,12 @@ public class MenuPanel extends JPanel {
         notificationLabel.setVisible(false);
         notificationPanel.add(notificationLabel);
 
+        /* Load the menu background image */
         this.backgroundImage = new ImageIcon(
             ClassLoader.getSystemResource("menu/menu.png")
         ).getImage();
 
+        /* Arrange the menu components */
         final Box box = Box.createVerticalBox();
 
         box.add(pvpButton);
@@ -74,7 +77,7 @@ public class MenuPanel extends JPanel {
         this.setLayout(new GridBagLayout());
         this.add(box);
 
-        /*Event listeners */
+        /* Register button listeners */
         pvpButton.addActionListener(e -> {
             inputHandler.onStart(GameModeType.PVP); 
         });
