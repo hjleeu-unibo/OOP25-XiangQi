@@ -9,11 +9,10 @@ import it.unibo.xiangqi.model.api.Player;
 
 /**
  * Concrete implementation of the {@link GameState} interface.
- *
  * This class stores the current board configuration and manages
  * the player turn during the game.
  */
-public class GameStateImpl implements GameState{
+public class GameStateImpl implements GameState {
 
     private Board board; 
     private Player player1; 
@@ -29,7 +28,7 @@ public class GameStateImpl implements GameState{
      * @param currentPlayer the player whose turn it is
      * @throws NullPointerException if any argument is {@code null}
      */
-    public GameStateImpl(Board board, Player player1, Player player2, Player currentPlayer) {
+    public GameStateImpl(final Board board, final Player player1, final Player player2, final Player currentPlayer) {
         Objects.requireNonNull(board);
         Objects.requireNonNull(player1);
         Objects.requireNonNull(player2);
@@ -60,17 +59,16 @@ public class GameStateImpl implements GameState{
     /**
      * {@inheritDoc}
      */
-   @Override
-    public GameState applyTurn(Move move) {
+    @Override
+    public GameState applyTurn(final Move move) {
         Objects.requireNonNull(move);
 
-        Board simulationBoard = board.afterMove(move);
+        final Board simulationBoard = board.afterMove(move);
 
-        GameStateImpl simulation = new GameStateImpl(simulationBoard, player1, player2, currentPlayer);
+        final GameStateImpl simulation = new GameStateImpl(simulationBoard, player1, player2, currentPlayer);
         simulation.switchTurn();
 
         return simulation;
-
     }
 
     /**
@@ -78,12 +76,11 @@ public class GameStateImpl implements GameState{
      *
      * @hidden
      */
-    private void switchTurn(){
-        if(player1.equals(currentPlayer)){
+    private void switchTurn() {
+        if (player1.equals(currentPlayer)) {
             this.currentPlayer = player2; 
-        }else{
+        } else {
             this.currentPlayer = player1; 
         }
     }
-    
 }

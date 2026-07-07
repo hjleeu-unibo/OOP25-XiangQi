@@ -10,18 +10,17 @@ import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
 /**
- * test class
+ * test class.
  * 
  * @hidden
  */
-public class FakePiece implements Piece{
+public class FakePiece implements Piece {
 
     private PieceType type; 
     private Player owner; 
     private Position pos; 
 
-
-    public FakePiece(PieceType type, Player owner, Position pos) {
+    public FakePiece(final PieceType type, final Player owner, final Position pos) {
         this.type = type;
         this.owner = owner;
         this.pos = pos;
@@ -43,12 +42,12 @@ public class FakePiece implements Piece{
     }
 
     @Override
-    public void setPosition(Position position) {
+    public void setPosition(final Position position) {
         throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
+    public List<Move> getMoves(final Board board) {
         throw new UnsupportedOperationException("Unimplemented method 'getMoves'");
     }
 
@@ -68,8 +67,7 @@ public class FakePiece implements Piece{
     }
 
     @Override
-    public void setValue(int value) {
+    public void setValue(final int value) {
         throw new UnsupportedOperationException("Unimplemented method 'setValue'");
     }
-    
 }

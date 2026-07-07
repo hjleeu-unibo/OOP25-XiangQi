@@ -10,12 +10,11 @@ import it.unibo.xiangqi.model.api.Position;
  */
 public interface InputHandler {
 
-     /**
+    /**
      * Handles the request to start a new game in the given mode.
      * 
      * @param mode the choosen game mode (PVP or PVE)
      */
-
     void onStart(GameModeType mode);
 
     /**
@@ -31,9 +30,8 @@ public interface InputHandler {
      * Handles the confirmation of a move by applying it
      * and advancing the game flow.
      * 
-     * @param move
+     * @param move the move to apply
      */
-
     void onMove(Move move);
 
     /**
@@ -42,11 +40,10 @@ public interface InputHandler {
     void onResume();
 
     /**
-     * Handles the request for a move suggestion
+     * Handles the request for a move suggestion.
      */
     void onHint();
 
-    
     /**
      * Handles the request to exit the game.
      */

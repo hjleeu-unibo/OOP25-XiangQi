@@ -23,7 +23,7 @@ public class CellListener implements ActionListener {
      * @param boardPanel the board panel that owns the cell
      * @param position the position represented by the cell
      */
-    public CellListener(BoardPanel boardPanel, Position position) {
+    public CellListener(final BoardPanel boardPanel, final Position position) {
         this.boardPanel = boardPanel;
         this.position = position;
     }
@@ -32,11 +32,11 @@ public class CellListener implements ActionListener {
      * {@inheritDoc}
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
-        InputHandler handler = boardPanel.getInputHandler();
+    public void actionPerformed(final ActionEvent e) {
+        final InputHandler handler = boardPanel.getInputHandler();
         if (handler != null) {
             boardPanel.handleCellClick(position);
-        }else{
+        } else {
             throw new IllegalStateException("Input handler has not been set."); 
         }
     }

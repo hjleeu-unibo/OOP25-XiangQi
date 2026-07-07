@@ -4,15 +4,15 @@ import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Player;
 
 /**
- * test class
+ * test class.
  * 
  * @hidden
  */
-public class FakePlayer implements Player{
+public class FakePlayer implements Player {
 
     private Color color; 
 
-    public FakePlayer(Color color){
+    public FakePlayer(final Color color) {
         this.color = color; 
     }
 
@@ -25,5 +25,4 @@ public class FakePlayer implements Player{
     public boolean isHuman() {
         throw new UnsupportedOperationException("Unimplemented method 'isHuman'");
     }
-    
 }

@@ -12,11 +12,11 @@ import it.unibo.xiangqi.model.api.Position;
  * 
  * @hidden
  */
-public class FakeBoard implements Board{
+public class FakeBoard implements Board {
 
     private List<Piece> pieces;
 
-    public FakeBoard(List<Piece> pieces){
+    public FakeBoard(final List<Piece> pieces) {
         this.pieces = pieces; 
     }
 
@@ -26,31 +26,31 @@ public class FakeBoard implements Board{
     }
 
     @Override
-    public Piece getPieceAt(Position pos) {
+    public Piece getPieceAt(final Position pos) {
 
         Piece piece = null; 
 
-        for (Piece p : this.pieces){
-            if(p.getPosition().equals(pos))
-                piece = p; 
+        for (final Piece p : this.pieces) {
+            if (p.getPosition().equals(pos)) {
+                piece = p;
+            } 
         }
 
-        return piece; 
+        return piece;
     }
 
     @Override
-    public void deletePiece(Piece piece) {
+    public void deletePiece(final Piece piece) {
         throw new UnsupportedOperationException("Unimplemented method 'deletePiece'");
     }
 
     @Override
-    public void addPiece(Piece piece) {
+    public void addPiece(final Piece piece) {
         throw new UnsupportedOperationException("Unimplemented method 'addPiece'");
     }
 
     @Override
-    public Board afterMove(Move move) {
+    public Board afterMove(final Move move) {
         throw new UnsupportedOperationException("Unimplemented method 'afterMove'");
     }
-
 }

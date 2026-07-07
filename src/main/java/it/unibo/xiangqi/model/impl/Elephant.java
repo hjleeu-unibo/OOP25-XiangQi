@@ -10,8 +10,11 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
+/**
+ * Rapresenting the elephant piece in Xiangqi.
+ * Elephant
+ */
 public class Elephant extends AbstractPiece {
-
     private static final int VALUE = 20;
     
     // river boundary: red stays on rows 5-9, black stays on rows 0-4
@@ -21,7 +24,7 @@ public class Elephant extends AbstractPiece {
     // 4 diagonal moves of magnitude 2; the eye is exactly halfway (dir/2)
     private static final int[][] DIRECTIONS = {{2, 2}, {2, -2}, {-2, 2}, {-2, -2}};
 
-    protected Elephant(Player owner, Position position) {
+    protected Elephant(final Player owner, final Position position) {
         super(PieceType.ELEPHANT, owner, position, VALUE);
     }
 
@@ -31,8 +34,8 @@ public class Elephant extends AbstractPiece {
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
-        List<Move> moves = new ArrayList<>();
+    public List<Move> getMoves(final Board board) {
+        final List<Move> moves = new ArrayList<>();
         final Position current = getPosition();
         final int row = current.getRow();
         final int col = current.getCol();

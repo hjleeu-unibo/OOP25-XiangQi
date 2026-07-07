@@ -60,30 +60,32 @@ public class BoardPanel extends JPanel {
      * notification area, and cell listeners.</p>
      */
     public BoardPanel() {
+        final int ROWS = 10;
+        final int COLS = 9;
 
-        boardGrid = new JPanel(new GridLayout(10, 9));
+        boardGrid = new JPanel(new GridLayout(ROWS, COLS));
         sidePanel = new JPanel();
         hintButton = new JButton("HINT"); 
-        cells = new JButton[10][9]; 
+        cells = new JButton[ROWS][COLS]; 
 
         notificationPanel = new JPanel(); 
         notificationLabel = new JLabel();
         notificationPanel.add(notificationLabel);
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.cellSize = (int)(screenSize.height * 0.05);
-        notificationPanel.setPreferredSize( new Dimension(0, (int)(screenSize.height * 0.075)));
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.cellSize = (int) (screenSize.height * 0.05);
+        notificationPanel.setPreferredSize(new Dimension(0, (int) (screenSize.height * 0.075)));
 
         hintButton.addActionListener(e -> {
-            if(this.inputHandler != null)
+            if (this.inputHandler != null) {
                 inputHandler.onHint(); 
-            else{
+            } else {
                 throw new IllegalStateException("input handler has not been setted"); 
             }
         });
 
-        for (int row = 0; row < 10; row++) {
-            for (int col = 0; col < 9; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 JButton button = new JButton();
                 button.addActionListener(new CellListener(this, new Position(row, col)));
                 cells[row][col] = button;
@@ -112,24 +114,22 @@ public class BoardPanel extends JPanel {
      * @param board the new board configuration to display
      * @throws NullPointerException if board is null
      */
-    public void updateBoard(Board board) {
-
-        if( board != null){
+    public void updateBoard(final Board board) {
+        if (board != null) {
             this.currentBoard = board;
-        }else{
+        } else {
             throw new NullPointerException("argument 'board' is null"); 
         }
 
-        for (int row = 0; row < 10; row++ ){
-            for (int col = 0; col < 9; col++ ){
-                
-                Position pos = new Position(row, col); 
-                Piece piece = this.currentBoard.getPieceAt(pos); 
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 9; col++) {
+                final Position pos = new Position(row, col); 
+                final Piece piece = this.currentBoard.getPieceAt(pos); 
 
-                if (piece == null){
+                if (piece == null) {
                     cells[row][col].setIcon(null);
                     cells[row][col].setText("");
-                }else{
+                } else {
                     cells[row][col].setIcon(pieceToIcon(piece));  
                 }
             }
@@ -137,30 +137,30 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
-    private ImageIcon pathToIcon(String path, int width, int height){
+    private ImageIcon pathToIcon(String path, int width, int height) {
         Objects.requireNonNull(path); 
-        URL url = ClassLoader.getSystemResource(path); 
-        ImageIcon icon = new ImageIcon(url); 
-        Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        final URL url = ClassLoader.getSystemResource(path); 
+        final ImageIcon icon = new ImageIcon(url); 
+        final Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled); 
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
-    private ImageIcon pieceToIcon(Piece piece){
-        String color = piece.getOwner().getColor().getName();
-        String type = piece.getType().getName();
-        if(color == null || type == null){
+    private ImageIcon pieceToIcon(final Piece piece) {
+        final String color = piece.getOwner().getColor().getName();
+        final String type = piece.getType().getName();
+        if (color == null || type == null) {
             throw new NullPointerException(); 
         }
-        String path = "icons/" + color + "_" + type + ".png";
+        final String path = "icons/" + color + "_" + type + ".png";
         return this.pathToIcon(path, this.cellSize, this.cellSize); 
     }
 
@@ -170,37 +170,37 @@ public class BoardPanel extends JPanel {
      * @param positions the list of positions to highlight
      * @throws NullPointerException if {@code positions} is null
      */
-    public void highlightCells(List<Position> positions) {
-        if(positions != null){
+    public void highlightCells(final List<Position> positions) {
+        if (positions != null) {
             this.highlightedCells = new ArrayList<>(positions);
-        } else{
+        } else {
             throw new NullPointerException("positions is null"); 
         }
 
         this.disableAll();
-        for (int row = 0; row < 10; row++ ){
-            for (int col = 0; col < 9; col++ ){
-                Position pos = new Position(row, col); 
-                if(this.highlightedCells.contains(pos)){
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 9; col++) {
+                final Position pos = new Position(row, col); 
+                if (this.highlightedCells.contains(pos)) {
                     highlightCell(pos, java.awt.Color.YELLOW);
                     cells[row][col].setEnabled(true);
                 }
             }
         }
 
-        int row = this.selectedCell.getRow(); 
-        int col = this.selectedCell.getCol(); 
+        final int row = this.selectedCell.getRow(); 
+        final int col = this.selectedCell.getCol(); 
         cells[row][col].setEnabled(true);
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
-    private void disableAll(){
-        for (int row = 0; row < 10; row++ ){
-            for (int col = 0; col < 9; col++ ){
+    private void disableAll() {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 9; col++) {
                 cells[row][col].setEnabled(false);
             }
         }
@@ -212,27 +212,27 @@ public class BoardPanel extends JPanel {
      * @param move the move to display
      * @throws NullPointerException if {@code move} is null
      */
-    public void showSuggestedMove(Move move) {
+    public void showSuggestedMove(final Move move) {
         Objects.requireNonNull(move); 
-        Position from = move.getFrom();
-        Position to = move.getTo();
+        final Position from = move.getFrom();
+        final Position to = move.getTo();
         highlightCell(from, java.awt.Color.GREEN);
         highlightCell(to, java.awt.Color.GREEN);
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
-    private void highlightCell(Position pos, java.awt.Color color) {
-        int row = pos.getRow();
-        int col = pos.getCol();
+    private void highlightCell(final Position pos, final java.awt.Color color) {
+        final int row = pos.getRow();
+        final int col = pos.getCol();
         cells[row][col].setBackground(color);
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
@@ -250,7 +250,7 @@ public class BoardPanel extends JPanel {
      * @param c the color of the player to enable
      * @throws NullPointerException if {@code c} is null
      */
-    public void setPlayerEnabled(Color c) {
+    public void setPlayerEnabled(final Color c) {
         this.disableAll();
         this.setPlayer(true, Objects.requireNonNull(c));
     }
@@ -261,25 +261,23 @@ public class BoardPanel extends JPanel {
      * @param c the color of the player to disable
      * @throws NullPointerException if {@code c} is null
      */
-    public void setPlayerDisabled(Color c) {
+    public void setPlayerDisabled(final Color c) {
         this.disableAll();
         this.setPlayer(false, Objects.requireNonNull(c));
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
-    private void setPlayer(boolean enable, Color c){
-
-        for (int row = 0; row < 10; row++ ){
-            for (int col = 0; col < 9; col++ ){
+    private void setPlayer(final boolean enable, final Color c) {
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 9; col++) {
+                final Position pos = new Position(row, col); 
+                final Piece piece = this.currentBoard.getPieceAt(pos); 
                 
-                Position pos = new Position(row, col); 
-                Piece piece = this.currentBoard.getPieceAt(pos); 
-                
-                if (piece != null && piece.getOwner().getColor() == c){
+                if (piece != null && piece.getOwner().getColor() == c) {
                     cells[row][col].setEnabled(enable);
                 }
             }
@@ -307,18 +305,18 @@ public class BoardPanel extends JPanel {
      * @param inputHandler the input handler associated with this view
      * @throws NullPointerException if {@code inputHandler} is null
      */
-    public void setInputHandler(InputHandler inputHandler) {
+    public void setInputHandler(final InputHandler inputHandler) {
         Objects.requireNonNull(inputHandler); 
         this.inputHandler = inputHandler;
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @return the current input handler
      * @hidden
      */
-    public InputHandler getInputHandler(){
+    public InputHandler getInputHandler() {
         return this.inputHandler; 
     }
 
@@ -328,17 +326,17 @@ public class BoardPanel extends JPanel {
      * @param position the clicked cell position
      * @hidden
      */
-    public void handleCellClick(Position position){
+    public void handleCellClick(final Position position) {
         Objects.requireNonNull(position); 
-        if(this.selectedCell == null){
+        if (this.selectedCell == null) {
             this.selectedCell = position; 
             this.inputHandler.onSelect(position);
-        }else if(this.selectedCell.equals(position)){
-            Color c = this.currentBoard.getPieceAt(position).getOwner().getColor(); 
+        } else if (this.selectedCell.equals(position)) {
+            final Color c = this.currentBoard.getPieceAt(position).getOwner().getColor(); 
             this.setPlayerEnabled(c);
             this.resetHighlights();
             this.selectedCell = null; 
-        }else{
+        } else {
             this.inputHandler.onMove(new Move(this.selectedCell, position)); 
             this.selectedCell = null; 
             this.resetHighlights();
@@ -348,14 +346,14 @@ public class BoardPanel extends JPanel {
     /**
      * {@link GameView#showCheck()} implementation.
      */
-    public void showCheck(){
+    public void showCheck() {
         showNotification(Notification.CHECK);
     }
 
     /**
      * {@link GameView#showDraw()} implementation.
      */
-    public void showDraw(){
+    public void showDraw() {
         showNotification(Notification.DRAW);
     }
 
@@ -373,47 +371,47 @@ public class BoardPanel extends JPanel {
      * 
      * @param color the color of the winning player
      */
-    public void showWinner(Color color){
-        if (color == Color.BLACK){
+    public void showWinner(final Color color) {
+        if (color == Color.BLACK) {
             showNotification(Notification.BLACK_WINS);
-        }else{
+        } else {
             showNotification(Notification.RED_WINS);
         }
     }
 
     /**
-     * Internal helper method
+     * Internal helper method.
      * 
      * @hidden
      */
-    private void showNotification(Notification notification){
+    private void showNotification(final Notification notification) {
         String path; 
-        int w,h; 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int w, h; 
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        switch(notification){
+        switch (notification) {
             case CHECK: 
                 path = "notifications/check.png";
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.4);
+                h = (int) (screenSize.height * 0.075);
+                w = (int) (screenSize.height * 0.4);
                 break; 
             case RED_WINS: 
                 this.disableAll();
                 path = "notifications/red_wins.png"; 
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.65);
+                h = (int) (screenSize.height * 0.075);
+                w = (int) (screenSize.height * 0.65);
                 break; 
             case BLACK_WINS: 
                 this.disableAll();
                 path = "notifications/black_wins.png"; 
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.65); 
+                h = (int) (screenSize.height * 0.075);
+                w = (int) (screenSize.height * 0.65); 
                 break; 
             case DRAW: 
                 this.disableAll();
                 path = "notifications/draw.png";
-                h = (int)(screenSize.height * 0.075);
-                w = (int)(screenSize.height * 0.4);
+                h = (int) (screenSize.height * 0.075);
+                w = (int) (screenSize.height * 0.4);
                 break;  
             default: 
                 throw new IllegalArgumentException("The argument is wrong"); 
@@ -432,7 +430,7 @@ public class BoardPanel extends JPanel {
      * @param gameRemaining seconds remaing for the entire game
      * @throws NullPointerException if {@code player} is null
      */
-    void updateTimer(Player player, long turnRemaining, long gameRemaining){
+    void updateTimer(final Player player, final long turnRemaining, final long gameRemaining) {
         Objects.requireNonNull(player); 
         timer.updateTimer(player, turnRemaining, gameRemaining);
     }
@@ -443,7 +441,7 @@ public class BoardPanel extends JPanel {
      * @param player the player refers to
      * @throws NullPointerException if {@code player} is null
      */
-    void showExpiredTime(Player player){
+    void showExpiredTime(final Player player) {
         Objects.requireNonNull(player);
         timer.showExpiredTime(player);
     }
@@ -452,7 +450,6 @@ public class BoardPanel extends JPanel {
      * Highlights the borders of the river and the two palaces.
      */
     private void highlightBoardAreas() {
-
         final int thickness = 3;
         final java.awt.Color palaceColor = java.awt.Color.RED;
         final java.awt.Color riverColor = java.awt.Color.BLUE;
@@ -461,10 +458,10 @@ public class BoardPanel extends JPanel {
         for (int row = 0; row <= 2; row++) {
             for (int col = 3; col <= 5; col++) {
 
-                int top = (row == 0) ? thickness : 1;
-                int bottom = (row == 2) ? thickness : 1;
-                int left = (col == 3) ? thickness : 1;
-                int right = (col == 5) ? thickness : 1;
+                final int top = (row == 0) ? thickness : 1;
+                final int bottom = (row == 2) ? thickness : 1;
+                final int left = (col == 3) ? thickness : 1;
+                final int right = (col == 5) ? thickness : 1;
 
                 cells[row][col].setBorder(
                     BorderFactory.createMatteBorder(
@@ -478,10 +475,10 @@ public class BoardPanel extends JPanel {
         for (int row = 7; row <= 9; row++) {
             for (int col = 3; col <= 5; col++) {
 
-                int top = (row == 7) ? thickness : 1;
-                int bottom = (row == 9) ? thickness : 1;
-                int left = (col == 3) ? thickness : 1;
-                int right = (col == 5) ? thickness : 1;
+                final int top = (row == 7) ? thickness : 1;
+                final int bottom = (row == 9) ? thickness : 1;
+                final int left = (col == 3) ? thickness : 1;
+                final int right = (col == 5) ? thickness : 1;
 
                 cells[row][col].setBorder(
                     BorderFactory.createMatteBorder(
@@ -493,7 +490,6 @@ public class BoardPanel extends JPanel {
 
         // ---------- River ----------
         for (int col = 0; col < 9; col++) {
-
             // Bottom border of row 4
             cells[4][col].setBorder(
                 BorderFactory.createMatteBorder(
@@ -509,5 +505,4 @@ public class BoardPanel extends JPanel {
             );
         }
     }
-    
 }

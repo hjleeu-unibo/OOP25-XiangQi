@@ -17,36 +17,34 @@ import it.unibo.xiangqi.model.api.Position;
  *   - copy of a piece for simulation
  */
 public final class PieceFactory {
-    
     // back rows
     private static final int BACK_ROW_BLACK = 0;
-    private static final int BACK_ROW_RED   = 9;
+    private static final int BACK_ROW_RED = 9;
 
     // cannon rows
     private static final int CANNON_ROW_BLACK = 2;
-    private static final int CANNON_ROW_RED   = 7;
-    private static final int CANNON_COL_LEFT  = 1;
+    private static final int CANNON_ROW_RED = 7;
+    private static final int CANNON_COL_LEFT = 1;
     private static final int CANNON_COL_RIGHT = 7;
 
     // soldier rows
     private static final int SOLDIER_ROW_BLACK = 3;
-    private static final int SOLDIER_ROW_RED   = 6;
+    private static final int SOLDIER_ROW_RED = 6;
 
     //back row columns
-    private static final int CHARIOT_COL_LEFT   = 0;
-    private static final int HORSE_COL_LEFT     = 1;
-    private static final int ELEPHANT_COL_LEFT  = 2;
-    private static final int ADVISOR_COL_LEFT   = 3;
-    private static final int GENERAL_COL        = 4;
-    private static final int ADVISOR_COL_RIGHT  = 5;
+    private static final int CHARIOT_COL_LEFT = 0;
+    private static final int HORSE_COL_LEFT = 1;
+    private static final int ELEPHANT_COL_LEFT = 2;
+    private static final int ADVISOR_COL_LEFT = 3;
+    private static final int GENERAL_COL = 4;
+    private static final int ADVISOR_COL_RIGHT = 5;
     private static final int ELEPHANT_COL_RIGHT = 6;
-    private static final int HORSE_COL_RIGHT    = 7;
-    private static final int CHARIOT_COL_RIGHT  = 8;
+    private static final int HORSE_COL_RIGHT = 7;
+    private static final int CHARIOT_COL_RIGHT = 8;
 
     // soldier columns (even columns: 0, 2, 4, 6, 8)
     private static final int[] SOLDIER_COLS = {0, 2, 4, 6, 8};
-    
-    private PieceFactory() {} // utility class
+    private PieceFactory() { } // utility class
 
     /**
      * Creates all 32 pieces for both players at their standard starting positions.
@@ -69,11 +67,11 @@ public final class PieceFactory {
             new Chariot(black, new Position(BACK_ROW_BLACK, CHARIOT_COL_RIGHT)),
             new Cannon(black, new Position(CANNON_ROW_BLACK, CANNON_COL_LEFT)),
             new Cannon(black, new Position(CANNON_ROW_BLACK, CANNON_COL_RIGHT)),
-            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[0])),
-            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[1])),
-            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[2])),
-            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[3])),
-            new Soldier (black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[4])),
+            new Soldier(black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[0])),
+            new Soldier(black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[1])),
+            new Soldier(black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[2])),
+            new Soldier(black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[3])),
+            new Soldier(black, new Position(SOLDIER_ROW_BLACK, SOLDIER_COLS[4])),
             // red pieces:
             new General(red, new Position(BACK_ROW_RED, GENERAL_COL)),
             new Advisor(red, new Position(BACK_ROW_RED, ADVISOR_COL_LEFT)),
@@ -86,19 +84,19 @@ public final class PieceFactory {
             new Chariot(red, new Position(BACK_ROW_RED, CHARIOT_COL_RIGHT)),
             new Cannon(red, new Position(CANNON_ROW_RED, CANNON_COL_LEFT)),
             new Cannon(red, new Position(CANNON_ROW_RED, CANNON_COL_RIGHT)),
-            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[0])),
-            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[1])),
-            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[2])),
-            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[3])),
-            new Soldier (red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[4]))
+            new Soldier(red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[0])),
+            new Soldier(red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[1])),
+            new Soldier(red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[2])),
+            new Soldier(red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[3])),
+            new Soldier(red, new Position(SOLDIER_ROW_RED, SOLDIER_COLS[4]))
         ));
     }
 
     /**
      * Creates a copy of a piece at its current position.
-     * reuses createPiece
+     * reuses createPiece.
      *
-     * @param p the piece to copy
+     * @param piece the piece to copy
      * @return a new piece instance with the same type, owner and position
      */
     public static Piece copyPiece(final Piece piece) {
@@ -106,13 +104,13 @@ public final class PieceFactory {
     }
     
     /**
-     * private base method — the single place where pieces are constructed
+     * private base method — the single place where pieces are constructed.
      * 
      * @param type type of piece to create
      * @param owner owner of piece to create
      * @param position position of piece to create
      * @return a piece  instance with the giving type, owner, position
-    */
+     */
     private static Piece createPiece(final PieceType type,
                                     final Player owner,
                                     final Position position) {
@@ -128,7 +126,7 @@ public final class PieceFactory {
     }
 
     /**
-     * create piece from stored piece information
+     * create piece from stored piece information.
      * 
      * @param stored a record contains the stored piece information(type, color, position)
      * @param red the red player, assigned as owner if stored color is RED

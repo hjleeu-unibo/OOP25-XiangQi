@@ -7,14 +7,13 @@ import it.unibo.xiangqi.model.api.Position;
 /**
  * Manages the overall game flow and controls the progression of
  * the match from start to finish.
- * 
  * The controller does not store the game state, which is entirely 
- * managed by the model
+ * managed by the model.
  */
 public interface GameController {
 
     /**
-     * Starts a new game with the selected mode by rendering the initial 
+     * Starts a new game with the selected mode by rendering the initial
      * board and initiating the first turn.
      * 
      * @param mode specifies the game mode (PVP or PVE)
@@ -22,8 +21,8 @@ public interface GameController {
     void start(GameModeType mode);
 
     /**
-     * Handles the selection of a cell on the board and asks the 
-     * view to highlight them for the user
+     * Handles the selection of a cell on the board and asks the
+     * view to highlight them for the user.
      * 
      * @param position the cell selected by the user
      */
@@ -52,7 +51,7 @@ public interface GameController {
     boolean isResumeAvailable();
 
     /**
-     * Loads a previously saved game state from persistent storage
+     * Loads a previously saved game state from persistent storage.
      */
     void load();
 
@@ -60,7 +59,4 @@ public interface GameController {
      * Provides a suggested move for the current human player.
      */
     void hint();
-
-
-    
 }

@@ -8,42 +8,46 @@ import it.unibo.xiangqi.common.api.PieceType;
  * Represents a Xiangqi piece on the board.
  */
 public interface Piece {
-    
     /**
      * Returns the type of this piece (i.e. HORSE, CANNON, GENERAL...).
+     * 
+     * @return the type of that piece
      */
-    public PieceType getType();
+    PieceType getType();
 
     /**
      * Returns the player who owns this piece.
+     * 
+     * @return the owner
      */
-    public Player getOwner();
-    
+    Player getOwner();
     /**
      * Returns the current position of this piece on the board.
+     * 
+     * @return the position of the piece
      */
-    public Position getPosition();
-    
+    Position getPosition();
     /**
      * Moves this piece to a new position.
      *
      * @param position the new position
      */
-    public void setPosition(Position position);
-    
-     /**
+    void setPosition(Position position);
+    /**
      * Returns all legal moves for this piece given the current board state.
      *
      * @param board the current board
      * @return list of legal moves
      */
-    public List<Move> getMoves(Board board);
+    List<Move> getMoves(Board board);
     
     /**
      * Returns true if this piece has a defensive role
      * (i.e. Advisor or Elephant, which protect the King).
+     * 
+     * @return if the piece is a defensor piece
      */
-    public Boolean isDefensor();
+    Boolean isDefensor();
 
     /**
      * Returns the strategic value of this piece, used by the AI scoring system.
@@ -60,23 +64,23 @@ public interface Piece {
      *
      * @return the piece value
      */
-    public int getInitialValue();
+    int getInitialValue();
 
-   /**
+    /**
      * Returns the current strategic value of this piece, which may differ
      * from the initial value depending on the board situation
      * (e.g. a Soldier crossing the river).
      *
      * @return the current piece value
      */
-    public int getCurrentValue();
+    int getCurrentValue();
 
     /**
-    * Updates the strategic value of this piece.
-    * Intended to be called by the AI (MoveCalculator) to adjust
-    * the value dynamically during the game (e.g. soldier crossing the river).
-    *
-    * @param value the new strategic value
-    */
-    public void setValue(final int value);
+     * Updates the strategic value of this piece.
+     * Intended to be called by the AI (MoveCalculator) to adjust
+     * the value dynamically during the game (e.g. soldier crossing the river).
+     *
+     * @param value the new strategic value
+     */
+    void setValue(int value);
 }

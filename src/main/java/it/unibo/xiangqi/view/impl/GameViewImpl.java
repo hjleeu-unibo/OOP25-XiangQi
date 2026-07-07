@@ -3,7 +3,8 @@ package it.unibo.xiangqi.view.impl;
 import java.util.List;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -22,7 +23,7 @@ import it.unibo.xiangqi.view.api.GameView;
 /**
  * Game view implementation based on Swing components.
  */
-public class GameViewImpl implements GameView{
+public class GameViewImpl implements GameView {
 
     private JFrame frame; 
     private JPanel rootPanel; 
@@ -50,39 +51,39 @@ public class GameViewImpl implements GameView{
         frame.setContentPane(rootPanel);
         cardLayout.show(rootPanel, "MENU");
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = (int)(screenSize.height * 0.6); 
-        int width = (int)(screenSize.width * 0.6);
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final int height = (int) (screenSize.height * 0.6); 
+        final int width = (int) (screenSize.width * 0.6);
 
         frame.setSize(width, height); 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        
+
         frame.addWindowListener(new WindowAdapter() {
-        @Override
-        public void windowClosing(WindowEvent e) {
-            if (inputHandler != null) {
-                inputHandler.onExit();
+            @Override
+            public void windowClosing(final WindowEvent e) {
+                if (inputHandler != null) {
+                    inputHandler.onExit();
+                }
+                System.exit(0);
             }
-            System.exit(0);
-        }
-});
-}
+        });
+    }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void updateBoard(Board board) {
+    public void updateBoard(final Board board) {
         boardPanel.updateBoard(board);
     }
 
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     @Override
-    public void setPlayerEnabled(Color c) {
+    public void setPlayerEnabled(final Color c) {
         boardPanel.setPlayerEnabled(c);
     }
 
@@ -90,7 +91,7 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void setPlayerDisabled(Color c) {
+    public void setPlayerDisabled(final Color c) {
         boardPanel.setPlayerDisabled(c);
     }
 
@@ -114,7 +115,7 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void highlightCells(List<Position> cells) {
+    public void highlightCells(final List<Position> cells) {
         boardPanel.highlightCells(cells);
     }
 
@@ -122,14 +123,14 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void showSuggestedMove(Move move) {
+    public void showSuggestedMove(final Move move) {
         boardPanel.showSuggestedMove(move);
     }
 
     /**
      * {@inheritDoc}
      */
-    public void setInputHandler(InputHandler handler) {
+    public void setInputHandler(final InputHandler handler) {
         Objects.requireNonNull(handler); 
         this.inputHandler = handler; 
         boardPanel.setInputHandler(handler);
@@ -156,17 +157,17 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void showWinner(Color color) {
+    public void showWinner(final Color color) {
         this.boardPanel.showWinner(color);
     }
 
     /**
      * {@inheritDoc}
      */
-    private void setGameSize(){
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = (int)(screenSize.height * 0.8); 
-        int width = height;
+    private void setGameSize() {
+        final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        final int height = (int)(screenSize.height * 0.8); 
+        final int width = height;
         this.frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
     }
@@ -174,7 +175,7 @@ public class GameViewImpl implements GameView{
     /**
      * {@inheritDoc}
      */
-    public void showGamePanel(){
+    public void showGamePanel() {
         this.setGameSize();
         this.cardLayout.show(rootPanel, "GAME");
     }
@@ -183,7 +184,7 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void updateTimer(Player player, long turnRemaining, long gameRemaining) {
+    public void updateTimer(final Player player, final long turnRemaining, final long gameRemaining) {
         boardPanel.updateTimer(player, turnRemaining, gameRemaining);
     }
 
@@ -191,7 +192,7 @@ public class GameViewImpl implements GameView{
      * {@inheritDoc}
      */
     @Override
-    public void showExpiredTime(Player player) {
+    public void showExpiredTime(final Player player) {
         boardPanel.showExpiredTime(player);
         Color enemyColor = Color.RED;
         if (player.getColor().equals(Color.RED)) {
@@ -215,5 +216,4 @@ public class GameViewImpl implements GameView{
     public void showResumeNotification() {
         this.menuPanel.showResumeNotification();
     }
-
 }

@@ -10,14 +10,24 @@ import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
-public class Cannon extends AbstractPiece{
+/**
+ * Rapresenting the cannon piece in Xiangqi.
+ * Cannon
+ */
+public class Cannon extends AbstractPiece {
 
     private static final int VALUE = 45;
 
     // Up, down, left, right
     private static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    protected Cannon(Player owner, Position position) {
+    /**
+     * Constructor.
+     * 
+     * @param owner the owner of that piece
+     * @param position the initial position
+     */
+    protected Cannon(final Player owner, final Position position) {
         super(PieceType.CANNON, owner, position, VALUE);
     }
 
@@ -31,22 +41,22 @@ public class Cannon extends AbstractPiece{
             int col = current.getCol() + dir[1];
             boolean screenFound = false; // has the cannon platform been found?
 
-            while(row >= 0 && row < Position.ROWS && col >= 0 && col < Position.COLS) {
+            while (row >= 0 && row < Position.ROWS && col >= 0 && col < Position.COLS) {
                 final Position to = new Position(row, col);
                 final Piece target = board.getPieceAt(to);
                 
                 // if the block is empty
-                if(target == null) {
-                    if(!screenFound) {
+                if (target == null) {
+                    if (!screenFound) {
                         moves.add(new Move(current, to)); // // phase 1 move freely
                     }
                     // phase 2: empty cell after screen → skip, keep looking
                 } else {
-                    if(!screenFound) {
+                    if (!screenFound) {
                         screenFound = true; // first piece hit → becomes the screen
                     } else {
                         // second piece found after screen
-                        if(!target.getOwner().equals(this.getOwner())) {
+                        if (!target.getOwner().equals(this.getOwner())) {
                             moves.add(new Move(current, to)); // if enemy → capture
                         }
                         break; // stop move in this direction

@@ -32,7 +32,12 @@ public final class XiangqiApplication {
 
     private XiangqiApplication() { }
 
-    public static void main(String[] args) {
+    /**
+     * The main class.
+     * 
+     * @param args params passed by command line
+     */
+    public static void main(final String[] args) {
 
         // Create the graphical user interface.
         final GameView view = new GameViewImpl();

@@ -1,12 +1,10 @@
 package it.unibo.xiangqi.common.api;
 
 /**
- * temp 
- * 
- * @hidden
+ * The type that a piece can be.
+ * PieceType
  */
 public enum PieceType {
-
     GENERAL("general"),
     ADVISOR("advisor"),
     ELEPHANT("elephant"),
@@ -15,12 +13,17 @@ public enum PieceType {
     CANNON("cannon"),
     SOLDIER("soldier");
 
-    private String name;
+    private final String name;
 
-    PieceType(String name) {
+    PieceType(final String name) {
         this.name = name;
     }
 
+    /**
+     * Get the name of that type.
+     * 
+     * @return the type name
+     */
     public String getName() {
         return this.name;
     }

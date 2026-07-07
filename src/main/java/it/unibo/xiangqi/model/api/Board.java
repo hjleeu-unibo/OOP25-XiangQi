@@ -17,7 +17,7 @@ public interface Board {
      * @return a new board instance
      * @throws NullPointerException if {@code pieces} is {@code null}
      */
-    static Board createBoard(List<Piece> pieces){
+    static Board createBoard(final List<Piece> pieces) {
         return new BoardImpl(pieces); 
     } 
 
@@ -29,15 +29,12 @@ public interface Board {
      *         {@code false} otherwise
      * @throws NullPointerException if {@code position} is {@code null}
      */
-    static boolean isValidPosition(Position position){
+    static boolean isValidPosition(final Position position) {
         Objects.requireNonNull(position); 
-        int col = position.getCol(); 
-        int row = position.getRow(); 
-        if(row >= 0 && row < 10 && col >= 0 && col < 9){
-            return true; 
-        }else{
-            return false; 
-        }
+        final int col = position.getCol(); 
+        final int row = position.getRow(); 
+
+        return (row >= 0 && row < 10 && col >= 0 && col < 9);
     }
 
     /**

@@ -5,7 +5,7 @@ import it.unibo.xiangqi.common.api.PieceType;
 
 /**
  * Represents the data required to recreate a piece when restoring
- * a previously saved game
+ * a previously saved game.
  * 
  * @param type the type of the piece
  * @param color the color of the owning player

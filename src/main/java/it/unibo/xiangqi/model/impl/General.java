@@ -10,7 +10,11 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
-public class General extends AbstractPiece{
+/**
+ * Rapresenting the general piece in Xiangqi.
+ * General
+ */
+public class General extends AbstractPiece {
 
     private static final int VALUE = 1000;
 
@@ -26,29 +30,34 @@ public class General extends AbstractPiece{
     // 4 orthogonal moves of magnitude 1
     private static final int[][] DIRECTIONS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-    protected General(Player owner, Position position) {
+    /**
+     * Constructor.
+     * 
+     * @param owner owner of the piece
+     * @param position initial position
+     */
+    protected General(final Player owner, final Position position) {
         super(PieceType.GENERAL, owner, position, VALUE);
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
-       List<Move> moves = new ArrayList<>();
+    public List<Move> getMoves(final Board board) {
+       final List<Move> moves = new ArrayList<>();
        final Position current = getPosition();
        final int row = current.getRow();
        final int col = current.getCol();
        final boolean isRed = getOwner().getColor() == Color.RED;
 
-       for (int[] dir : DIRECTIONS) {
+       for (final int[] dir : DIRECTIONS) {
             final int toRow = row + dir[0];
             final int toCol = col + dir[1];
 
             // the General must stay within the palace (row and column bounds)
-            if((isRed ? toRow >= PALACE_ROW_RED_MIN : toRow <= PALACE_ROW_BLACK_MAX)
+            if ((isRed ? toRow >= PALACE_ROW_RED_MIN : toRow <= PALACE_ROW_BLACK_MAX)
                 && toCol >= PALACE_COL_MIN && toCol <= PALACE_COL_MAX) {
                     tryAddMove(moves, board, current, toRow, toCol);
             }
        }
        return moves;
     }
-
 }

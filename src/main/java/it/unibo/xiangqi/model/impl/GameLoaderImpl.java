@@ -21,10 +21,8 @@ import java.util.List;
 
 /**
  * Implementation of the game loader.
- * 
  * Saves and loads game data using a text-based save file stored
  * in the user's home directory.
- * 
  * The save file is organized as follows:
  * 
  * <pre>
@@ -36,8 +34,8 @@ import java.util.List;
  * line 6+: piece description-> TYPE,COLOR,X,Y
  * </pre>
  * 
- * In PVE mode the red player is always the human and the black 
- * player is the bot.
+ * <p>In PVE mode the red player is always the human and the black 
+ * player is the bot.</p>
  */
 public final class GameLoaderImpl implements GameLoader {
 
@@ -48,7 +46,7 @@ public final class GameLoaderImpl implements GameLoader {
     private final File storeFile;
 
     /**
-     * Builds a new game loader and initializes the store file location
+     * Builds a new game loader and initializes the store file location.
      */
     public GameLoaderImpl() {
         final String userHome = System.getProperty("user.home");
@@ -84,11 +82,11 @@ public final class GameLoaderImpl implements GameLoader {
             writer.write(Integer.toString(pieces.size()));
             writer.newLine();
 
-            for(final Piece piece : pieces) {
+            for (final Piece piece : pieces) {
                 writer.write(pieceToLine(piece));
                 writer.newLine();
             }
-        } catch(IOException e) {
+        } catch (final IOException e) {
             throw new IllegalStateException("Failed to store current game state", e);
         }
     }
@@ -99,8 +97,7 @@ public final class GameLoaderImpl implements GameLoader {
             throw new IllegalStateException("No stored game is available.");
         }
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(storeFile))) {
-
+        try (BufferedReader reader = new BufferedReader(new FileReader(storeFile))) {
             final GameModeType mode = GameModeType.valueOf(safeReadLine(reader));
             final Color currentPlayerColor = Color.valueOf(safeReadLine(reader));
             final int redHints = Integer.parseInt(safeReadLine(reader));
@@ -108,13 +105,12 @@ public final class GameLoaderImpl implements GameLoader {
             final int piecesCount = Integer.parseInt(safeReadLine(reader));
 
             final List<StoredPiece> storedPieces = new ArrayList<>();  //da modificare qui
-            for (int i=0; i < piecesCount; i++) {
+            for (int i = 0; i < piecesCount; i++) {
                 storedPieces.add(parsePiece(safeReadLine(reader)));
             }
 
             gameModel.setStatus(mode, currentPlayerColor, redHints, blackHints, storedPieces);
-
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new IllegalStateException("The game restore has failed.", e);
         }
     }
@@ -152,7 +148,7 @@ public final class GameLoaderImpl implements GameLoader {
     //reads the next line and rejects an unexpected end of file
     private String safeReadLine(final BufferedReader reader) throws IOException {
         final String line = reader.readLine();
-        if(line == null) {
+        if (line == null) {
             throw new IllegalStateException("Unexpected end of file");
         }
 
@@ -162,9 +158,7 @@ public final class GameLoaderImpl implements GameLoader {
     private StoredPiece parsePiece(final String line) {
         final String[] fields = line.split(SEPARATOR);
         if (fields.length != PIECE_FIELDS) {
-
             throw new IllegalStateException("Invalid piece description");
-
         }
 
         final PieceType type = PieceType.valueOf(fields[0]);
@@ -174,5 +168,4 @@ public final class GameLoaderImpl implements GameLoader {
 
         return new StoredPiece(type, color, new Position(row, col));
     }
-
 }

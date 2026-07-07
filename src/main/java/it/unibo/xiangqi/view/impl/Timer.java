@@ -10,6 +10,10 @@ import javax.swing.SwingUtilities;
 
 import it.unibo.xiangqi.model.api.Player;
 
+/**
+ * The timer view component.
+ * Timer
+ */
 public class Timer {
     private JPanel timerPanel;
     private JLabel redTurnLabel;
@@ -17,6 +21,9 @@ public class Timer {
     private JLabel redGameLabel;
     private JLabel blackGameLabel;
 
+    /**
+     * Constructor. Creates the timer panel.
+     */
     public Timer() {
         timerPanel = new JPanel();
         timerPanel.setLayout(new BoxLayout(timerPanel, BoxLayout.X_AXIS));
@@ -26,7 +33,7 @@ public class Timer {
         blackTurnLabel = new JLabel("TURN: 00:00");
         blackGameLabel = new JLabel("GAME: 00:00");
 
-        Font timerFont = new Font("Monospaced", Font.BOLD, 15);
+        final Font timerFont = new Font("Monospaced", Font.BOLD, 15);
         redTurnLabel.setFont(timerFont);
         redGameLabel.setFont(timerFont);
         blackTurnLabel.setFont(timerFont);
@@ -45,7 +52,7 @@ public class Timer {
         timerPanel.add(Box.createHorizontalGlue());
     }
 
-    public void updateTimer(Player player, long turnRemaining, long gameRemaining) {
+    public void updateTimer(final Player player, final long turnRemaining, final long gameRemaining) {
         /* The invokeLater method make async update of the view with threads. */
         SwingUtilities.invokeLater(() -> {
             switch (player.getColor()) {
@@ -61,7 +68,7 @@ public class Timer {
         });
     }
 
-    public void showExpiredTime(Player player) {
+    public void showExpiredTime(final Player player) {
         SwingUtilities.invokeLater(() -> {
             switch (player.getColor()) {
                 case RED:
@@ -82,15 +89,13 @@ public class Timer {
 
     /**
      * Return the time in a specified format.
+     * 
      * @param time the time in seconds
      * @return the formatted time string
      */
-    private String timeToString(long time) {
-        if (time < 0) {
-            time = 0;
-        }
-        long minutes = time / 60;
-        long seconds = time % 60;
+    private String timeToString(final long time) {
+        long minutes = Math.max(0, time) / 60;
+        long seconds = Math.max(0, time) % 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
 }

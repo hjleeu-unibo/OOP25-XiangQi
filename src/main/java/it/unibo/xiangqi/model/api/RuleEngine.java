@@ -11,7 +11,6 @@ public interface RuleEngine {
 
     /**
      * Filters a list of candidate moves, keeping only legal ones.
-     * 
      * A move is illegal if after simulating it:
      * - the player's General is under attack OR
      * - the two Generals face each other with no pieces between them
@@ -31,7 +30,6 @@ public interface RuleEngine {
      * @return true if the player is in check
      */
     boolean isCheck(Player player, Board board);
-    
     /**
      * Returns true if the player is in check and has no legal move
      * that resolves it.
@@ -49,6 +47,5 @@ public interface RuleEngine {
      * @param board   the current board state
      * @return true if the game is a draw
      */
-     boolean isDraw(Board board);
-    
+    boolean isDraw(Board board);
 }

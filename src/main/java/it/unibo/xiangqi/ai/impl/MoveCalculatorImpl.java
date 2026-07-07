@@ -1,5 +1,20 @@
 package it.unibo.xiangqi.ai.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import it.unibo.xiangqi.ai.api.MoveCalculator;
+import it.unibo.xiangqi.common.api.Color;
+import it.unibo.xiangqi.common.api.PieceType;
+import it.unibo.xiangqi.model.api.Board;
+import it.unibo.xiangqi.model.api.GameModel;
+import it.unibo.xiangqi.model.api.GameState;
+import it.unibo.xiangqi.model.api.Move;
+import it.unibo.xiangqi.model.api.Piece;
+import it.unibo.xiangqi.model.api.Player;
+import it.unibo.xiangqi.model.api.Position;
+import it.unibo.xiangqi.model.api.RuleEngine;
+
 /**
  * LOGIC OF THIS SYSTEM | HOW THE BOARD SCORES ARE CALCULATED:
  * The board score is the sum of my pieces current value.
@@ -26,7 +41,6 @@ package it.unibo.xiangqi.ai.impl;
  *  - ELEPHANT  ->  out of its initial row (the bottom row), its value changes to 30.
  *  - ADVISOR   ->  out of its initial row (the bottom row), its value changes to 30.
  *  - GENERAL   ->  its own value will not be changed.
- * 
  * Above, these are the value of each piece during the game.
  * But they can get some extra value:
  *  - when they are protecting some ally pieces: own_positional_value + protecting_pieces_positional_value
@@ -38,25 +52,14 @@ package it.unibo.xiangqi.ai.impl;
  * The positional value depends only by their position in the board.
  * With these logics, this system will prefer attack instead of protect, make the game flow faster.
  */
-
-import java.util.ArrayList;
-import java.util.List;
-
-import it.unibo.xiangqi.ai.api.MoveCalculator;
-import it.unibo.xiangqi.common.api.Color;
-import it.unibo.xiangqi.common.api.PieceType;
-import it.unibo.xiangqi.model.api.Board;
-import it.unibo.xiangqi.model.api.GameModel;
-import it.unibo.xiangqi.model.api.GameState;
-import it.unibo.xiangqi.model.api.Move;
-import it.unibo.xiangqi.model.api.Piece;
-import it.unibo.xiangqi.model.api.Player;
-import it.unibo.xiangqi.model.api.Position;
-import it.unibo.xiangqi.model.api.RuleEngine;
-
 public class MoveCalculatorImpl implements MoveCalculator {
     private final RuleEngine ruleEngine;
 
+    /**
+     * The constructor.
+     * 
+     * @param ruleEngine rule engine for getting legal moves
+     */
     public MoveCalculatorImpl(final RuleEngine ruleEngine) {
         this.ruleEngine = ruleEngine;
     }
@@ -72,7 +75,6 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 boardScore += piece.getCurrentValue();
             }
         }
-        
         return boardScore;
     }
 
@@ -83,7 +85,6 @@ public class MoveCalculatorImpl implements MoveCalculator {
         final GameState currentState = gameModel.copyState(); /* A state of the game. */
         int maxSimulatedScore = Integer.MIN_VALUE; /* Set to this value to handle negative board scores. */
         Move bestMove = null;
-        
         for (final Piece p : board.getPieces()) {
             if (p.getOwner().equals(currentPlayer)) {
                 for (final Move m : ruleEngine.getLegalMoves(p, board)) {
@@ -91,7 +92,8 @@ public class MoveCalculatorImpl implements MoveCalculator {
                     int captureBonus = 0;
                     final Piece capturedPiece = board.getPieceAt(m.getTo());
                     if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
-                        captureBonus = (int)(getThreateningMultiplier(capturedPiece.getType()) * calculatePositionalValue(capturedPiece, board));
+                        captureBonus = (int) (getThreateningMultiplier(capturedPiece.getType())
+                                        * calculatePositionalValue(capturedPiece, board));
                     }
 
                     final GameState simulation = currentState.applyTurn(m);
@@ -109,14 +111,17 @@ public class MoveCalculatorImpl implements MoveCalculator {
 
     /**
      * Update the value of a piece due to the state of the game.
+     * 
      * @param piece the piece to update
      * @param board the game board
      */
     private void updatePieceValue(final Piece piece, final Board board) {
+        final double PROTECTED_PENALTY = 0.8;
+
         int newValue = 0; /* The returning variable. */
         final Player currentPlayer = piece.getOwner();
-        List<Piece> myPieces = new ArrayList<>();
-        List<Piece> enemyPieces = new ArrayList<>();
+        final List<Piece> myPieces = new ArrayList<>();
+        final List<Piece> enemyPieces = new ArrayList<>();
 
         for (final Piece p : board.getPieces()) {
             if (p.getOwner().equals(currentPlayer)) {
@@ -127,7 +132,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
         }
 
         /* UPDATE CURRENT OWN VALUE. SEE THE DOC AT THE TOP. */
-        int positionalValue = calculatePositionalValue(piece, board);
+        final int positionalValue = calculatePositionalValue(piece, board);
 
         newValue += positionalValue;
 
@@ -136,7 +141,7 @@ public class MoveCalculatorImpl implements MoveCalculator {
             final Piece capturedPiece = board.getPieceAt(move.getTo());
             boolean isProtected = false;
             if (capturedPiece != null && !capturedPiece.getOwner().equals(currentPlayer)) {
-                double threatening_multiplier = getThreateningMultiplier(capturedPiece.getType());
+                double threateningMultiplier = getThreateningMultiplier(capturedPiece.getType());
 
                 /* IS PROTECTED? */
                 for (final Piece p : enemyPieces) {
@@ -147,16 +152,16 @@ public class MoveCalculatorImpl implements MoveCalculator {
                         }
                     }
                     if (isProtected) {
-                        threatening_multiplier *= 0.8;
+                        threateningMultiplier *= PROTECTED_PENALTY;
                         break;
                     }
                 }
 
-                int targetValue = calculatePositionalValue(capturedPiece, board);
-                int attackBonus = (int)(threatening_multiplier * targetValue);
+                final int targetValue = calculatePositionalValue(capturedPiece, board);
+                int attackBonus = (int) (threateningMultiplier * targetValue);
 
                 boolean isSafeMove = true;
-                Position newPos = capturedPiece.getPosition();
+                final Position newPos = capturedPiece.getPosition();
 
                 /* Is this move take me to a dangerous state? */
                 for (final Piece pp: enemyPieces) {
@@ -172,13 +177,13 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 }
 
                 if (!isSafeMove) {
-                    int myValue = calculatePositionalValue(piece, board);
+                    final int myValue = calculatePositionalValue(piece, board);
 
                     if (targetValue > myValue) {
                         /* If this is a more valuable piece. */
-                        attackBonus = (int)(attackBonus * 0.7);
+                        attackBonus = (int) (attackBonus * 0.7);
                     } else if (targetValue <= myValue) {
-                        attackBonus = (int)(attackBonus * 0.5);
+                        attackBonus = (int) (attackBonus * 0.5);
                     }
                 }
 
@@ -224,6 +229,13 @@ public class MoveCalculatorImpl implements MoveCalculator {
         piece.setValue(newValue);
     }
 
+    /**
+     * Returns the positional value of a piece.
+     * 
+     * @param piece the piece
+     * @param board the board
+     * @return the positional value
+     */
     private int calculatePositionalValue(final Piece piece, final Board board) {
         final int RED_RIVER_ROW = 4; /* The row that rapresents that the red pieces is over the river. */
         final int BLACK_RIVER_ROW = 5; /* The row that rapresents that the black pieces is over the river. */
@@ -247,14 +259,17 @@ public class MoveCalculatorImpl implements MoveCalculator {
             case SOLDIER:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
                     positionalValue = 20;
-                } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
+                } else if (currentPlayerColor.equals(Color.BLACK)
+                            && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
                     positionalValue = 20;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }
                 break;
             case CANNON:
-                if (enemyGeneral != null && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol() || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
+                if (enemyGeneral != null
+                    && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol()
+                        || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
                     positionalValue = 50;
                 } else {
                     positionalValue = piece.getInitialValue();
@@ -263,7 +278,9 @@ public class MoveCalculatorImpl implements MoveCalculator {
                 positionalValue = Math.max(positionalValue, 40);
                 break;
             case CHARIOT:
-                if (enemyGeneral != null && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol() || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
+                if (enemyGeneral != null
+                    && (piece.getPosition().getCol() == enemyGeneral.getPosition().getCol()
+                        || piece.getPosition().getRow() == enemyGeneral.getPosition().getRow())) {
                     positionalValue = 100;
                 } else {
                     positionalValue = piece.getInitialValue();
@@ -272,7 +289,8 @@ public class MoveCalculatorImpl implements MoveCalculator {
             case HORSE:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
                     positionalValue = 50;
-                } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
+                } else if (currentPlayerColor.equals(Color.BLACK)
+                            && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
                     positionalValue = 50;
                 } else {
                     positionalValue = piece.getInitialValue();
@@ -285,7 +303,8 @@ public class MoveCalculatorImpl implements MoveCalculator {
             case ADVISOR:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
                     positionalValue = 30;
-                } else if (currentPlayerColor.equals(Color.BLACK) && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
+                } else if (currentPlayerColor.equals(Color.BLACK)
+                            && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
                     positionalValue = 30;
                 } else {
                     positionalValue = piece.getInitialValue();
@@ -299,26 +318,27 @@ public class MoveCalculatorImpl implements MoveCalculator {
     }
 
     /**
-     * Return the threatening multiplier due to piece type.
+     * Returns the threatening multiplier due to piece type.
+     * 
      * @param type the piece type
      * @return the threatening multiplier
      */
-    private double getThreateningMultiplier(PieceType type) {
-        double threatening_multiplier = 2.0;
+    private double getThreateningMultiplier(final PieceType type) {
+        double threateningMultiplier = 2.0;
         switch (type) {
             case GENERAL:
-                threatening_multiplier = 6.0;
+                threateningMultiplier = 6.0;
                 break;
             case CHARIOT:
-                threatening_multiplier = 4.0;
+                threateningMultiplier = 4.0;
                 break;
             case CANNON:
             case HORSE:
-                threatening_multiplier = 3.0;
+                threateningMultiplier = 3.0;
                 break;
             default:
                 break;
         }
-        return threatening_multiplier;
+        return threateningMultiplier;
     }
 }

@@ -1,7 +1,7 @@
 package it.unibo.xiangqi.model.api;
 
 /**
- * Responsible for storing and restoring the state of a game
+ * Responsible for storing and restoring the state of a game.
  */
 public interface GameLoader {
 
@@ -33,6 +33,4 @@ public interface GameLoader {
      * @return true if a stored game exists
      */
     boolean hasStoredGame();
-    
-    
 }

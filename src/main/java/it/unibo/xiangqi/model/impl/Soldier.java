@@ -10,15 +10,24 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
-public class Soldier extends AbstractPiece{
-
+/**
+ * Rapresenting the soldier piece in Xiangqi.
+ * Soldier
+ */
+public class Soldier extends AbstractPiece {
     private static final int VALUE = 10;
 
     // river boundary: red stays on rows 5-9, black stays on rows 0-4
     private static final int RIVER_ROW_RED = 4;
     private static final int RIVER_ROW_BLACK = 5;
 
-    protected Soldier(final Player owner,final Position position) {
+    /**
+     * Constructor.
+     * 
+     * @param owner owner of the piece
+     * @param position initial position
+     */
+    protected Soldier(final Player owner, final Position position) {
         super(PieceType.SOLDIER, owner, position, VALUE);
     }
 

@@ -1,21 +1,25 @@
 package it.unibo.xiangqi.common.api;
 
 /**
- * temp
- * 
- * @hidden
+ * An enum class that defines the players and pieces color.
+ * Color
  */
 public enum Color {
 
     RED("red"),
     BLACK("black"); 
 
-    private String name;
+    private final String name;
 
-    Color(String name) {
+    Color(final String name) {
         this.name = name;
     }
 
+    /**
+     * Returns the color name.
+     * 
+     * @return the color name
+     */
     public String getName() {
         return this.name;
     }

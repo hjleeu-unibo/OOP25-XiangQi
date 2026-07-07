@@ -15,7 +15,6 @@ import it.unibo.xiangqi.model.api.Position;
  * Each concrete piece only needs to implement getMoves().
  */
 public abstract class AbstractPiece implements Piece {
-
     private final PieceType type;
     private final Player owner;
     private Position position;
@@ -23,10 +22,10 @@ public abstract class AbstractPiece implements Piece {
     private int currentvalue;
 
     /**
-     * @param type     the type of this piece
-     * @param owner    the player who owns this piece
-     * @param position the starting position
-     * @param int      the initial value of this piece
+     * @param type          the type of this piece
+     * @param owner         the player who owns this piece
+     * @param position      the starting position
+     * @param initialvalue  the initial value of this piece
      */
     protected AbstractPiece(final PieceType type, 
                             final Player owner, 
@@ -88,7 +87,7 @@ public abstract class AbstractPiece implements Piece {
     }
 
     /**
-     * Tries to add a move
+     * Tries to add a move.
      * 
      * @param moves the list to add the move to if valid
      * @param board the current board state

@@ -8,11 +8,10 @@ import it.unibo.xiangqi.model.api.Position;
 
 /**
  * Implementation of the Input Handler.
- * 
  * Receives user interactions from the view and delegates the
  * corresponding actions to the appropriate components.
  */
-public final class InputHandlerImpl implements InputHandler{
+public final class InputHandlerImpl implements InputHandler {
 
     private final GameController gameController;
 
@@ -24,7 +23,6 @@ public final class InputHandlerImpl implements InputHandler{
     public InputHandlerImpl(final GameController gameController) {
 
         this.gameController = gameController;
-  
     }
 
     @Override

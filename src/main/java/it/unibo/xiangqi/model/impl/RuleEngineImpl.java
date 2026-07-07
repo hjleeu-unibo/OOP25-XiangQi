@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-
 /**
  * Implementation of the Xiangqi rule engine.
  * Responsible for validating legal moves and evaluating game states
@@ -23,29 +22,27 @@ public class RuleEngineImpl implements RuleEngine {
 
     @Override
     public boolean isCheck(final Player player, final Board board) {
-        Position generalPosition = findGeneralPosition(board, p -> p.getOwner().equals(player));
+        final Position generalPosition = findGeneralPosition(board, p -> p.getOwner().equals(player));
 
         if (generalPosition == null) {
             return false;
         }
 
-        for(Piece enemyPiece : selectPieces(board, p-> !p.getOwner().equals(player))) {
-            
-            for(Move move : enemyPiece.getMoves(board)){
+        for (final Piece enemyPiece : selectPieces(board, p -> !p.getOwner().equals(player))) {
+            for (final Move move : enemyPiece.getMoves(board)) {
                 if (move.getTo().equals(generalPosition)) {
                     return true;
                 }
             }
         }  
         return false;
-
     }
 
     @Override
     public List<Move> getLegalMoves(final Piece piece, final Board board) {
-        List<Move> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>();
 
-        for(Move move : piece.getMoves(board)) {
+        for (final Move move : piece.getMoves(board)) {
             if (isLegalMove(move, piece.getOwner(), board)) {
                 legalMoves.add(move);
             }
@@ -56,12 +53,10 @@ public class RuleEngineImpl implements RuleEngine {
     // Verifies whether a move is legal by simulating it and checking 
     // that it does not leave the player's general in check or create
     // a flying general situation.
-    private boolean isLegalMove(final Move move, final Player player, final Board board){
-
-        Board simulatedBoard = board.afterMove(move);
+    private boolean isLegalMove(final Move move, final Player player, final Board board) {
+        final Board simulatedBoard = board.afterMove(move);
 
         return !isCheck(player, simulatedBoard) && !isFlyingGeneral(simulatedBoard);
-
     }
 
     @Override
@@ -71,84 +66,69 @@ public class RuleEngineImpl implements RuleEngine {
 
     //Checks whether the  player has at least one legal move.
     private boolean hasAnyLegalMove(final Player player, final Board board) {
-        for(Piece piece : selectPieces(board, p -> p.getOwner().equals(player))) {
+        for (final Piece piece : selectPieces(board, p -> p.getOwner().equals(player))) {
             if (!getLegalMoves(piece, board).isEmpty()) {
                 return true;
             }
         }
         return false;
-
     }
 
     @Override
     public boolean isDraw(final Board board) {
-        for(Piece piece : board.getPieces()) {
+        for (final Piece piece : board.getPieces()) {
             if (piece.getType() != PieceType.GENERAL && !piece.isDefensor()) {
                 return false;
             }
         }
-
         return true;
     }
 
     // Checks whether the two generals face each other directly on the 
     // same coloumn with no pieces in between.
-    private boolean isFlyingGeneral(final Board board)  {
-
-        Position redGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.RED);
-        Position blackGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.BLACK);
+    private boolean isFlyingGeneral(final Board board) {
+        final Position redGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.RED);
+        final Position blackGeneral = findGeneralPosition(board, p -> p.getOwner().getColor() == Color.BLACK);
 
         if (redGeneral == null || blackGeneral == null) {
             return false;
         }
 
         if (redGeneral.getCol() != blackGeneral.getCol()) {
-
             return false;
         }
 
         final int start = Math.min(redGeneral.getRow(), blackGeneral.getRow());
         final int end = Math.max(redGeneral.getRow(), blackGeneral.getRow());
     
-
-        for(int y=start+1; y<end; y++) {
+        for (int y = start + 1; y < end; y++) {
 
             if (board.getPieceAt(new Position(y, redGeneral.getCol())) != null) {
                 return false;
             }
         }
-
         return true;
     }
 
     // Selects all pieces belonging to the specified player
     private List<Piece> selectPieces(final Board board, final Predicate<Piece> owner) {
-
-        List<Piece> selectedPieces = new ArrayList<>();
-        for(Piece piece : board.getPieces()) {
+        final List<Piece> selectedPieces = new ArrayList<>();
+        for (final Piece piece : board.getPieces()) {
             if (owner.test(piece)) {
                 selectedPieces.add(piece);
             }
         }
-
         return selectedPieces;
-     }
+    }
 
-     //Finds the position of the general belonging to the specified player,
-     //or null if it is not on the board (e.g. captured in a simulated position).
-     private Position findGeneralPosition(final Board board, final Predicate<Piece> owner){
-
-        for(Piece piece : board.getPieces()) {
+    //Finds the position of the general belonging to the specified player,
+    //or null if it is not on the board (e.g. captured in a simulated position).
+    private Position findGeneralPosition(final Board board, final Predicate<Piece> owner) {
+        for (final Piece piece : board.getPieces()) {
             if (piece.getType() == PieceType.GENERAL && owner.test(piece)) {
                 return piece.getPosition();
             }
         }
-
         return null;
-
-     }
-
-
+    }
 }
-
-

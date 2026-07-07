@@ -2,6 +2,10 @@ package it.unibo.xiangqi.model.api;
 
 import java.util.Objects;
 
+/**
+ * Rapresenting a cell in the game board.
+ * Position
+ */
 public final class Position {
 
     /** Number of rows on a standard Xiangqi board. */
@@ -13,7 +17,13 @@ public final class Position {
     private final int row;
     private final int col;
 
-    public Position(int row, int col) {
+    /**
+     * Constructor.
+     * 
+     * @param row the row number
+     * @param col the col number
+     */
+    public Position(final int row, final int col) {
         if (row < 0 || row >= ROWS) {
             throw new IllegalArgumentException(
                 "Row out of bounds: " + row + " (must be 0–" + (ROWS - 1) + ")");
@@ -26,25 +36,38 @@ public final class Position {
         this.col = col;
     }
 
+    /**
+     * Returns the row number.
+     * 
+     * @return row number.
+     */
     public int getRow() {
         return row;
     }
 
+    /**
+     * Returns the column number.
+     * @return the column number
+     */
     public int getCol() {
         return col;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Position)) return false;
-        Position p = (Position) o;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Position)) {
+            return false;
+        }
+        final Position p = (Position) o;
         return row == p.row && col == p.col;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(row,col);
+        return Objects.hash(row, col);
     }
 
     @Override

@@ -8,7 +8,6 @@ import it.unibo.xiangqi.common.api.GameStatus;
 
 /**
  * The central model of the Xiangqi game.
- *
  * GameModel is the source of truth for the real game state.
  * The controller reads from and writes to this interface.
  */
@@ -22,40 +21,40 @@ public interface GameModel {
      *
      * @param mode PVP or PVE
      */
-    public void startGame(GameModeType mode);
+    void startGame(GameModeType mode);
 
     /**
      * Ends the game after checkmate is detected.
      * Marks the game as finished so that a resumed load is no longer possible.
      */
-    public void endGame();
+    void endGame();
 
     /**
      * Returns true if the game has ended (endGame() has been called).
      * 
      * @return true if the game ended
      */
-    public boolean isOver();
+    boolean isOver();
 
     /**
      * Returns the current status of the game.
      * 
      * @return Status of game
      */
-    public GameStatus getStatus();
+    GameStatus getStatus();
 
     /**
      * Advances the turn to the next player.
      * On the very first call, the red player must go first.
      */
-    public void switchTurn();
+    void switchTurn();
 
     /**
      * Returns the player whose turn it currently is.
      * 
      * @return player of current turn
      */
-    public Player getCurrentPlayer();
+    Player getCurrentPlayer();
 
     // -------------------------------------------------------------------------
     // MOVE
@@ -69,7 +68,7 @@ public interface GameModel {
      * @param move the move to apply
      * @return true if the move was applied successfully
      */
-    public boolean movePiece(Move move);
+    boolean movePiece(Move move);
 
     // -------------------------------------------------------------------------
     // STATE ACCESS
@@ -80,19 +79,21 @@ public interface GameModel {
      * 
      * @return Board the current state of board
      */
-    public Board getBoard();
+    Board getBoard();
 
     /**
      * Returns both players. Red player is at index 0, black at index 1.
      * 
      * @return List of Players
      */
-    public List<Player> getPlayers();
+    List<Player> getPlayers();
 
     /**
      * Returns the current game mode (PVP or PVE).
+     * 
+     * @return the game mode type
      */
-    public GameModeType getMode();
+    GameModeType getMode();
 
     /**
      * Returns an immutable snapshot of the current game state.
@@ -101,7 +102,7 @@ public interface GameModel {
      *
      * @return a read-only snapshot of the current GameState
      */
-    public GameState copyState();
+    GameState copyState();
 
     /**
      * Restores the game model to a previously saved state.
@@ -112,31 +113,31 @@ public interface GameModel {
      * @param blackHints            hints/suggestions saved for the black side
      * @param pieces                the saved list of pieces with their positions
      */
-    public void setStatus(GameModeType mode,
-                   Color currentPlayerColor,
-                   int redHints,
-                   int blackHints,
-                   List<StoredPiece> pieces);
+    void setStatus(GameModeType mode,
+                    Color currentPlayerColor,
+                    int redHints,
+                    int blackHints,
+                    List<StoredPiece> pieces);
 
     /**
-    * Returns the number of hints remaining for the given player.
-    *
-    * @param player the player to check
-    * @return number of hints remaining (0-3)
-    */
-    public int getHintsRemaining(Player player);
+     * Returns the number of hints remaining for the given player.
+     *
+     * @param player the player to check
+     * @return number of hints remaining (0-3)
+     */
+    int getHintsRemaining(Player player);
 
     /**
-    * Decrements the hint counter for the given player.
-    *
-    * @param player the player who used a hint
-    */
-    public void useHint(Player player);
+     * Decrements the hint counter for the given player.
+     *
+     * @param player the player who used a hint
+     */
+    void useHint(Player player);
 
     /**
-    * Returns the opponent of the player whose turn it currently is.
-    *
-    * @return the player who is not currently taking their turn
-    */
-    public Player getOpponentPlayer();
+     * Returns the opponent of the player whose turn it currently is.
+     *
+     * @return the player who is not currently taking their turn
+     */
+    Player getOpponentPlayer();
 }

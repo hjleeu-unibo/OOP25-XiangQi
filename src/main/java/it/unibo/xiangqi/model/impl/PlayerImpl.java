@@ -3,12 +3,22 @@ package it.unibo.xiangqi.model.impl;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Player;
 
-public class PlayerImpl implements Player{
+/**
+ * The implementation of the player interface.
+ * PlayerImpl
+ */
+public class PlayerImpl implements Player {
 
     private final Color color;
     private final Boolean isHuman;
 
-    public PlayerImpl(final Color color, boolean isHuman) {
+    /**
+     * Constructor.
+     * 
+     * @param color the rapresenting color
+     * @param isHuman human or bot
+     */
+    public PlayerImpl(final Color color, final boolean isHuman) {
         this.color = color;
         this.isHuman = isHuman;
     }

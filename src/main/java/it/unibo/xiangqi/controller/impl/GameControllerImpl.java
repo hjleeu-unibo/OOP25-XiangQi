@@ -24,7 +24,6 @@ import java.util.List;
  * underlying model components and updating the view.
  */
 public final class GameControllerImpl implements GameController {
-
     private final GameModel gameModel;
     private final GameView gameView;
     private final RuleEngine ruleEngine;
@@ -94,8 +93,6 @@ public final class GameControllerImpl implements GameController {
             case FINISHED:
                 gameLoader.discardSave();
                 break;
-            default:
-                break;
         }
     }
 
@@ -150,7 +147,7 @@ public final class GameControllerImpl implements GameController {
                 try {
                     /* Wait 1s between every loop. */
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
                 }
@@ -182,7 +179,7 @@ public final class GameControllerImpl implements GameController {
                 try {
                     /* Wait 1s between every loop. */
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     Thread.currentThread().interrupt();
                     return;
                 }

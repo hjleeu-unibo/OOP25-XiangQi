@@ -9,14 +9,24 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
-public class Chariot extends AbstractPiece{
+/**
+ * Rapresenting the chariot piece in Xiangqi.
+ * Chariot
+ */
+public class Chariot extends AbstractPiece {
 
     private static final int VALUE = 90;
 
     // Up, down, left, right
     private static final int[][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
-    protected Chariot(Player owner, Position position) {
+    /**
+     * Constructor.
+     * 
+     * @param owner the owner
+     * @param position the initial position
+     */
+    protected Chariot(final Player owner, final Position position) {
         super(PieceType.CHARIOT, owner, position, VALUE);
     }
 

@@ -22,7 +22,7 @@ import it.unibo.xiangqi.view.api.GameView;
  * and resuming a previous game. It also manages the background image and
  * forwards user actions to the assigned {@link InputHandler}.</p>
  */
-public class MenuPanel extends JPanel{
+public class MenuPanel extends JPanel {
 
     private JButton pvpButton;
     private JButton pveButton;
@@ -56,7 +56,7 @@ public class MenuPanel extends JPanel{
             ClassLoader.getSystemResource("menu/menu.png")
         ).getImage();
 
-        Box box = Box.createVerticalBox();
+        final Box box = Box.createVerticalBox();
 
         box.add(pvpButton);
         box.add(Box.createVerticalStrut(10));
@@ -91,14 +91,14 @@ public class MenuPanel extends JPanel{
      *
      * @param inputHandler the handler responsible for processing user inputs
      */
-    public void setInputHandler(InputHandler inputHandler) {
+    public void setInputHandler(final InputHandler inputHandler) {
         this.inputHandler = inputHandler;
     }
 
     /**
      * {@link GameView#showResumeNotification()} implementation.
      */
-    public void showResumeNotification(){
+    public void showResumeNotification() {
         this.notificationLabel.setVisible(true);
     }
 
@@ -106,7 +106,7 @@ public class MenuPanel extends JPanel{
      * {@inheritDoc}
      */
     @Override
-    protected void paintComponent(Graphics g) {
+    protected void paintComponent(final Graphics g) {
         Objects.requireNonNull(this.backgroundImage); 
         super.paintComponent(g);
         g.drawImage(
@@ -118,5 +118,4 @@ public class MenuPanel extends JPanel{
             this
         );
     }
-    
 }

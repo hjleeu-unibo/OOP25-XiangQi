@@ -11,11 +11,10 @@ import it.unibo.xiangqi.model.api.Position;
 
 /**
  * Concrete implementation of the {@link Board} interface.
- * 
  * This class stores the pieces currently placed on the board
  * and provides operations to access and modify them.
  */
-public class BoardImpl implements Board{
+public class BoardImpl implements Board {
 
     private List<Piece> pieces; 
 
@@ -25,7 +24,7 @@ public class BoardImpl implements Board{
      * @param pieces the initial list of pieces on the board
      * @throws NullPointerException if {@code pieces} is {@code null}
      */
-    public BoardImpl(List<Piece> pieces) {
+    public BoardImpl(final List<Piece> pieces) {
         Objects.requireNonNull(pieces);
         this.pieces = new ArrayList<>(pieces);
     }
@@ -42,11 +41,11 @@ public class BoardImpl implements Board{
      * {@inheritDoc}
      */
     @Override
-    public Piece getPieceAt(Position position) {
+    public Piece getPieceAt(final Position position) {
         Objects.requireNonNull(position); 
         Piece piece = null; 
-        for (Piece p : this.pieces){
-            if(p.getPosition().equals(position)){
+        for (final Piece p : this.pieces) {
+            if (p.getPosition().equals(position)) {
                 piece = p; 
             }
         }
@@ -57,7 +56,7 @@ public class BoardImpl implements Board{
      * {@inheritDoc}
      */
     @Override
-    public void deletePiece(Piece piece) {
+    public void deletePiece(final Piece piece) {
         Objects.requireNonNull(piece); 
         this.pieces.remove(piece); 
     }
@@ -66,7 +65,7 @@ public class BoardImpl implements Board{
      * {@inheritDoc}
      */
     @Override
-    public void addPiece(Piece piece) {
+    public void addPiece(final Piece piece) {
         Objects.requireNonNull(piece);
         this.pieces.add(piece);
     }
@@ -75,15 +74,15 @@ public class BoardImpl implements Board{
      * {@inheritDoc}
      */
     @Override
-    public Board afterMove(Move move) {
+    public Board afterMove(final Move move) {
         Objects.requireNonNull(move);
 
-        Board newBoard = copyBoard();
+        final Board newBoard = copyBoard();
 
         if (newBoard.getPieceAt(move.getTo()) != null) {
             newBoard.deletePiece(newBoard.getPieceAt(move.getTo()));
         }
-        Piece piece = Objects.requireNonNull(newBoard.getPieceAt(move.getFrom()));
+        final Piece piece = Objects.requireNonNull(newBoard.getPieceAt(move.getFrom()));
         piece.setPosition(move.getTo());
 
         return newBoard;
@@ -91,7 +90,7 @@ public class BoardImpl implements Board{
 
     // Creates a new board containing a fresh copy of this board's pieces.
     private Board copyBoard() {
-        List<Piece> copiedPieces = this.getPieces().stream()
+        final List<Piece> copiedPieces = this.getPieces().stream()
             .map(PieceFactory::copyPiece)
             .toList();
         return Board.createBoard(copiedPieces);

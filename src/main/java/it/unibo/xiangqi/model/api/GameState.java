@@ -18,7 +18,7 @@ public interface GameState {
      * @return a new game state
      * @throws NullPointerException if any argument is {@code null}
      */
-    static GameState createGameState(Board board, List<Player> players, Player currentPlayer){
+    static GameState createGameState(final Board board, final List<Player> players, final Player currentPlayer) {
         return new GameStateImpl(board, players.get(0), players.get(1), currentPlayer); 
     }
 

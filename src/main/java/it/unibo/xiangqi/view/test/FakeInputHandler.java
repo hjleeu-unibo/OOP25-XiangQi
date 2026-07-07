@@ -9,30 +9,30 @@ import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.view.api.GameView;
 
 /**
- * test class
+ * test class.
  * 
  * @hidden
  */
-public class FakeInputHandler implements InputHandler{
+public class FakeInputHandler implements InputHandler {
 
     private GameView view; 
 
-    public FakeInputHandler(GameView view) {
+    public FakeInputHandler(final GameView view) {
         this.view = view;
     }
 
     @Override
-    public void onSelect(Position position) {
-        view.highlightCells(List.of(new Position(3,3), new Position(6,7)));
+    public void onSelect(final Position position) {
+        view.highlightCells(List.of(new Position(3, 3), new Position(6, 7)));
     }
 
     @Override
-    public void onMove(Move move) {
+    public void onMove(final Move move) {
 
     }
 
     @Override
-    public void onStart(GameModeType mode) {
+    public void onStart(final GameModeType mode) {
         view.showGamePanel(); 
     }
 
@@ -50,5 +50,4 @@ public class FakeInputHandler implements InputHandler{
     public void onHint() {
 
     }
-    
 }

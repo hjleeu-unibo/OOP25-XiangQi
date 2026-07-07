@@ -9,11 +9,15 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
+/**
+ * Rapresenting the horse piece in Xiangqi.
+ * Horse
+ */
 public class Horse extends AbstractPiece {
 
     private static final int VALUE = 40;
     // 8 possible L-shaped moves: the axis with magnitude 2 is the straight step (leg),
-    // the axis with magnitude 1 is the diagonal step
+    // the axis with magnitude 1 is the diagonal step.
     private static final int[][] DIRECTIONS = {
         {-2,  1}, {-2, -1},  // up 2
         { 2,  1}, { 2, -1},  // down 2
@@ -21,14 +25,13 @@ public class Horse extends AbstractPiece {
         { 1, -2}, {-1, -2},  // left 2
     };
 
-
-    protected Horse(Player owner, Position position) {
+    protected Horse(final Player owner, final Position position) {
         super(PieceType.HORSE, owner, position, VALUE);
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
-        List<Move> moves = new ArrayList<>();
+    public List<Move> getMoves(final Board board) {
+        final List<Move> moves = new ArrayList<>();
         final Position current = getPosition();
         final int row = current.getRow();
         final int col = current.getCol();
@@ -42,7 +45,7 @@ public class Horse extends AbstractPiece {
             final int legCol = col + (Math.abs(dir[1]) == 2 ? dir[1] / 2 : 0);
 
             // leg must be on the board and unoccupied (no blocking piece)
-            if(legRow >= 0 && legRow < Position.ROWS
+            if (legRow >= 0 && legRow < Position.ROWS
                 && legCol >= 0 && legCol < Position.COLS
                 && board.getPieceAt(new Position(legRow, legCol)) == null) {
                     tryAddMove(moves, board, current, toRow, toCol);

@@ -13,8 +13,11 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 
+/**
+ * The implementation of the GameModel interface.
+ * GameModelImpl
+ */
 public class GameModelImpl implements GameModel {
-    
     private static final int INITIAL_HINTS = 3;
 
     private Board board;
@@ -24,8 +27,7 @@ public class GameModelImpl implements GameModel {
     private GameStatus status;
     
     private int redHints;
-    private int blackHints; 
-
+    private int blackHints;
 
     public GameModelImpl(final Board board, final List<Player> players) {
         this.board = board;
@@ -35,14 +37,14 @@ public class GameModelImpl implements GameModel {
     }
 
     @Override
-    public void startGame(GameModeType mode) {
+    public void startGame(final GameModeType mode) {
         this.mode = mode;
 
         // build players based on game mode
         final Player red = new PlayerImpl(Color.RED, true);
         final Player black = new PlayerImpl(Color.BLACK, mode == GameModeType.PVP);
 
-        this.players = List.of(red,black);
+        this.players = List.of(red, black);
 
         // red always moves first
         this.currentPlayer = players.get(0);
@@ -88,7 +90,7 @@ public class GameModelImpl implements GameModel {
     }
 
     @Override
-    public boolean movePiece(Move move) {
+    public boolean movePiece(final Move move) {
         final Piece piece = board.getPieceAt(move.getFrom());
         final Piece captured = board.getPieceAt(move.getTo());
 
@@ -126,13 +128,13 @@ public class GameModelImpl implements GameModel {
     }
 
     @Override
-    public void setStatus(GameModeType mode, Color currentPlayerColor, int redHints,
-        int blackHints, List<StoredPiece> storedPieces) {
+    public void setStatus(final GameModeType mode, final Color currentPlayerColor, final int redHints,
+        final int blackHints, final List<StoredPiece> storedPieces) {
         this.mode = mode;
 
         // build players from mode
-        final Player red   = new PlayerImpl(Color.RED,   true);
-        final Player black = new PlayerImpl(Color.BLACK,  mode == GameModeType.PVP);
+        final Player red = new PlayerImpl(Color.RED, true);
+        final Player black = new PlayerImpl(Color.BLACK, mode == GameModeType.PVP);
         this.players = List.of(red, black);
 
         // restore current player by matching the saved color
@@ -156,15 +158,15 @@ public class GameModelImpl implements GameModel {
     }
 
     @Override
-    public int getHintsRemaining(Player player) {
+    public int getHintsRemaining(final Player player) {
         return player.getColor() == Color.RED ? redHints : blackHints; 
     }
 
     @Override
-    public void useHint(Player player) {
+    public void useHint(final Player player) {
         if (player.getColor() == Color.RED) {
             redHints--;
-        } else{
+        } else {
             blackHints--;
         }
     }
@@ -176,6 +178,4 @@ public class GameModelImpl implements GameModel {
         .findFirst()
         .orElseThrow(() -> new IllegalStateException("The opponent was not found"));
     }
-
-    
 }

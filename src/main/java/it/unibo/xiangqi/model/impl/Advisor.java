@@ -10,8 +10,11 @@ import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
+/**
+ * The advisor in Xiangqi.
+ * Advisor
+ */
 public class Advisor extends AbstractPiece {
-
     private static final int VALUE = 20;
 
     // the palace spans columns 3-5 for both sides
@@ -26,18 +29,24 @@ public class Advisor extends AbstractPiece {
     // 4 diagonal moves of magnitude 1
     private static final int[][] DIRECTIONS = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
 
-    protected Advisor(Player owner, Position position) {
+    /**
+     * Constructor.
+     * 
+     * @param owner the owner
+     * @param position the initial position
+     */
+    protected Advisor(final Player owner, final Position position) {
         super(PieceType.ADVISOR, owner, position, VALUE);
     }
 
     @Override
     public Boolean isDefensor() {
-        return true; // Advisor is a defensive piece protecting the General
+        return true; // Advisor is a defensive piece protecting the General.
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
-       List<Move> moves = new ArrayList<>();
+    public List<Move> getMoves(final Board board) {
+       final List<Move> moves = new ArrayList<>();
        final Position current = getPosition();
        final int row = current.getRow();
        final int col = current.getCol();
