@@ -2,7 +2,7 @@ package it.unibo.xiangqi.model.api;
 
 import java.util.List;
 
-import it.unibo.xiangqi.model.impl.GameStateImpl;
+import it.unibo.xiangqi.model.impl.FakeGameStateImpl;
 
 /**
  * Represents the current state of a Xiangqi game.
@@ -19,7 +19,7 @@ public interface GameState {
      * @throws NullPointerException if any argument is {@code null}
      */
     static GameState createGameState(final Board board, final List<Player> players, final Player currentPlayer) {
-        return new GameStateImpl(board, players.get(0), players.get(1), currentPlayer); 
+        return new FakeGameStateImpl(board, players.get(0), players.get(1), currentPlayer); 
     }
 
     /**
