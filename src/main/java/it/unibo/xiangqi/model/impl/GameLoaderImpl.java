@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,7 @@ public final class GameLoaderImpl implements GameLoader {
     //da modificare col e row -> in base costruttore
     @Override
     public void store(final GameModel gameModel) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(storeFile))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(storeFile, StandardCharsets.UTF_8))) {
 
             writer.write(gameModel.getMode().name());
             writer.newLine();
@@ -97,7 +98,7 @@ public final class GameLoaderImpl implements GameLoader {
             throw new IllegalStateException("No stored game is available.");
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(storeFile))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(storeFile, StandardCharsets.UTF_8))) {
             final GameModeType mode = GameModeType.valueOf(safeReadLine(reader));
             final Color currentPlayerColor = Color.valueOf(safeReadLine(reader));
             final int redHints = Integer.parseInt(safeReadLine(reader));

@@ -32,7 +32,46 @@ import it.unibo.xiangqi.model.api.RuleEngine;
  * The test class for MoveCalculator.
  * TestMoveCalculator
  */
-public final class TestMoveCalculator {
+final class TestMoveCalculator {
+    private static final int SOLDIER_INITIAL_VALUE = 10;
+    private static final int CHARIOT_INITIAL_VALUE = 90;
+    private static final int CANNON_INITIAL_VALUE = 45;
+    private static final int HORSE_INITIAL_VALUE = 40;
+    private static final int ELEPHANT_INITIAL_VALUE = 20;
+    private static final int ADVISOR_INITIAL_VALUE = 20;
+
+    /* Position constants. To avoid using magic number. */
+    private static final int ROW_ZERO = 0;
+    private static final int ROW_TWO = 2;
+    private static final int ROW_THREE = 3;
+    private static final int ROW_FOUR = 4;
+    private static final int ROW_FIVE = 5;
+    private static final int ROW_SEVEN = 7;
+    private static final int ROW_EIGHT = 8;
+    private static final int ROW_NINE = 9;
+
+    private static final int COL_ZERO = 0;
+    private static final int COL_ONE = 1;
+    private static final int COL_TWO = 2;
+    private static final int COL_FOUR = 4;
+    private static final int COL_FIVE = 5;
+
+    /* Excepted results. For avoid magic numbers. */
+    private static final int EXPECTED_SUM_ONLY_REDS = 100;
+    private static final int EXPECTED_CHARIOT_INITIAL_VALUE = 90;
+    private static final int EXPECTED_SOLDIER_OVER_RIVER = 20;
+    private static final int EXPECTED_THREATENING_UNPROTECTED = 285;
+    private static final int EXPECTED_CANNON_ALIGNED_GENERAL = 40;
+    private static final int EXPECTED_HORSE_OVER_RIVER = 65;
+    private static final int EXPECTED_ELEPHANT_OUT_BOTTOM_ROW = 30;
+    private static final int EXPECTED_ADVISOR_OUT_BOTTOM_ROW = 30;
+    private static final int EXPECTED_THREATENING_PROTECTED = 168;
+    private static final int EXPECTED_THREATENING_MUL_UNPROTECTED = 325;
+    private static final int EXPECTED_THREATENED_PROTECTED = 100;
+    private static final int EXPECTED_THREATENED_UNPROTECTED = 0;
+    private static final int EXPECTED_MUL_THREATENED = 0;
+    private static final int EXPECTED_MUL_THREATENED_PROTECTED = 130;
+
     private MoveCalculatorImpl moveCalculator;
     private RuleEngine ruleEngine;
     private GameModel gameModel;
@@ -44,7 +83,7 @@ public final class TestMoveCalculator {
 
     /* This block will run before every test cases. */
     @BeforeEach
-    void setup() {
+    void setUp() {
         ruleEngine = mock(RuleEngine.class);
         gameModel = mock(GameModel.class);
         board = mock(Board.class);
@@ -60,8 +99,8 @@ public final class TestMoveCalculator {
         when(blackPlayer.getColor()).thenReturn(Color.BLACK);
         when(gameState.getBoard()).thenReturn(board);
         when(gameState.getCurrentPlayer()).thenReturn(redPlayer);
-        when(pos.getRow()).thenReturn(9);
-        when(pos.getCol()).thenReturn(0);
+        when(pos.getRow()).thenReturn(ROW_NINE);
+        when(pos.getCol()).thenReturn(COL_ZERO);
     }
 
     /* Test if calculatebBoardScore() sums only the current players' pieces. */
@@ -73,18 +112,18 @@ public final class TestMoveCalculator {
 
         when(red1.getOwner()).thenReturn(redPlayer);
         when(red1.getType()).thenReturn(PieceType.SOLDIER);
-        when(red1.getCurrentValue()).thenReturn(10);
-        when(red1.getInitialValue()).thenReturn(10);
+        when(red1.getCurrentValue()).thenReturn(SOLDIER_INITIAL_VALUE);
+        when(red1.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
 
         when(red2.getOwner()).thenReturn(redPlayer);
         when(red2.getType()).thenReturn(PieceType.CHARIOT);
-        when(red2.getCurrentValue()).thenReturn(20);
-        when(red2.getInitialValue()).thenReturn(10);
+        when(red2.getCurrentValue()).thenReturn(CHARIOT_INITIAL_VALUE);
+        when(red2.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
 
         when(black.getOwner()).thenReturn(blackPlayer);
         when(black.getType()).thenReturn(PieceType.CHARIOT);
-        when(black.getCurrentValue()).thenReturn(50);
-        when(black.getInitialValue()).thenReturn(10);
+        when(black.getCurrentValue()).thenReturn(CHARIOT_INITIAL_VALUE);
+        when(black.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
 
         when(red1.getPosition()).thenReturn(pos);
         when(red2.getPosition()).thenReturn(pos);
@@ -96,7 +135,8 @@ public final class TestMoveCalculator {
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
         /* ASSERTS. */
-        assertEquals(30, score, "Should only sum red pieces values");
+        assertEquals(EXPECTED_SUM_ONLY_REDS, score, "Should only sum red pieces values");
+
         /* Verify that a function call happened. */
         verify(red1).getCurrentValue();
         verify(red2).getCurrentValue();
@@ -111,7 +151,7 @@ public final class TestMoveCalculator {
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(pos);
 
         when(board.getPieces()).thenReturn(List.of(chariot));
@@ -121,7 +161,7 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        assertEquals(90, score);
+        assertEquals(EXPECTED_CHARIOT_INITIAL_VALUE, score);
     }
 
     /* Test if the red soldier over the river, changes its value or not. */
@@ -131,9 +171,9 @@ public final class TestMoveCalculator {
 
         when(soldier.getOwner()).thenReturn(redPlayer);
         when(soldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(soldier.getInitialValue()).thenReturn(10);
+        when(soldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(soldier.getPosition()).thenReturn(pos);
-        when(pos.getRow()).thenReturn(4);
+        when(pos.getRow()).thenReturn(ROW_FOUR);
 
         when(board.getPieces()).thenReturn(List.of(soldier));
         when(ruleEngine.getLegalMoves(soldier, board)).thenReturn(List.of());
@@ -142,34 +182,34 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        assertEquals(20, score);
+        assertEquals(EXPECTED_SOLDIER_OVER_RIVER, score);
     }
 
     /* Test threatening not protected. */
     @Test
     void testThreateningUnprotected() {
-        Piece chariot = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Move captureMove = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Move captureMove = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
 
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(9);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_NINE);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
 
-        when(horsePos.getCol()).thenReturn(0);
-        when(horsePos.getRow()).thenReturn(4);
+        when(horsePos.getCol()).thenReturn(COL_ZERO);
+        when(horsePos.getRow()).thenReturn(ROW_FOUR);
 
         when(captureMove.getTo()).thenReturn(horsePos);
         when(board.getPieceAt(horsePos)).thenReturn(enemyHorse);
@@ -181,41 +221,41 @@ public final class TestMoveCalculator {
         mockSetValue(chariot);
         mockSetValue(enemyHorse);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base value: 90 (not aligned with the enemy general)
          * Horse: 40 + (32 - 2) = 70 -> min(70, 65) = 65
          * Threatening the horse: 3.0 * 65 = 195
          * Expected: 90 + 195 = 285
          */
-        assertEquals(285, score);
+        assertEquals(EXPECTED_THREATENING_UNPROTECTED, score);
     }
 
     /* Test cannon aligned with enemy general, and decreasing value due to dead pieces. */
     @Test
     void testCannonAlignedWithEnemyGeneral() {
-        Piece cannon = mock(Piece.class);
-        Piece enemyGeneral = mock(Piece.class);
-        Position cannonPos = mock(Position.class);
-        Position generalPos = mock(Position.class);
+        final Piece cannon = mock(Piece.class);
+        final Piece enemyGeneral = mock(Piece.class);
+        final Position cannonPos = mock(Position.class);
+        final Position generalPos = mock(Position.class);
 
         when(cannon.getOwner()).thenReturn(redPlayer);
         when(cannon.getType()).thenReturn(PieceType.CANNON);
-        when(cannon.getInitialValue()).thenReturn(45);
+        when(cannon.getInitialValue()).thenReturn(CANNON_INITIAL_VALUE);
         when(cannon.getPosition()).thenReturn(cannonPos);
-        when(cannonPos.getRow()).thenReturn(5);
-        when(cannonPos.getCol()).thenReturn(5);
+        when(cannonPos.getRow()).thenReturn(ROW_FIVE);
+        when(cannonPos.getCol()).thenReturn(COL_FIVE);
 
         when(enemyGeneral.getOwner()).thenReturn(blackPlayer);
         when(enemyGeneral.getType()).thenReturn(PieceType.GENERAL);
         when(enemyGeneral.getPosition()).thenReturn(generalPos);
-        when(generalPos.getRow()).thenReturn(0);
-        when(generalPos.getCol()).thenReturn(5);
+        when(generalPos.getRow()).thenReturn(ROW_ZERO);
+        when(generalPos.getCol()).thenReturn(COL_FIVE);
 
-        List<Piece> pieces = new ArrayList<>(List.of(cannon, enemyGeneral));
+        final List<Piece> pieces = new ArrayList<>(List.of(cannon, enemyGeneral));
         for (int i = 0; i < 10; i++) {
-            Piece p = mock(Piece.class);
+            final Piece p = mock(Piece.class);
             when(p.getOwner()).thenReturn(blackPlayer);
             when(p.getType()).thenReturn(PieceType.SOLDIER);
             when(p.getPosition()).thenReturn(mock(Position.class));
@@ -230,31 +270,31 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base value: 45
          * Aligned with enemy general: 50
          * Dead pieces: 32 - (2 + 10) = 20
          * Min value: 40
          * Expected: max(40, 50 - 20) = 40
          */
-        assertEquals(40, score);
+        assertEquals(EXPECTED_CANNON_ALIGNED_GENERAL, score);
     }
 
     /* Test horse over river, with some dead pieces. */
     @Test
     void testHorseOverRiver() {
-        Piece horse = mock(Piece.class);
-        Position horsePos = mock(Position.class);
+        final Piece horse = mock(Piece.class);
+        final Position horsePos = mock(Position.class);
 
         when(horse.getOwner()).thenReturn(redPlayer);
         when(horse.getType()).thenReturn(PieceType.HORSE);
-        when(horse.getInitialValue()).thenReturn(40);
+        when(horse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(horse.getPosition()).thenReturn(horsePos);
-        when(horsePos.getRow()).thenReturn(3);
+        when(horsePos.getRow()).thenReturn(ROW_THREE);
 
-        List<Piece> pieces = new ArrayList<>(List.of(horse));
+        final List<Piece> pieces = new ArrayList<>(List.of(horse));
         for (int i = 0; i < 10; i++) {
-            Piece p = mock(Piece.class);
+            final Piece p = mock(Piece.class);
             when(p.getOwner()).thenReturn(blackPlayer);
             when(p.getType()).thenReturn(PieceType.ADVISOR);
             when(p.getPosition()).thenReturn(mock(Position.class));
@@ -267,51 +307,51 @@ public final class TestMoveCalculator {
 
         mockSetValue(horse);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base: 40
          * Over the river: 50
          * Dead pieces: 32 - 11 = 21
          * Max value: 65
          * Expected: max(65, 50 + 21) = 65
          */
-        assertEquals(65, score);
+        assertEquals(EXPECTED_HORSE_OVER_RIVER, score);
     }
 
     /* Test elephant out of the bottom row. */
     @Test
     void testElephantOutBottomRow() {
-        Piece elephant = mock(Piece.class);
-        Position elephantPos = mock(Position.class);
+        final Piece elephant = mock(Piece.class);
+        final Position elephantPos = mock(Position.class);
 
         when(elephant.getOwner()).thenReturn(redPlayer);
         when(elephant.getType()).thenReturn(PieceType.ELEPHANT);
-        when(elephant.getInitialValue()).thenReturn(20);
+        when(elephant.getInitialValue()).thenReturn(ELEPHANT_INITIAL_VALUE);
         when(elephant.getPosition()).thenReturn(elephantPos);
-        when(elephantPos.getRow()).thenReturn(7);
+        when(elephantPos.getRow()).thenReturn(ROW_SEVEN);
 
         when(board.getPieces()).thenReturn(List.of(elephant));
         when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
 
         mockSetValue(elephant);
 
-        int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
+        final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        assertEquals(30, score);
+        assertEquals(EXPECTED_ELEPHANT_OUT_BOTTOM_ROW, score);
     }
 
     /* Test advisor out of the bottom row. */
     @Test
     void testAdvisorOutBottomRow() {
-        Piece advisor = mock(Piece.class);
-        Position advisorPos = mock(Position.class);
+        final Piece advisor = mock(Piece.class);
+        final Position advisorPos = mock(Position.class);
 
         when(advisor.getOwner()).thenReturn(redPlayer);
         when(advisor.getType()).thenReturn(PieceType.ADVISOR);
-        when(advisor.getInitialValue()).thenReturn(20);
+        when(advisor.getInitialValue()).thenReturn(ADVISOR_INITIAL_VALUE);
         when(advisor.getPosition()).thenReturn(advisorPos);
-        when(advisorPos.getRow()).thenReturn(8);
+        when(advisorPos.getRow()).thenReturn(ROW_EIGHT);
 
         when(board.getPieces()).thenReturn(List.of(advisor));
         when(ruleEngine.getLegalMoves(any(Piece.class), any(Board.class))).thenReturn(List.of());
@@ -320,42 +360,42 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        assertEquals(30, score);
+        assertEquals(EXPECTED_ADVISOR_OUT_BOTTOM_ROW, score);
     }
 
     /* Test threatening but protected. */
     @Test
     void testThreateningProtected() {
-        Piece chariot = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
-        Piece enemySoldier = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
+        final Piece enemySoldier = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Position soldierPos = mock(Position.class);
-        Move captureMove = mock(Move.class);
-        Move protectMove = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Position soldierPos = mock(Position.class);
+        final Move captureMove = mock(Move.class);
+        final Move protectMove = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_TWO);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
-        when(horsePos.getCol()).thenReturn(0);
-        when(horsePos.getRow()).thenReturn(4);
+        when(horsePos.getCol()).thenReturn(COL_ZERO);
+        when(horsePos.getRow()).thenReturn(ROW_FOUR);
 
         when(enemySoldier.getOwner()).thenReturn(blackPlayer);
         when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(enemySoldier.getInitialValue()).thenReturn(10);
+        when(enemySoldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(enemySoldier.getPosition()).thenReturn(soldierPos);
-        when(soldierPos.getCol()).thenReturn(0);
-        when(soldierPos.getRow()).thenReturn(5);
+        when(soldierPos.getCol()).thenReturn(COL_ZERO);
+        when(soldierPos.getRow()).thenReturn(ROW_FIVE);
 
         when(captureMove.getTo()).thenReturn(horsePos);
         when(board.getPieceAt(horsePos)).thenReturn(enemyHorse);
@@ -373,7 +413,7 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
         * Base value: 90
         * Horse value: 40 + (32 - 3) = 69 -> min(69, 65) = 65
         * Threatening multiplier (protected): 3.0 * 0.8 = 2.4
@@ -381,42 +421,42 @@ public final class TestMoveCalculator {
         * Attack bonus: 2.4 * 65 * 0.5 = 78
         * Expected: 90 + 78 = 168
         */
-        assertEquals(168, score);
+        assertEquals(EXPECTED_THREATENING_PROTECTED, score);
     }
 
     /* Test threatening multiple not protected pieces. */
     @Test
     void testThreateningMultipleUnprotected() {
-        Piece chariot = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
-        Piece enemySoldier = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
+        final Piece enemySoldier = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Position soldierPos = mock(Position.class);
-        Move captureHorse = mock(Move.class);
-        Move captureSoldier = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Position soldierPos = mock(Position.class);
+        final Move captureHorse = mock(Move.class);
+        final Move captureSoldier = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_TWO);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
-        when(horsePos.getCol()).thenReturn(0);
-        when(horsePos.getRow()).thenReturn(0);
+        when(horsePos.getCol()).thenReturn(COL_ZERO);
+        when(horsePos.getRow()).thenReturn(ROW_ZERO);
 
         when(enemySoldier.getOwner()).thenReturn(blackPlayer);
         when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(enemySoldier.getInitialValue()).thenReturn(10);
+        when(enemySoldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(enemySoldier.getPosition()).thenReturn(soldierPos);
-        when(soldierPos.getCol()).thenReturn(0);
-        when(soldierPos.getRow()).thenReturn(5);
+        when(soldierPos.getCol()).thenReturn(COL_ZERO);
+        when(soldierPos.getRow()).thenReturn(ROW_FIVE);
 
         when(captureHorse.getTo()).thenReturn(horsePos);
         when(captureSoldier.getTo()).thenReturn(soldierPos);
@@ -435,7 +475,7 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base: 90
          * Horse: 40 + (32 - 3) = 69 -> 65
          * Soldier: 20
@@ -444,40 +484,40 @@ public final class TestMoveCalculator {
          *  - Soldier: 2.0 * 20 = 40
          * Expected: 90 + 195 + 40 = 325
          */
-        assertEquals(325, score);
+        assertEquals(EXPECTED_THREATENING_MUL_UNPROTECTED, score);
     }
 
     /* Test under threaten but protected. */
     @Test
     void testThreatenedProtected() {
-        Piece chariot = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
-        Piece soldier = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
+        final Piece soldier = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Position soldierPos = mock(Position.class);
-        Move captureMove = mock(Move.class);
-        Move protectMove = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Position soldierPos = mock(Position.class);
+        final Move captureMove = mock(Move.class);
+        final Move protectMove = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(4);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_FOUR);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
 
         when(soldier.getOwner()).thenReturn(redPlayer);
         when(soldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(soldier.getInitialValue()).thenReturn(10);
+        when(soldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(soldier.getPosition()).thenReturn(soldierPos);
-        when(soldierPos.getCol()).thenReturn(0);
-        when(soldierPos.getRow()).thenReturn(5);
+        when(soldierPos.getCol()).thenReturn(COL_ZERO);
+        when(soldierPos.getRow()).thenReturn(ROW_FIVE);
 
         when(captureMove.getTo()).thenReturn(chariotPos);
         when(protectMove.getTo()).thenReturn(chariotPos);
@@ -494,34 +534,34 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base: soldier 10, chariot 90
          * Threatening protected: 0
          * Expected: 100
          */
-        assertEquals(100, score);
+        assertEquals(EXPECTED_THREATENED_PROTECTED, score);
     }
 
     /* Test threatened not protected. */
     @Test
     void testThreatenedUnprotected() {
-        Piece chariot = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Move captureMove = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Move captureMove = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_TWO);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
 
         when(captureMove.getTo()).thenReturn(chariotPos);
@@ -536,42 +576,42 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base: 90
          * Threatening not protected: -90
          * Expected: 90 - 90 = 0
          */
-        assertEquals(0, score);
+        assertEquals(EXPECTED_THREATENED_UNPROTECTED, score);
     }
 
     /* Test threatened by multiple enemies. */
     @Test
     void testMultipleThreatened() {
-        Piece chariot = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
-        Piece enemySoldier = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
+        final Piece enemySoldier = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Position soldierPos = mock(Position.class);
-        Move captureMove1 = mock(Move.class);
-        Move captureMove2 = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Position soldierPos = mock(Position.class);
+        final Move captureMove1 = mock(Move.class);
+        final Move captureMove2 = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_TWO);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
 
         when(enemySoldier.getOwner()).thenReturn(blackPlayer);
         when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(enemySoldier.getInitialValue()).thenReturn(10);
+        when(enemySoldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(enemySoldier.getPosition()).thenReturn(soldierPos);
 
         when(captureMove1.getTo()).thenReturn(chariotPos);
@@ -589,52 +629,52 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base: 90
          * Threatening not protected: -90
          * Expected: 90 - 90 = 0
          */
-        assertEquals(0, score);
+        assertEquals(EXPECTED_MUL_THREATENED, score);
     }
 
     /* Test threatened by multiple enemies bu protected. */
     @Test
     void testMultipleThreatenedProtected() {
-        Piece chariot = mock(Piece.class);
-        Piece cannon = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
-        Piece enemySoldier = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
+        final Piece cannon = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
+        final Piece enemySoldier = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position cannonPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Position soldierPos = mock(Position.class);
-        Move captureMove1 = mock(Move.class);
-        Move captureMove2 = mock(Move.class);
-        Move protectMove = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position cannonPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Position soldierPos = mock(Position.class);
+        final Move captureMove1 = mock(Move.class);
+        final Move captureMove2 = mock(Move.class);
+        final Move protectMove = mock(Move.class);
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_TWO);
 
         when(cannon.getOwner()).thenReturn(redPlayer);
         when(cannon.getType()).thenReturn(PieceType.CANNON);
-        when(cannon.getInitialValue()).thenReturn(45);
+        when(cannon.getInitialValue()).thenReturn(CANNON_INITIAL_VALUE);
         when(cannon.getPosition()).thenReturn(cannonPos);
-        when(cannonPos.getCol()).thenReturn(4);
-        when(cannonPos.getRow()).thenReturn(9);
+        when(cannonPos.getCol()).thenReturn(COL_FOUR);
+        when(cannonPos.getRow()).thenReturn(ROW_NINE);
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
 
         when(enemySoldier.getOwner()).thenReturn(blackPlayer);
         when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(enemySoldier.getInitialValue()).thenReturn(10);
+        when(enemySoldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(enemySoldier.getPosition()).thenReturn(soldierPos);
 
         when(captureMove1.getTo()).thenReturn(chariotPos);
@@ -655,33 +695,33 @@ public final class TestMoveCalculator {
 
         final int score = moveCalculator.calculateBoardScore(gameState, redPlayer);
 
-        /**
+        /*
          * Base: chariot 90, cannon 45
          * Cannon real value: 45 - (32 - 4) = 28 -> max(40, 28) = 40
          * Expected: 90 + 40 = 130
          */
-        assertEquals(130, score);
+        assertEquals(EXPECTED_MUL_THREATENED_PROTECTED, score);
     }
 
     /* Test getBestMove. */
     @Test
     void testGetBestMove() {
-        Piece chariot1 = mock(Piece.class);
-        Piece chariot2 = mock(Piece.class);
-        Piece enemyHorse = mock(Piece.class);
-        Piece enemySoldier = mock(Piece.class);
+        final Piece chariot1 = mock(Piece.class);
+        final Piece chariot2 = mock(Piece.class);
+        final Piece enemyHorse = mock(Piece.class);
+        final Piece enemySoldier = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Position horsePos = mock(Position.class);
-        Position soldierPos = mock(Position.class);
-        Move captureHorse = mock(Move.class);
-        Move captureSoldier = mock(Move.class);
-        Move threatenMove = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Position horsePos = mock(Position.class);
+        final Position soldierPos = mock(Position.class);
+        final Move captureHorse = mock(Move.class);
+        final Move captureSoldier = mock(Move.class);
+        final Move threatenMove = mock(Move.class);
 
-        GameState sim1 = mock(GameState.class);
-        GameState sim2 = mock(GameState.class);
-        Board board1 = mock(Board.class);
-        Board board2 = mock(Board.class);
+        final GameState sim1 = mock(GameState.class);
+        final GameState sim2 = mock(GameState.class);
+        final Board board1 = mock(Board.class);
+        final Board board2 = mock(Board.class);
 
         when(gameModel.getBoard()).thenReturn(board);
         when(gameModel.getCurrentPlayer()).thenReturn(redPlayer);
@@ -689,12 +729,12 @@ public final class TestMoveCalculator {
 
         when(chariot1.getOwner()).thenReturn(redPlayer);
         when(chariot1.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot1.getInitialValue()).thenReturn(90);
+        when(chariot1.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot1.getPosition()).thenReturn(chariotPos);
 
         when(chariot2.getOwner()).thenReturn(redPlayer);
         when(chariot2.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot2.getInitialValue()).thenReturn(90);
+        when(chariot2.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot2.getPosition()).thenReturn(chariotPos);
 
         mockSetValue(chariot1);
@@ -702,17 +742,17 @@ public final class TestMoveCalculator {
 
         when(enemyHorse.getOwner()).thenReturn(blackPlayer);
         when(enemyHorse.getType()).thenReturn(PieceType.HORSE);
-        when(enemyHorse.getInitialValue()).thenReturn(40);
+        when(enemyHorse.getInitialValue()).thenReturn(HORSE_INITIAL_VALUE);
         when(enemyHorse.getPosition()).thenReturn(horsePos);
-        when(horsePos.getRow()).thenReturn(0);
-        when(horsePos.getCol()).thenReturn(1);
+        when(horsePos.getRow()).thenReturn(ROW_ZERO);
+        when(horsePos.getCol()).thenReturn(COL_ONE);
 
         when(enemySoldier.getOwner()).thenReturn(blackPlayer);
         when(enemySoldier.getType()).thenReturn(PieceType.SOLDIER);
-        when(enemySoldier.getInitialValue()).thenReturn(10);
+        when(enemySoldier.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(enemySoldier.getPosition()).thenReturn(soldierPos);
-        when(soldierPos.getRow()).thenReturn(0);
-        when(soldierPos.getCol()).thenReturn(2);
+        when(soldierPos.getRow()).thenReturn(ROW_ZERO);
+        when(soldierPos.getCol()).thenReturn(COL_TWO);
 
         mockSetValue(enemyHorse);
         mockSetValue(enemySoldier);
@@ -722,7 +762,7 @@ public final class TestMoveCalculator {
         when(captureHorse.getTo()).thenReturn(horsePos);
         when(captureSoldier.getTo()).thenReturn(soldierPos);
 
-        /**
+        /*
          * Base: 90
          * Horse: 40 + (32 - 2) = 70 -> 65
          * Threatening not protected: 1.5 * 65 = 97
@@ -737,7 +777,7 @@ public final class TestMoveCalculator {
         when(ruleEngine.getLegalMoves(chariot1, board1)).thenReturn(List.of(threatenMove));
         when(ruleEngine.getLegalMoves(enemyHorse, board1)).thenReturn(List.of());
 
-        /**
+        /*
          * Base: 90
          * Soldier (not threatened): 10
          * Expected: 90
@@ -757,16 +797,16 @@ public final class TestMoveCalculator {
     /* Test getBestMove with all negative score moves. */
     @Test
     void testGetBestMoveAllNegative() {
-        Piece chariot = mock(Piece.class);
+        final Piece chariot = mock(Piece.class);
 
-        Position chariotPos = mock(Position.class);
-        Move move1 = mock(Move.class);
-        Move move2 = mock(Move.class);
+        final Position chariotPos = mock(Position.class);
+        final Move move1 = mock(Move.class);
+        final Move move2 = mock(Move.class);
 
-        GameState sim1 = mock(GameState.class);
-        GameState sim2 = mock(GameState.class);
-        Board board1 = mock(Board.class);
-        Board board2 = mock(Board.class);
+        final GameState sim1 = mock(GameState.class);
+        final GameState sim2 = mock(GameState.class);
+        final Board board1 = mock(Board.class);
+        final Board board2 = mock(Board.class);
 
         when(gameModel.getBoard()).thenReturn(board);
         when(gameModel.getCurrentPlayer()).thenReturn(redPlayer);
@@ -774,10 +814,10 @@ public final class TestMoveCalculator {
 
         when(chariot.getOwner()).thenReturn(redPlayer);
         when(chariot.getType()).thenReturn(PieceType.CHARIOT);
-        when(chariot.getInitialValue()).thenReturn(90);
+        when(chariot.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(chariot.getPosition()).thenReturn(chariotPos);
-        when(chariotPos.getCol()).thenReturn(0);
-        when(chariotPos.getRow()).thenReturn(2);
+        when(chariotPos.getCol()).thenReturn(COL_ZERO);
+        when(chariotPos.getRow()).thenReturn(ROW_TWO);
 
         when(board.getPieces()).thenReturn(List.of(chariot));
         when(ruleEngine.getLegalMoves(chariot, board)).thenReturn(List.of(move1, move2));
@@ -800,18 +840,18 @@ public final class TestMoveCalculator {
     /* Test getBestMove with multiple pieces. */
     @Test
     void testGetBestMoveMultiplePieces() {
-        Piece piece1 = mock(Piece.class);
-        Piece piece2 = mock(Piece.class);
-        Move moveFromPiece1 = mock(Move.class);
-        Move moveFromPiece2 = mock(Move.class);
-        GameState sim1 = mock(GameState.class);
-        GameState sim2 = mock(GameState.class);
-        Board simBoard1 = mock(Board.class);
-        Board simBoard2 = mock(Board.class);
-        Piece simPiece1 = mock(Piece.class);
-        Piece simPiece2 = mock(Piece.class);
-        Position simPos1 = mock(Position.class);
-        Position simPos2 = mock(Position.class);
+        final Piece piece1 = mock(Piece.class);
+        final Piece piece2 = mock(Piece.class);
+        final Move moveFromPiece1 = mock(Move.class);
+        final Move moveFromPiece2 = mock(Move.class);
+        final GameState sim1 = mock(GameState.class);
+        final GameState sim2 = mock(GameState.class);
+        final Board simBoard1 = mock(Board.class);
+        final Board simBoard2 = mock(Board.class);
+        final Piece simPiece1 = mock(Piece.class);
+        final Piece simPiece2 = mock(Piece.class);
+        final Position simPos1 = mock(Position.class);
+        final Position simPos2 = mock(Position.class);
 
         when(gameModel.getBoard()).thenReturn(board);
         when(gameModel.getCurrentPlayer()).thenReturn(redPlayer);
@@ -828,9 +868,9 @@ public final class TestMoveCalculator {
         when(sim1.getCurrentPlayer()).thenReturn(redPlayer);
         when(simPiece1.getOwner()).thenReturn(redPlayer);
         when(simPiece1.getType()).thenReturn(PieceType.SOLDIER);
-        when(simPiece1.getInitialValue()).thenReturn(10);
+        when(simPiece1.getInitialValue()).thenReturn(SOLDIER_INITIAL_VALUE);
         when(simPiece1.getPosition()).thenReturn(simPos1);
-        when(simPos1.getRow()).thenReturn(9);
+        when(simPos1.getRow()).thenReturn(ROW_NINE);
         when(simBoard1.getPieces()).thenReturn(List.of(simPiece1));
         when(ruleEngine.getLegalMoves(simPiece1, simBoard1)).thenReturn(List.of());
 
@@ -842,13 +882,13 @@ public final class TestMoveCalculator {
         when(sim2.getCurrentPlayer()).thenReturn(redPlayer);
         when(simPiece2.getOwner()).thenReturn(redPlayer);
         when(simPiece2.getType()).thenReturn(PieceType.CHARIOT);
-        when(simPiece2.getInitialValue()).thenReturn(90);
+        when(simPiece2.getInitialValue()).thenReturn(CHARIOT_INITIAL_VALUE);
         when(simPiece2.getPosition()).thenReturn(simPos2);
-        when(simPos2.getRow()).thenReturn(9);
-        when(simPos2.getCol()).thenReturn(0);
+        when(simPos2.getRow()).thenReturn(ROW_NINE);
+        when(simPos2.getCol()).thenReturn(COL_ZERO);
         when(simBoard2.getPieces()).thenReturn(List.of(simPiece2));
         when(ruleEngine.getLegalMoves(simPiece2, simBoard2)).thenReturn(List.of());
-        
+
         mockSetValue(simPiece2);
 
         final Move result = moveCalculator.getBestMove(gameModel);
@@ -859,7 +899,7 @@ public final class TestMoveCalculator {
     /* Helper function that "simulate" the Piece.setValue method. */
     private void mockSetValue(final Piece piece) {
         doAnswer(inv -> {
-            when(piece.getCurrentValue()).thenReturn((int)inv.getArgument(0));
+            when(piece.getCurrentValue()).thenReturn(inv.<Integer>getArgument(0));
             return null;
         }).when(piece).setValue(anyInt());
     }

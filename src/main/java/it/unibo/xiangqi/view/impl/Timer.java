@@ -1,5 +1,6 @@
 package it.unibo.xiangqi.view.impl;
 
+import java.awt.BorderLayout;
 import java.awt.Font;
 
 import javax.swing.Box;
@@ -18,11 +19,11 @@ public final class Timer {
     private static final String LOST_MSG = "LOST!";
     private static final int TIME_DIVIDER = 60;
 
-    private JPanel timerPanel;
-    private JLabel redTurnLabel;
-    private JLabel blackTurnLabel;
-    private JLabel redGameLabel;
-    private JLabel blackGameLabel;
+    private final JPanel timerPanel;
+    private final JLabel redTurnLabel;
+    private final JLabel blackTurnLabel;
+    private final JLabel redGameLabel;
+    private final JLabel blackGameLabel;
 
     /**
      * Constructor. Creates the timer panel.
@@ -99,11 +100,14 @@ public final class Timer {
     }
 
     /**
-     * Returs the panel of the time.
+     * Returs a copy of the panel of the time.
+     * 
      * @return the JPanel component
      */
     public JPanel getTimerPanel() {
-        return timerPanel;
+        final JPanel copy = new JPanel(new BorderLayout());
+        copy.add(timerPanel);
+        return copy;
     }
 
     /**

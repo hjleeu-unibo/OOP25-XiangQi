@@ -23,14 +23,15 @@ import it.unibo.xiangqi.view.api.GameView;
  * forwards user actions to the assigned {@link InputHandler}.</p>
  */
 public class MenuPanel extends JPanel {
+    private static final long serialVersionUID = 1L; /* Because this class implements Serializable. */
 
-    private JButton pvpButton;
-    private JButton pveButton;
-    private JButton resumeButton;
-    private InputHandler inputHandler; 
-    private Image backgroundImage; 
-    private JPanel notificationPanel;
-    private JLabel notificationLabel;
+    private static final int VERTICAL_STRUCT_SIZE_1 = 10;
+    private static final int VERTICAL_STRUCT_SIZE_2 = 20;
+
+    /* Transient fields will be skipped during serialization. */
+    private transient InputHandler inputHandler;
+    private final transient Image backgroundImage;
+    private final JLabel notificationLabel;
 
     /**
      * Creates a new menu panel.
@@ -40,11 +41,11 @@ public class MenuPanel extends JPanel {
      */
     public MenuPanel() {
         /* Initialize menu buttons and notification components */
-        pvpButton = new JButton("Player vs Player");
-        pveButton = new JButton("Player vs AI");
-        resumeButton = new JButton("Resume Game");
+        final JButton pvpButton = new JButton("Player vs Player");
+        final JButton pveButton = new JButton("Player vs AI");
+        final JButton resumeButton = new JButton("Resume Game");
 
-        notificationPanel = new JPanel();
+        final JPanel notificationPanel = new JPanel();
         notificationPanel.setOpaque(false); 
 
         notificationLabel = new JLabel();
@@ -62,11 +63,11 @@ public class MenuPanel extends JPanel {
         final Box box = Box.createVerticalBox();
 
         box.add(pvpButton);
-        box.add(Box.createVerticalStrut(10));
+        box.add(Box.createVerticalStrut(VERTICAL_STRUCT_SIZE_1));
         box.add(pveButton);
-        box.add(Box.createVerticalStrut(10));
+        box.add(Box.createVerticalStrut(VERTICAL_STRUCT_SIZE_1));
         box.add(resumeButton);
-        box.add(Box.createVerticalStrut(20));
+        box.add(Box.createVerticalStrut(VERTICAL_STRUCT_SIZE_2));
         box.add(notificationPanel);
 
         pvpButton.setAlignmentX(CENTER_ALIGNMENT);

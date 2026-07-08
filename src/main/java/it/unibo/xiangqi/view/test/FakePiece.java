@@ -10,16 +10,21 @@ import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
 /**
- * test class.
- * 
- * @hidden
+ * Simulation of the Piece class.
+ * FakePiece
  */
 public final class FakePiece implements Piece {
+    private final PieceType type; 
+    private final Player owner; 
+    private final Position pos; 
 
-    private PieceType type; 
-    private Player owner; 
-    private Position pos; 
-
+    /**
+     * Constructor.
+     * 
+     * @param type the type of the piece
+     * @param owner the owner
+     * @param pos the initial position
+     */
     public FakePiece(final PieceType type, final Player owner, final Position pos) {
         this.type = type;
         this.owner = owner;

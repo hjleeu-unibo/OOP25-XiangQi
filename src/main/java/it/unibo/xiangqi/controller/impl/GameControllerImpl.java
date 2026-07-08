@@ -16,6 +16,7 @@ import it.unibo.xiangqi.view.api.GameView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of the game controller.
@@ -50,12 +51,12 @@ public final class GameControllerImpl implements GameController {
                               final GameLoader gameLoader,
                               final GameTimer gameTimer) {
 
-        this.gameModel = gameModel;
-        this.gameView = gameView;
-        this.ruleEngine = ruleEngine;
-        this.moveCalculator = moveCalculator;
-        this.gameLoader = gameLoader;
-        this.gameTimer = gameTimer;
+        this.gameModel = Objects.requireNonNull(gameModel);
+        this.gameView = Objects.requireNonNull(gameView);
+        this.ruleEngine = Objects.requireNonNull(ruleEngine);
+        this.moveCalculator = Objects.requireNonNull(moveCalculator);
+        this.gameLoader = Objects.requireNonNull(gameLoader);
+        this.gameTimer = Objects.requireNonNull(gameTimer);
     }
 
     @Override
@@ -290,5 +291,4 @@ public final class GameControllerImpl implements GameController {
 
         return destinations;
     }
-
 }

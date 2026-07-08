@@ -2,6 +2,7 @@ package it.unibo.xiangqi.view.impl;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Position;
@@ -14,8 +15,8 @@ import it.unibo.xiangqi.model.api.Position;
  */
 public class CellListener implements ActionListener {
 
-    private BoardPanel boardPanel;
-    private Position position;
+    private final BoardPanel boardPanel;
+    private final Position position;
 
     /**
      * Creates a new listener associated with the specified board cell.
@@ -24,8 +25,8 @@ public class CellListener implements ActionListener {
      * @param position the position represented by the cell
      */
     public CellListener(final BoardPanel boardPanel, final Position position) {
-        this.boardPanel = boardPanel;
-        this.position = position;
+        this.boardPanel = Objects.requireNonNull(boardPanel);
+        this.position = Objects.requireNonNull(position);
     }
 
     /**

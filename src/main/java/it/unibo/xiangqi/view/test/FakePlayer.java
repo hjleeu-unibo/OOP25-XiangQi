@@ -4,14 +4,17 @@ import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Player;
 
 /**
- * test class.
- * 
- * @hidden
+ * Simulation of the Player class.
+ * FakePlayer
  */
 public final class FakePlayer implements Player {
+    private final Color color; 
 
-    private Color color; 
-
+    /**
+     * Constructor.
+     * 
+     * @param color the rapresenting color
+     */
     public FakePlayer(final Color color) {
         this.color = color; 
     }

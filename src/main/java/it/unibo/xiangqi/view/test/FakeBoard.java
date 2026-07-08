@@ -1,5 +1,6 @@
 package it.unibo.xiangqi.view.test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.xiangqi.model.api.Board;
@@ -8,21 +9,25 @@ import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Position;
 
 /**
- * test class.
- * 
- * @hidden
+ * Simulate the Board class.
+ * FakeBoard
  */
 public final class FakeBoard implements Board {
 
-    private List<Piece> pieces;
+    private final List<Piece> pieces;
 
+    /**
+     * Constructor.
+     * 
+     * @param pieces list of pieces
+     */
     public FakeBoard(final List<Piece> pieces) {
-        this.pieces = pieces; 
+        this.pieces = new ArrayList<>(pieces);
     }
 
     @Override
     public List<Piece> getPieces() {
-        return this.pieces; 
+        return List.copyOf(this.pieces); 
     }
 
     @Override

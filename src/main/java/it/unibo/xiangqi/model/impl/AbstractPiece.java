@@ -39,22 +39,22 @@ public abstract class AbstractPiece implements Piece {
     }
 
     @Override
-    public PieceType getType() {
+    public final PieceType getType() {
         return type;
     }
 
     @Override
-    public Player getOwner() {
+    public final Player getOwner() {
         return owner;
     }
 
     @Override
-    public Position getPosition() {
+    public final Position getPosition() {
         return position;
     }
 
     @Override
-    public void setPosition(final Position position) {
+    public final void setPosition(final Position position) {
         this.position = position;
     }
 
@@ -62,27 +62,25 @@ public abstract class AbstractPiece implements Piece {
     public abstract List<Move> getMoves(Board board);
 
     @Override
-    public Boolean isDefensor() {
-        return false;
-    }
+    public abstract Boolean isDefensor();
 
     @Override
-    public int getInitialValue() {
+    public final int getInitialValue() {
         return this.initialvalue;
     }
 
     @Override
-    public int getCurrentValue() {
+    public final int getCurrentValue() {
         return this.currentvalue;
     }
 
     @Override
-    public void setValue(final int value) {
+    public final void setValue(final int value) {
         this.currentvalue = value;
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return this.type + "(" + this.owner + ")@" + this.position + "[" + this.currentvalue + "]";
     }
 

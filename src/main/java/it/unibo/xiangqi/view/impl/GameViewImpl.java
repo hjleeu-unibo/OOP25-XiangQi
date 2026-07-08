@@ -25,11 +25,11 @@ import it.unibo.xiangqi.view.api.GameView;
  */
 public class GameViewImpl implements GameView {
 
-    private JFrame frame; 
-    private JPanel rootPanel; 
-    private CardLayout cardLayout;
-    private MenuPanel menuPanel;
-    private BoardPanel boardPanel;
+    private final JFrame frame; 
+    private final JPanel rootPanel; 
+    private final CardLayout cardLayout;
+    private final MenuPanel menuPanel;
+    private final BoardPanel boardPanel;
     private InputHandler inputHandler; 
 
     /**
@@ -134,6 +134,7 @@ public class GameViewImpl implements GameView {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setInputHandler(final InputHandler handler) {
         Objects.requireNonNull(handler); 
         this.inputHandler = handler; 
@@ -165,12 +166,9 @@ public class GameViewImpl implements GameView {
         this.boardPanel.showWinner(color);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     private void setGameSize() {
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final int height = (int)(screenSize.height * 0.8); 
+        final int height = (int) (screenSize.height * 0.8); 
         final int width = height;
         this.frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
@@ -179,6 +177,7 @@ public class GameViewImpl implements GameView {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void showGamePanel() {
         this.setGameSize();
         this.cardLayout.show(rootPanel, "GAME");

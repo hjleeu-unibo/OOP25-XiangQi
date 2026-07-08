@@ -76,8 +76,7 @@ public final class MoveCalculatorImpl implements MoveCalculator {
     private static final int CHARIOT_ALIGNED_GENERAL = 100;
     private static final int HORSE_OVER_RIVER = 50;
     private static final int HORSE_UPPER_LIMIT = 65;
-    private static final int ELEPHANT_OUT_BOTTOM = 30;
-    private static final int ADVISOR_OUT_BOTTOM = 30;
+    private static final int ELE_ADV_OUT_BOTTOM = 30;
 
     private final RuleEngine ruleEngine;
 
@@ -317,21 +316,12 @@ public final class MoveCalculatorImpl implements MoveCalculator {
                 positionalValue = Math.min(positionalValue, HORSE_UPPER_LIMIT);
                 break;
             case ELEPHANT:
-                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
-                    positionalValue = ELEPHANT_OUT_BOTTOM;
-                } else if (currentPlayerColor.equals(Color.BLACK)
-                            && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
-                    positionalValue = ELEPHANT_OUT_BOTTOM;
-                } else {
-                    positionalValue = piece.getInitialValue();
-                }
-                break;
             case ADVISOR:
                 if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
-                    positionalValue = ADVISOR_OUT_BOTTOM;
+                    positionalValue = ELE_ADV_OUT_BOTTOM;
                 } else if (currentPlayerColor.equals(Color.BLACK)
                             && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
-                    positionalValue = ADVISOR_OUT_BOTTOM;
+                    positionalValue = ELE_ADV_OUT_BOTTOM;
                 } else {
                     positionalValue = piece.getInitialValue();
                 }

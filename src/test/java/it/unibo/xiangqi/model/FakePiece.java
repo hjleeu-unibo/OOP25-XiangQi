@@ -10,14 +10,23 @@ import it.unibo.xiangqi.model.api.Piece;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 
-public class FakePiece implements Piece{
-    private PieceType type; 
-    private Player owner; 
-    private Position position; 
+/**
+ * A simulation of the Piece class.
+ * FakePiece
+ */
+public final class FakePiece implements Piece {
+    private final PieceType type;
+    private final Player owner;
+    private final Position position;
 
-    
-
-    public FakePiece(PieceType type, Player owner, Position position) {
+    /**
+     * Constructor.
+     * 
+     * @param type the piece type
+     * @param owner the owner
+     * @param position the position
+     */
+    public FakePiece(final PieceType type, final Player owner, final Position position) {
         this.type = type;
         this.owner = owner;
         this.position = position;
@@ -39,7 +48,7 @@ public class FakePiece implements Piece{
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -48,7 +57,7 @@ public class FakePiece implements Piece{
             return false;
         }
 
-        FakePiece other = (FakePiece) obj; 
+        final FakePiece other = (FakePiece) obj; 
 
         return Objects.equals(this.type, other.type)
             && Objects.equals(this.owner, other.owner)
@@ -56,12 +65,17 @@ public class FakePiece implements Piece{
     }
 
     @Override
-    public void setPosition(Position position) {
+    public int hashCode() {
+        return Objects.hash(type, owner, position);
+    }
+
+    @Override
+    public void setPosition(final Position position) {
         throw new UnsupportedOperationException("Unimplemented method 'setPosition'");
     }
 
     @Override
-    public List<Move> getMoves(Board board) {
+    public List<Move> getMoves(final Board board) {
         throw new UnsupportedOperationException("Unimplemented method 'getMoves'");
     }
 
@@ -81,8 +95,7 @@ public class FakePiece implements Piece{
     }
 
     @Override
-    public void setValue(int value) {
+    public void setValue(final int value) {
         throw new UnsupportedOperationException("Unimplemented method 'setValue'");
     }
-    
 }

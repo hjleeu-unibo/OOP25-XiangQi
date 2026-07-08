@@ -72,7 +72,7 @@ class TestGameModelImpl {
     @Test
     void switchTurnAlternatesBetweenPlayers() {
         gameModel.startGame(GameModeType.PVP);
-        Player first = gameModel.getCurrentPlayer();
+        final Player first = gameModel.getCurrentPlayer();
 
         gameModel.switchTurn();
         assertNotEquals(first, gameModel.getCurrentPlayer());
@@ -85,14 +85,14 @@ class TestGameModelImpl {
     @Test
     void movePieceCapturesEnemyPieceAtDestination() {
         gameModel.startGame(GameModeType.PVP);
-        Board board = gameModel.getBoard();
+        final Board board = gameModel.getBoard();
 
         // Example: a red soldier advancing and capturing an enemy piece
         // Adjust these coordinates to match a real legal move from your initial layout
-        Position from = new Position(6, 0); // e.g. red soldier's starting position
-        Position to = new Position(5, 0);
+        final Position from = new Position(6, 0); // e.g. red soldier's starting position
+        final Position to = new Position(5, 0);
 
-        boolean result = gameModel.movePiece(new Move(from, to));
+        final boolean result = gameModel.movePiece(new Move(from, to));
 
         assertTrue(result);
         assertEquals(to, board.getPieceAt(to).getPosition());
@@ -119,15 +119,15 @@ class TestGameModelImpl {
     @Test
     void copyStateIsIndependentSnapshot() {
         gameModel.startGame(GameModeType.PVP);
-        GameState snapshot = gameModel.copyState();
+        final GameState snapshot = gameModel.copyState();
 
-        Piece originalPiece = gameModel.getBoard().getPieces().get(0);
-        Position originalPos = originalPiece.getPosition();
+        final Piece originalPiece = gameModel.getBoard().getPieces().get(0);
+        final Position originalPos = originalPiece.getPosition();
 
         originalPiece.setPosition(new Position(0, 0)); // mutate the original board
 
         // the snapshot's piece should not be affected
-        Piece snapshotPiece = snapshot.getBoard().getPieceAt(originalPos);
+        final Piece snapshotPiece = snapshot.getBoard().getPieceAt(originalPos);
         assertNotNull(snapshotPiece, "Snapshot should retain the piece at its original position (deep copy)");
     }
 
@@ -135,7 +135,7 @@ class TestGameModelImpl {
     @Test
     void useHintDecrementsCorrectPlayerCount() {
         gameModel.startGame(GameModeType.PVP);
-        Player red = gameModel.getPlayers().get(0);
+        final Player red = gameModel.getPlayers().get(0);
 
         gameModel.useHint(red);
 
@@ -146,7 +146,7 @@ class TestGameModelImpl {
     @Test
     void setStatusRestoresGivenState() {
         gameModel.startGame(GameModeType.PVP); // run once first so player references exist for comparison
-        List<StoredPiece> stored = List.of(
+        final List<StoredPiece> stored = List.of(
             new StoredPiece(PieceType.GENERAL, Color.RED, new Position(9, 4))
         );
 
@@ -160,11 +160,11 @@ class TestGameModelImpl {
 
     /* Test that getOpponentPlayer returns the player who is not currently taking their turn. */
     @Test
-    void getOpponentPlayerReturnsTheOtherPlayer() {
+    void testGetOpponentPlayerReturnsTheOtherPlayer() {
         gameModel.startGame(GameModeType.PVP);
 
-        Player current = gameModel.getCurrentPlayer();
-        Player opponent = gameModel.getOpponentPlayer();
+        final Player current = gameModel.getCurrentPlayer();
+        final Player opponent = gameModel.getOpponentPlayer();
 
         assertNotEquals(current, opponent);
         assertTrue(gameModel.getPlayers().contains(opponent));
@@ -172,7 +172,7 @@ class TestGameModelImpl {
 
     /* Test that getOpponentPlayer keeps returning the correct player after switchTurn. */
     @Test
-    void getOpponentPlayerUpdatesAfterSwitchTurn() {
+    void testGetOpponentPlayerUpdatesAfterSwitchTurn() {
         gameModel.startGame(GameModeType.PVP);
 
         final Player redAsCurrent = gameModel.getCurrentPlayer();

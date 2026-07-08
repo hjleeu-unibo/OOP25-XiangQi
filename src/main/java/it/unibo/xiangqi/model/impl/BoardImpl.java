@@ -15,8 +15,7 @@ import it.unibo.xiangqi.model.api.Position;
  * and provides operations to access and modify them.
  */
 public class BoardImpl implements Board {
-
-    private List<Piece> pieces; 
+    private final List<Piece> pieces; 
 
     /**
      * Creates a new board containing the specified pieces.

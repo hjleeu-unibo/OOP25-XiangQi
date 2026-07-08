@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -41,9 +43,21 @@ import static org.mockito.Mockito.when;
  * TestGameLoaderImpl
  */
 @ExtendWith(MockitoExtension.class)
-public final class TestGameLoaderImpl {
+final class TestGameLoaderImpl {
+    /* These strings appears frequently. */
+    private static final String PVE_STR = "PVE\n";
+    private static final String RED_STR = "RED\n";
+    private static final String ONE_STR = "1\n";
+    private static final String TWO_STR = "2\n";
+    private static final String THREE_STR = "3\n";
+
+    private static final int ROW1 = 0;
+    private static final int COL1 = 4;
+    private static final int ROW2 = 7;
+    private static final int COL2 = 1;
+
     @TempDir
-    Path tempDir;
+    private Path tempDir;
 
     private File storeFile;
     private GameLoaderImpl loader;
@@ -64,10 +78,8 @@ public final class TestGameLoaderImpl {
     }
 
     @AfterEach  //ridondante JUnit con tempDir dovrebbe cancellare in automatico
-    void cleanUp() {
-        if (storeFile.exists()) {
-            storeFile.delete();  //niente residui isolamento
-        }
+    void cleanUp() throws IOException {
+        Files.deleteIfExists(storeFile.toPath()); //niente residui isolamento
     }
 
     @Test
@@ -77,13 +89,13 @@ public final class TestGameLoaderImpl {
 
     @Test
     void hasStoredGameWhenFileIsEmptyReturnsFalse() throws IOException {
-        storeFile.createNewFile();   // empty file
+        Files.createFile(storeFile.toPath()); // empty file
         assertFalse(loader.hasStoredGame());
     }
 
     @Test
     void hasStoredGameWhenFileHasContentReturnsTrue() throws IOException {
-        try (FileWriter writer = new FileWriter(storeFile)) {
+        try (FileWriter writer = new FileWriter(storeFile, StandardCharsets.UTF_8)) {
             writer.write("scacchi"); //pk non usa buffered
         }
         assertTrue(loader.hasStoredGame());
@@ -91,7 +103,7 @@ public final class TestGameLoaderImpl {
 
     @Test
     void discardSaveRemovesExistingFile() throws IOException {
-        storeFile.createNewFile();
+        Files.createFile(storeFile.toPath());
         assertTrue(storeFile.exists());
  
         loader.discardSave();
@@ -105,7 +117,7 @@ public final class TestGameLoaderImpl {
         assertFalse(storeFile.exists());
         //riceve lambda esegue lui e osserva se lancia eccezioni, se 
         //scrivesssi direttamente la funzione avrei void ed eccezione non ci arriverebbe
-        assertDoesNotThrow(() -> loader.discardSave()); 
+        assertDoesNotThrow(loader::discardSave); 
     }
 
     @Test
@@ -129,8 +141,8 @@ public final class TestGameLoaderImpl {
 
         loader.restore(gameModel);
 
-        // capture arguments passed to setStatus and check them  
-        //a sx compile-time a dx run-time quindi scrivo entrambi
+        // capture arguments passed to setStatus and check them
+        // a sx compile-time a dx run-time quindi scrivo entrambi
         final ArgumentCaptor<GameModeType> modeCaptor = ArgumentCaptor.forClass(GameModeType.class);
         final ArgumentCaptor<Color> colorCaptor = ArgumentCaptor.forClass(Color.class);
         //generici non supportano i prmitivi -> autoboxing
@@ -160,12 +172,12 @@ public final class TestGameLoaderImpl {
 
     @Test
     void restoreWithCorruptedPieceLineThrows() throws IOException {
-        try (FileWriter writer = new FileWriter(storeFile)) {
-            writer.write("PVE\n");
-            writer.write("RED\n");
-            writer.write("3\n");
-            writer.write("2\n");
-            writer.write("1\n");
+        try (FileWriter writer = new FileWriter(storeFile, StandardCharsets.UTF_8)) {
+            writer.write(PVE_STR);
+            writer.write(RED_STR);
+            writer.write(THREE_STR);
+            writer.write(TWO_STR);
+            writer.write(ONE_STR);
             writer.write("GENERAL,RED\n");  // missing col and row
         }
 
@@ -174,9 +186,9 @@ public final class TestGameLoaderImpl {
 
     @Test
     void restoreWithTruncatedFileThrows() throws IOException {
-        try (FileWriter writer = new FileWriter(storeFile)) {
-            writer.write("PVE\n");
-            writer.write("RED\n");
+        try (FileWriter writer = new FileWriter(storeFile, StandardCharsets.UTF_8)) {
+            writer.write(PVE_STR);
+            writer.write(RED_STR);
             // file ends prematurely
         }
 
@@ -190,7 +202,7 @@ public final class TestGameLoaderImpl {
 
         loader.store(gameModel);
 
-        GameModel restoredModel = mock(GameModel.class);
+        final GameModel restoredModel = mock(GameModel.class);
         loader.restore(restoredModel);
 
         //come funziona e perche farla cosi
@@ -227,27 +239,27 @@ public final class TestGameLoaderImpl {
         when(general.getType()).thenReturn(PieceType.GENERAL);
         when(general.getOwner()).thenReturn(redPlayer);
         when(general.getPosition()).thenReturn(generalPos); //pk fare questo e anche col e row
-        when(generalPos.getCol()).thenReturn(4);
-        when(generalPos.getRow()).thenReturn(0);
+        when(generalPos.getCol()).thenReturn(COL1);
+        when(generalPos.getRow()).thenReturn(ROW1);
 
         final Piece cannon = mock(Piece.class);
         final Position cannonPos = mock(Position.class);
         when(cannon.getType()).thenReturn(PieceType.CANNON);
         when(cannon.getOwner()).thenReturn(blackPlayer);
         when(cannon.getPosition()).thenReturn(cannonPos);
-        when(cannonPos.getCol()).thenReturn(1);
-        when(cannonPos.getRow()).thenReturn(7);
+        when(cannonPos.getCol()).thenReturn(COL2);
+        when(cannonPos.getRow()).thenReturn(ROW2);
 
         return List.of(general, cannon);
     }
 
     private void writeSampleFile() throws IOException {
-        try (FileWriter writer = new FileWriter(storeFile)) {
-            writer.write("PVE\n");
-            writer.write("RED\n");
-            writer.write("3\n");
-            writer.write("2\n");
-            writer.write("2\n");
+        try (FileWriter writer = new FileWriter(storeFile, StandardCharsets.UTF_8)) {
+            writer.write(PVE_STR);
+            writer.write(RED_STR);
+            writer.write(THREE_STR);
+            writer.write(TWO_STR);
+            writer.write(TWO_STR);
             writer.write("GENERAL,RED,4,0\n");
             writer.write("CANNON,BLACK,1,7\n");
         }

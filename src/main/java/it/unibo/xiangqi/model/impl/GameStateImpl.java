@@ -14,9 +14,9 @@ import it.unibo.xiangqi.model.api.Player;
  */
 public class GameStateImpl implements GameState {
 
-    private Board board; 
-    private Player player1; 
-    private Player player2; 
+    private final Board board; 
+    private final Player player1; 
+    private final Player player2; 
     private Player currentPlayer; 
 
     /**
@@ -34,10 +34,10 @@ public class GameStateImpl implements GameState {
         Objects.requireNonNull(player2);
         Objects.requireNonNull(currentPlayer);
 
-        this.board = board;
-        this.player1 = player1;
-        this.player2 = player2;
-        this.currentPlayer = currentPlayer; 
+        this.board = Objects.requireNonNull(board);
+        this.player1 = Objects.requireNonNull(player1);
+        this.player2 = Objects.requireNonNull(player2);
+        this.currentPlayer = Objects.requireNonNull(currentPlayer);
     }
 
     /**
@@ -45,7 +45,7 @@ public class GameStateImpl implements GameState {
      */
     @Override
     public Board getBoard() {
-        return this.board; 
+        return this.board;
     }
 
     /**

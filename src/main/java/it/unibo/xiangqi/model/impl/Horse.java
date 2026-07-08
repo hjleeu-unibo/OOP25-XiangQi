@@ -18,12 +18,18 @@ public final class Horse extends AbstractPiece {
     // 8 possible L-shaped moves: the axis with magnitude 2 is the straight step (leg),
     // the axis with magnitude 1 is the diagonal step.
     private static final int[][] DIRECTIONS = {
-        {-2, 1}, {-2, -1},  // up 2
-        { 2, 1}, { 2, -1},  // down 2
-        { 1, 2}, {-1, 2},  // right 2
-        { 1, 2}, {-1, -2},  // left 2
+        {-2, +1}, {-2, -1}, // up 2
+        {+2, +1}, {+2, -1}, // down 2
+        {+1, +2}, {-1, +2}, // right 2
+        {+1, +2}, {-1, -2}, // left 2
     };
 
+    /**
+     * Constructor.
+     * 
+     * @param owner the owner
+     * @param position initial position
+     */
     protected Horse(final Player owner, final Position position) {
         super(PieceType.HORSE, owner, position, VALUE);
     }
@@ -51,5 +57,10 @@ public final class Horse extends AbstractPiece {
                 }
         }
         return moves;
+    }
+
+    @Override
+    public Boolean isDefensor() {
+        return false;
     }
 }

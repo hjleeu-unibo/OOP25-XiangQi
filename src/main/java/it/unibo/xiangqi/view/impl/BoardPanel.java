@@ -38,23 +38,40 @@ import it.unibo.xiangqi.view.api.GameView;
  * components used to display the game.</p>
  */
 public class BoardPanel extends JPanel {
-    private JButton[][] cells;
-    private JButton hintButton;
-    private JPanel boardGrid;
-    private JPanel sidePanel;
-    private Board currentBoard;
-    private List<Position> highlightedCells;
-    private Position selectedCell;
-    private InputHandler inputHandler;
-    private int cellSize;
-    private JPanel notificationPanel;
-    private JLabel notificationLabel;
-    private Timer timer; 
-    private JPanel timerPanel; 
-    private final int ROWS = 10;
-    private final int COLS = 9;
-    private final double CELL_SIZE_RATIO = 0.05;
-    private final double NOTIFICATION_PANEL_RATIO = 0.075;
+    private static final long serialVersionUID = 1L; /* Because this class implements Serializable. */
+
+    private static final int ROWS = 10;
+    private static final int COLS = 9;
+    private static final double CELL_SIZE_RATIO = 0.05;
+    private static final double NOTIFICATION_PANEL_RATIO = 0.075;
+
+    private static final int THICK_BORDER = 3;
+    private static final int NORMAL_BORDER = 1;
+    private static final int PALACE_START_COL = 3;
+    private static final int PALACE_END_COL = 5;
+    private static final int BLACK_PALACE_START_ROW = 0;
+    private static final int BLACK_PALACE_END_ROW = 2;
+    private static final int RED_PALACE_START_ROW = 7;
+    private static final int RED_PALACE_END_ROW = 9;
+    private static final int RIVER_LOWER_ROW = 5;
+    private static final int RIVER_UPPER_ROW = 4;
+
+    /* Notifications. */
+    private static final double HEIGHT_RATIO = 0.075;
+    private static final double LOW_WIDTH_RATIO = 0.4;
+    private static final double HIGH_WIDTH_RATIO = 0.65;
+
+    /* Transient field will not be serialized. */
+    private final JButton[][] cells;
+    private final JButton hintButton;
+    private transient Board currentBoard;
+    private transient List<Position> highlightedCells;
+    private transient Position selectedCell;
+    private transient InputHandler inputHandler;
+    private final int cellSize;
+    private final JPanel notificationPanel;
+    private final JLabel notificationLabel;
+    private final transient Timer timer;
 
     /**
      * Creates a new board panel.
@@ -64,8 +81,8 @@ public class BoardPanel extends JPanel {
      */
     public BoardPanel() {
         /* Initialize the main Swing components */
-        boardGrid = new JPanel(new GridLayout(ROWS, COLS));
-        sidePanel = new JPanel();
+        final JPanel boardGrid = new JPanel(new GridLayout(ROWS, COLS));
+        final JPanel sidePanel = new JPanel();
         hintButton = new JButton("HINT");
         cells = new JButton[ROWS][COLS];
         notificationPanel = new JPanel();
@@ -74,8 +91,8 @@ public class BoardPanel extends JPanel {
 
         /* Configure component dimensions according to the screen size */
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.cellSize = (int) (screenSize.height * this.CELL_SIZE_RATIO);
-        notificationPanel.setPreferredSize(new Dimension(0, (int) (screenSize.height * this.NOTIFICATION_PANEL_RATIO)));
+        this.cellSize = (int) (screenSize.height * CELL_SIZE_RATIO);
+        notificationPanel.setPreferredSize(new Dimension(0, (int) (screenSize.height * NOTIFICATION_PANEL_RATIO)));
 
         /* Register the hint button listener */
         hintButton.addActionListener(e -> {
@@ -105,14 +122,14 @@ public class BoardPanel extends JPanel {
         this.add(sidePanel, BorderLayout.EAST);
         this.add(notificationPanel, BorderLayout.SOUTH); 
 
-        /* Initialize and place the game timer */
+        /* Initialize and place the game timer. */
         timer = new Timer(); 
-        timerPanel = timer.getTimerPanel();
+        final JPanel timerPanel = timer.getTimerPanel();
         this.add(timerPanel, BorderLayout.NORTH);
 
-        /* Highlight the fixed board areas (river and palaces) */
+        /* Highlight the fixed board areas (river and palaces). */
         this.highlightBoardAreas();
-}
+    }
 
     /**
      * {@link GameView#updateBoard(Board)} implementation.
@@ -122,9 +139,7 @@ public class BoardPanel extends JPanel {
      */
     public void updateBoard(final Board board) {
         if (board != null) {
-            this.currentBoard = board;
-        } else {
-            throw new NullPointerException("argument 'board' is null"); 
+            this.currentBoard = Objects.requireNonNull(board);
         }
 
         for (int row = 0; row < ROWS; row++) {
@@ -153,8 +168,8 @@ public class BoardPanel extends JPanel {
      *
      * @hidden
      */
-    private ImageIcon pathToIcon(final String path, final  int width, final int height) {
-        Objects.requireNonNull(path); 
+    private ImageIcon pathToIcon(final String path, final int width, final int height) {
+        Objects.requireNonNull(path);
         final URL url = ClassLoader.getSystemResource(path);
         final ImageIcon icon = new ImageIcon(url);
         final Image scaled = icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
@@ -173,9 +188,7 @@ public class BoardPanel extends JPanel {
     private ImageIcon pieceToIcon(final Piece piece) {
         final String color = piece.getOwner().getColor().getName();
         final String type = piece.getType().getName();
-        if (color == null || type == null) {
-            throw new NullPointerException(); 
-        }
+
         final String path = "icons/" + color + "_" + type + ".png";
         return this.pathToIcon(path, this.cellSize, this.cellSize); 
     }
@@ -189,13 +202,11 @@ public class BoardPanel extends JPanel {
     public void highlightCells(final List<Position> positions) {
         if (positions != null) {
             this.highlightedCells = new ArrayList<>(positions);
-        } else {
-            throw new NullPointerException("positions is null"); 
         }
 
         this.disableAll();
-        for (int row = 0; row < this.ROWS; row++) {
-            for (int col = 0; col < this.COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 final Position pos = new Position(row, col); 
                 if (this.highlightedCells.contains(pos)) {
                     highlightCell(pos, java.awt.Color.YELLOW);
@@ -215,8 +226,8 @@ public class BoardPanel extends JPanel {
      * @hidden
      */
     private void disableAll() {
-        for (int row = 0; row < this.ROWS; row++) {
-            for (int col = 0; col < this.COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 cells[row][col].setEnabled(false);
             }
         }
@@ -238,7 +249,7 @@ public class BoardPanel extends JPanel {
 
     /**
      * Highlights a board cell by changing its background color.
-     *
+     * 
      * @param pos the position of the cell to highlight
      * @param color the color to apply to the cell background
      *
@@ -251,13 +262,13 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Resets all board cells highlights
+     * Resets all board cells highlights.
      * 
      * @hidden
      */
     private void resetHighlights() {
-        for (int row = 0; row < this.ROWS; row++) {
-            for (int col = 0; col < this.COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 cells[row][col].setBackground(null);
             }
         }
@@ -294,17 +305,16 @@ public class BoardPanel extends JPanel {
      * @hidden
      */
     private void setPlayer(final boolean enable, final Color c) {
-        for (int row = 0; row < this.ROWS; row++) {
-            for (int col = 0; col < this.COLS; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 final Position pos = new Position(row, col);
                 final Piece piece = this.currentBoard.getPieceAt(pos);
-                
+
                 if (piece != null && piece.getOwner().getColor() == c) {
                     cells[row][col].setEnabled(enable);
                 }
             }
         }
-
     }
 
     /**
@@ -320,7 +330,7 @@ public class BoardPanel extends JPanel {
     public void setHintButtonDisabled() {
         this.hintButton.setEnabled(false);
     }
-    
+
     /**
      * {@link GameView#setInputHandler(InputHandler)} implementation.
      * 
@@ -333,7 +343,7 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Returns the input handler
+     * Returns the input handler.
      * 
      * @return the current input handler
      * @hidden
@@ -343,17 +353,17 @@ public class BoardPanel extends JPanel {
     }
 
     /**
-     * Handles the inputs on board cells
+     * Handles the inputs on board cells.
      * 
      * @param position the clicked cell position
      * @hidden
      */
     public void handleCellClick(final Position position) {
-        Objects.requireNonNull(position); 
+        Objects.requireNonNull(position);
 
         /* First click: select the piece and request its legal moves */
         if (this.selectedCell == null) {
-            this.selectedCell = position; 
+            this.selectedCell = position;
             this.inputHandler.onSelect(position);
 
         /* Clicking the selected piece again cancels the selection */
@@ -361,12 +371,11 @@ public class BoardPanel extends JPanel {
             final Color c = this.currentBoard.getPieceAt(position).getOwner().getColor(); 
             this.setPlayerEnabled(c);
             this.resetHighlights();
-            this.selectedCell = null; 
-
+            this.selectedCell = null;
         /* Second click on a different cell: perform the move */
         } else {
             this.inputHandler.onMove(new Move(this.selectedCell, position)); 
-            this.selectedCell = null; 
+            this.selectedCell = null;
             this.resetHighlights();
         }
     }
@@ -414,26 +423,23 @@ public class BoardPanel extends JPanel {
      * @hidden
      */
     private void showNotification(final Notification notification) {
-        final String path;
-        final int w;
-        final int h;
+        String path = "";
+        int w = 0;
+        int h = 0;
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final double HEIGHT_RATIO = 0.075;
-        final double LOW_WIDTH_RATIO = 0.4;
-        final double HIGH_WIDTH_RATIO = 0.65;
 
         switch (notification) {
             case CHECK:
                 path = "notifications/check.png";
                 h = (int) (screenSize.height * HEIGHT_RATIO);
                 w = (int) (screenSize.height * LOW_WIDTH_RATIO);
-                break; 
+                break;
             case RED_WINS:
                 this.disableAll();
                 path = "notifications/red_wins.png";
                 h = (int) (screenSize.height * HEIGHT_RATIO);
                 w = (int) (screenSize.height * HIGH_WIDTH_RATIO);
-                break; 
+                break;
             case BLACK_WINS:
                 this.disableAll();
                 path = "notifications/black_wins.png"; 
@@ -446,8 +452,6 @@ public class BoardPanel extends JPanel {
                 h = (int) (screenSize.height * HEIGHT_RATIO);
                 w = (int) (screenSize.height * LOW_WIDTH_RATIO);
                 break;
-            default:
-                throw new IllegalArgumentException("The argument is wrong");
         }
 
         notificationLabel.setIcon(this.pathToIcon(path, w, h));
@@ -486,21 +490,6 @@ public class BoardPanel extends JPanel {
         final java.awt.Color palaceColor = java.awt.Color.RED;
         final java.awt.Color riverColor = java.awt.Color.BLUE;
 
-        final int THICK_BORDER = 3;
-        final int NORMAL_BORDER = 1;
-
-        final int PALACE_START_COL = 3;
-        final int PALACE_END_COL = 5;
-
-        final int BLACK_PALACE_START_ROW = 0;
-        final int BLACK_PALACE_END_ROW = 2;
-
-        final int RED_PALACE_START_ROW = 7;
-        final int RED_PALACE_END_ROW = 9;
-
-        final int RIVER_LOWER_ROW = 5;
-        final int RIVER_UPPER_ROW = 4;
-
         // Black palace
         for (int row = BLACK_PALACE_START_ROW; row <= BLACK_PALACE_END_ROW; row++) {
             for (int col = PALACE_START_COL; col <= PALACE_END_COL; col++) {
@@ -536,7 +525,7 @@ public class BoardPanel extends JPanel {
         }
 
         // River
-        for (int col = 0; col < this.COLS; col++) {
+        for (int col = 0; col < COLS; col++) {
             cells[RIVER_UPPER_ROW][col].setBorder(
                 BorderFactory.createMatteBorder(
                     NORMAL_BORDER, NORMAL_BORDER, THICK_BORDER, NORMAL_BORDER, riverColor

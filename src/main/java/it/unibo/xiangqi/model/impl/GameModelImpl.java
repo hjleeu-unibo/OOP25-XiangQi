@@ -1,6 +1,7 @@
 package it.unibo.xiangqi.model.impl;
 
 import java.util.List;
+import java.util.Objects;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
@@ -36,19 +37,19 @@ public final class GameModelImpl implements GameModel {
      * @param players list of players
      */
     public GameModelImpl(final Board board, final List<Player> players) {
-        this.board = board;
-        this.players = players;
+        this.board = Objects.requireNonNull(board);
+        this.players = Objects.requireNonNull(players);
         this.currentPlayer = players.get(0); // red starts always at first
         this.status = GameStatus.NOT_STARTED;
     }
 
     @Override
-    public void startGame(final GameModeType mode) {
-        this.mode = mode;
+    public void startGame(final GameModeType gameMode) {
+        this.mode = gameMode;
 
         // build players based on game mode
         final Player red = new PlayerImpl(Color.RED, true);
-        final Player black = new PlayerImpl(Color.BLACK, mode == GameModeType.PVP);
+        final Player black = new PlayerImpl(Color.BLACK, gameMode == GameModeType.PVP);
 
         this.players = List.of(red, black);
 
@@ -64,9 +65,10 @@ public final class GameModelImpl implements GameModel {
         this.status = GameStatus.IN_PROGRESS;
     }
 
+    @Override
     public void endGame() {
         // clear the board
-        board.getPieces().forEach(p -> board.deletePiece(p));
+        board.getPieces().forEach(board::deletePiece);
 
         // reset players and current player
         this.players = List.of();
@@ -76,14 +78,17 @@ public final class GameModelImpl implements GameModel {
         this.status = GameStatus.FINISHED;
     }
 
+    @Override
     public boolean isOver() {
         return this.status == GameStatus.FINISHED;
     }
 
+    @Override
     public GameStatus getStatus() {
         return this.status;
     }
 
+    @Override
     public void switchTurn() {
         final int currentIndex = players.indexOf(currentPlayer);
         final int nextIndex = (currentIndex + 1) % players.size();
@@ -117,7 +122,7 @@ public final class GameModelImpl implements GameModel {
 
     @Override
     public List<Player> getPlayers() {
-        return this.players;
+        return List.copyOf(this.players);
     }
 
     @Override
@@ -134,13 +139,13 @@ public final class GameModelImpl implements GameModel {
     }
 
     @Override
-    public void setStatus(final GameModeType mode, final Color currentPlayerColor, final int redHints,
-        final int blackHints, final List<StoredPiece> storedPieces) {
-        this.mode = mode;
+    public void setStatus(final GameModeType gameMode, final Color currentPlayerColor, final int newRedHints,
+        final int newBlackHints, final List<StoredPiece> storedPieces) {
+        this.mode = gameMode;
 
         // build players from mode
         final Player red = new PlayerImpl(Color.RED, true);
-        final Player black = new PlayerImpl(Color.BLACK, mode == GameModeType.PVP);
+        final Player black = new PlayerImpl(Color.BLACK, gameMode == GameModeType.PVP);
         this.players = List.of(red, black);
 
         // restore current player by matching the saved color
@@ -157,8 +162,8 @@ public final class GameModelImpl implements GameModel {
         this.board = Board.createBoard(pieces);
 
         // restore hints information
-        this.redHints = redHints;
-        this.blackHints = blackHints;
+        this.redHints = newRedHints;
+        this.blackHints = newBlackHints;
 
         this.status = GameStatus.IN_PROGRESS;
     }

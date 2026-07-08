@@ -67,4 +67,9 @@ public final class Cannon extends AbstractPiece {
         }
         return moves;
     }
+
+    @Override
+    public Boolean isDefensor() {
+        return false;
+    }
 }

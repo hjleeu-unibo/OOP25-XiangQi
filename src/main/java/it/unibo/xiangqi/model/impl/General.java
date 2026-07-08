@@ -60,4 +60,9 @@ public final class General extends AbstractPiece {
        }
        return moves;
     }
+
+    @Override
+    public Boolean isDefensor() {
+        return false;
+    }
 }

@@ -52,4 +52,9 @@ public final class Chariot extends AbstractPiece {
         }
         return moves;
     }
+
+    @Override
+    public Boolean isDefensor() {
+        return false;
+    }
 }
