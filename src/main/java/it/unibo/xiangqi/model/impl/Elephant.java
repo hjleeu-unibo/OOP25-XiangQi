@@ -35,7 +35,7 @@ public final class Elephant extends AbstractPiece {
     }
 
     @Override
-    public Boolean isDefensor() {
+    public boolean isDefensor() {
         return true;    // Elephant is a defensive piece protecting the General
     }
 
