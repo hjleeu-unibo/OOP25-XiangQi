@@ -27,8 +27,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Test class for RuleEngineImpl.
- * TestRuleEngineImpl
+ * Test class for RuleEngineImpl
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -109,18 +108,14 @@ final class TestRuleEngineImpl {
     }
 
     @Test
-    void isCheckWhenEnemyHasNoMovesReturnsFalse() {
+    void isCheckWhenEnemyHasNoThreatMovesReturnsFalse() {
         when(board.getPieces()).thenReturn(List.of(redGeneral, blackCannon));
         when(blackCannon.getMoves(board)).thenReturn(List.of());
 
         assertFalse(ruleEngine.isCheck(redPlayer, board));
     }
 
-    // RuleEngineImpl now delegates simulation to Board.afterMove(move), so we
-    // stub that call directly on the (mocked) board: no matter which move gets
-    // simulated, the resulting board still has blackCannon threatening the red
-    // general (i.e. the move never escapes check).
-    private void stubSimulationAlwaysInCheck() {
+    private void simulationAlwaysInCheck() {
         final Board simulatedBoard = mock(Board.class);
         when(board.afterMove(any(Move.class))).thenReturn(simulatedBoard);
         when(simulatedBoard.getPieces()).thenReturn(List.of(redGeneral, blackCannon));
@@ -133,7 +128,7 @@ final class TestRuleEngineImpl {
         when(blackCannon.getMoves(board)).thenReturn(List.of(threatMove));
 
         when(redSoldier.getMoves(board)).thenReturn(List.of(blockingMove));
-        stubSimulationAlwaysInCheck();
+        simulationAlwaysInCheck();
 
         assertTrue(ruleEngine.isCheckMate(redPlayer, board));
     }
@@ -144,14 +139,14 @@ final class TestRuleEngineImpl {
         when(blackCannon.getMoves(board)).thenReturn(List.of(threatMove));
         when(redSoldier.getMoves(board)).thenReturn(List.of(blockingMove));
 
-        // Simulating blockingMove resolves the check: on the simulated board
+        // Simulating blockingMove resolves the check on the simulated board
         // the cannon can no longer reach the general.
         final Board simulatedBoard = mock(Board.class);
         when(board.afterMove(blockingMove)).thenReturn(simulatedBoard);
         when(simulatedBoard.getPieces()).thenReturn(List.of(redGeneral, blackGeneral, redSoldier, blackCannon));
         when(blackCannon.getMoves(simulatedBoard)).thenReturn(List.of(safeMove));
 
-        // Generals on different columns → no flying-general issue
+        // Generals on different columns no flying-general issue
         when(redGeneralPos.getCol()).thenReturn(RED_GENERAL_COL);
         when(blackGeneralPos.getCol()).thenReturn(BLACK_GENERAL_COL);
 
@@ -166,8 +161,6 @@ final class TestRuleEngineImpl {
         when(redAdvisor.isDefensor()).thenReturn(true);
         when(blackElephant.isDefensor()).thenReturn(true);
 
-        // di default il getType degli altri ritorna null - il codice
-        // di isDraw deve escludere solo i Generali
         when(redAdvisor.getType()).thenReturn(PieceType.ADVISOR);
         when(blackElephant.getType()).thenReturn(PieceType.ELEPHANT);
 
@@ -178,7 +171,7 @@ final class TestRuleEngineImpl {
 
     @Test
     void isDrawWhenAtLeastOneOffensivePieceReturnsFalse() {
-        final Piece redChariot = mock(Piece.class); // pezzo offensivo
+        final Piece redChariot = mock(Piece.class); 
         final Piece blackElephant = mock(Piece.class);
 
         when(redChariot.getType()).thenReturn(PieceType.CHARIOT);
@@ -198,13 +191,13 @@ final class TestRuleEngineImpl {
     void testGetLegalMovesIncludesMoveThatDoesNotLeaveInCheck() {
         when(redSoldier.getMoves(board)).thenReturn(List.of(safeMove));
 
-        // Simulate: no check, no flying general
+        // Simulate no check and no flying general
         final Board simulatedBoard = mock(Board.class);
         when(board.afterMove(safeMove)).thenReturn(simulatedBoard);
         when(simulatedBoard.getPieces()).thenReturn(List.of(redGeneral, blackGeneral, redSoldier, blackCannon));
         when(blackCannon.getMoves(simulatedBoard)).thenReturn(List.of()); // no threat
 
-        // Generals on different columns → no flying general
+        // Generals on different columns
         when(redGeneralPos.getCol()).thenReturn(RED_GENERAL_COL);
         when(blackGeneralPos.getCol()).thenReturn(BLACK_GENERAL_COL);
 
@@ -216,7 +209,7 @@ final class TestRuleEngineImpl {
     @Test
     void testGetLegalMovesExcludesMoveThatLeavesInCheck() {
         when(redSoldier.getMoves(board)).thenReturn(List.of(safeMove));
-        stubSimulationAlwaysInCheck();
+        simulationAlwaysInCheck();
 
         final List<Move> legal = ruleEngine.getLegalMoves(redSoldier, board);
         assertTrue(legal.isEmpty());

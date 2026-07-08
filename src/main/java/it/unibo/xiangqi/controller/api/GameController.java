@@ -21,8 +21,8 @@ public interface GameController {
     void start(GameModeType mode);
 
     /**
-     * Handles the selection of a cell on the board and asks the
-     * view to highlight them for the user.
+     * Handles the selection of a piece on the board and asks the
+     * view to highlight the selected piece's legal moves.
      * 
      * @param position the cell selected by the user
      */
@@ -41,14 +41,6 @@ public interface GameController {
      * Saves the current game state to persistent storage.
      */
     void save();
-
-    /**
-     * Reports whether a previously saved game is avaible 
-     * to be resumed.
-     * 
-     * @return true if a saved game exists and can be restored
-     */
-    boolean isResumeAvailable();
 
     /**
      * Loads a previously saved game state from persistent storage.

@@ -98,11 +98,6 @@ public final class GameControllerImpl implements GameController {
     }
 
     @Override
-    public boolean isResumeAvailable() {
-        return gameLoader.hasStoredGame();
-    }
-
-    @Override
     public void load() {
         if (!isResumeAvailable()) {
             gameView.showResumeNotification();
@@ -133,6 +128,14 @@ public final class GameControllerImpl implements GameController {
         gameView.showSuggestedMove(suggestedMove);
     }
 
+    // reports whether a previously saved game is available to be resumed
+    private boolean isResumeAvailable() {
+        return gameLoader.hasStoredGame();
+    }
+
+    // enables the current human player's controls and starts their turn
+    // timer, polling it every second on a background thread and ending
+    // the game if the time runs out
     private void playerTurn() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
 
@@ -168,6 +171,9 @@ public final class GameControllerImpl implements GameController {
         }).start();
     }
 
+    // starts the bot's turn timer on a background thread and, in parallel,
+    // computes and applies the bot's move, advancing to the next turn once
+    // it is played
     private void botTurn() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
         gameView.setHintButtonDisabled();
@@ -215,6 +221,7 @@ public final class GameControllerImpl implements GameController {
         }).start();
     }
 
+    // stops the current player's timer, switches turn and dispatches the next one
     private void nextTurn() {
         final Player currentPlayer = gameModel.getCurrentPlayer();
         gameTimer.stopTurn(currentPlayer);
@@ -270,6 +277,8 @@ public final class GameControllerImpl implements GameController {
         }
     }
 
+    // returns the legal destinations for the piece at the given position,
+    // or an empty list if there is no piece there or it belongs to the other player
     private List<Position> getLegalDestinations(final Position position) {
         final Board board = gameModel.getBoard();
         final Piece selectedPiece = board.getPieceAt(position);
@@ -283,6 +292,7 @@ public final class GameControllerImpl implements GameController {
         return toDestinations(legalMoves);
     }
 
+    // extracts the destination positions from a list of moves
     private List<Position> toDestinations(final List<Move> moves) {
         final List<Position> destinations = new ArrayList<>();
         for (final Move move : moves) {

@@ -10,7 +10,6 @@ import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.model.api.StoredPiece;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,11 +39,10 @@ import static org.mockito.Mockito.when;
 
 /**
  * Test class for GameLoaderImpl.
- * TestGameLoaderImpl
  */
 @ExtendWith(MockitoExtension.class)
 final class TestGameLoaderImpl {
-    /* These strings appears frequently. */
+    // Strings frequently used.
     private static final String PVE_STR = "PVE\n";
     private static final String RED_STR = "RED\n";
     private static final String ONE_STR = "1\n";
@@ -70,16 +68,13 @@ final class TestGameLoaderImpl {
     @BeforeEach
     void setUp() {
 
-        //costruisco il percorso completo e converte da path a file
+        //build the full path and convert from Path to File
         storeFile = tempDir.resolve("test_store.txt").toFile();
 
-        //costruttore private-package per testing
+        //package-private constructor: points the loader at a temp file 
+        // instead of the real user-home save file to mantain the 
+        // isolation during testing phase
         loader = new GameLoaderImpl(storeFile);
-    }
-
-    @AfterEach  //ridondante JUnit con tempDir dovrebbe cancellare in automatico
-    void cleanUp() throws IOException {
-        Files.deleteIfExists(storeFile.toPath()); //niente residui isolamento
     }
 
     @Test
@@ -96,7 +91,7 @@ final class TestGameLoaderImpl {
     @Test
     void hasStoredGameWhenFileHasContentReturnsTrue() throws IOException {
         try (FileWriter writer = new FileWriter(storeFile, StandardCharsets.UTF_8)) {
-            writer.write("scacchi"); //pk non usa buffered
+            writer.write("scacchi"); 
         }
         assertTrue(loader.hasStoredGame());
     }
@@ -111,12 +106,9 @@ final class TestGameLoaderImpl {
         assertFalse(storeFile.exists());
     }
 
-    //anche senza file da cancellare non deve esplodere
     @Test
     void discardSaveWhenFileDoesNotExistDoesNothing() {
         assertFalse(storeFile.exists());
-        //riceve lambda esegue lui e osserva se lancia eccezioni, se 
-        //scrivesssi direttamente la funzione avrei void ed eccezione non ci arriverebbe
         assertDoesNotThrow(loader::discardSave); 
     }
 
@@ -142,16 +134,14 @@ final class TestGameLoaderImpl {
         loader.restore(gameModel);
 
         // capture arguments passed to setStatus and check them
-        // a sx compile-time a dx run-time quindi scrivo entrambi
         final ArgumentCaptor<GameModeType> modeCaptor = ArgumentCaptor.forClass(GameModeType.class);
         final ArgumentCaptor<Color> colorCaptor = ArgumentCaptor.forClass(Color.class);
-        //generici non supportano i prmitivi -> autoboxing
         final ArgumentCaptor<Integer> redHintsCaptor = ArgumentCaptor.forClass(Integer.class);
         final ArgumentCaptor<Integer> blackHintsCaptor = ArgumentCaptor.forClass(Integer.class);
-        @SuppressWarnings("unchecked") //a runtime i tipi genereci non ci sono quindi spprimo il warning che partirebbe
+        @SuppressWarnings("unchecked") 
         final ArgumentCaptor<List<StoredPiece>> piecesCaptor = ArgumentCaptor.forClass(List.class);
 
-        verify(gameModel).setStatus(//come funziona
+        verify(gameModel).setStatus(
                 modeCaptor.capture(),
                 colorCaptor.capture(),
                 redHintsCaptor.capture(),
@@ -195,7 +185,7 @@ final class TestGameLoaderImpl {
         assertThrows(IllegalStateException.class, () -> loader.restore(gameModel));
     }
 
-    //round-trip test
+    // round-trip test
     @Test
     void storeAndRestorePreservesData() {
         stubGameModelForStore(GameModeType.PVP, Color.BLACK, 1, 0, buildPieces());
@@ -205,14 +195,12 @@ final class TestGameLoaderImpl {
         final GameModel restoredModel = mock(GameModel.class);
         loader.restore(restoredModel);
 
-        //come funziona e perche farla cosi
         verify(restoredModel).setStatus(
-                //uso eq pk se non posso mischiare any (matcher) con valori
                 eq(GameModeType.PVP),
                 eq(Color.BLACK),
                 eq(1),
                 eq(0),
-                any() // non controllo i pezzi 
+                any() // pieces aren't checked 
         );
     }
 
@@ -238,7 +226,7 @@ final class TestGameLoaderImpl {
         final Position generalPos = mock(Position.class);
         when(general.getType()).thenReturn(PieceType.GENERAL);
         when(general.getOwner()).thenReturn(redPlayer);
-        when(general.getPosition()).thenReturn(generalPos); //pk fare questo e anche col e row
+        when(general.getPosition()).thenReturn(generalPos); 
         when(generalPos.getCol()).thenReturn(COL1);
         when(generalPos.getRow()).thenReturn(ROW1);
 

@@ -19,10 +19,13 @@ import java.util.function.Predicate;
  * as check, checkmate, draw, and the flying gneral rule.
  */
 public final class RuleEngineImpl implements RuleEngine {
+
     @Override
     public boolean isCheck(final Player player, final Board board) {
         final Position generalPosition = findGeneralPosition(board, p -> p.getOwner().equals(player));
 
+        // MoveCalculatorImpl evaluates legal moves on simulated boards  where
+        // a general may already have been captured; without this guard that would NPE here.
         if (generalPosition == null) {
             return false;
         }
@@ -50,28 +53,9 @@ public final class RuleEngineImpl implements RuleEngine {
         return legalMoves;
     }
 
-    // Verifies whether a move is legal by simulating it and checking 
-    // that it does not leave the player's general in check or create
-    // a flying general situation.
-    private boolean isLegalMove(final Move move, final Player player, final Board board) {
-        final Board simulatedBoard = board.afterMove(move);
-
-        return !isCheck(player, simulatedBoard) && !isFlyingGeneral(simulatedBoard);
-    }
-
     @Override
     public boolean isCheckMate(final Player player, final Board board) {
         return isCheck(player, board) && !hasAnyLegalMove(player, board);
-    }
-
-    //Checks whether the  player has at least one legal move.
-    private boolean hasAnyLegalMove(final Player player, final Board board) {
-        for (final Piece piece : selectPieces(board, p -> p.getOwner().equals(player))) {
-            if (!getLegalMoves(piece, board).isEmpty()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -82,6 +66,25 @@ public final class RuleEngineImpl implements RuleEngine {
             }
         }
         return true;
+    }
+
+    // Checks whether the  player has at least one legal move.
+    private boolean hasAnyLegalMove(final Player player, final Board board) {
+        for (final Piece piece : selectPieces(board, p -> p.getOwner().equals(player))) {
+            if (!getLegalMoves(piece, board).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Verifies whether a move is legal by simulating it and checking 
+    // that it does not leave the player's general in check or create
+    // a flying general situation.
+    private boolean isLegalMove(final Move move, final Player player, final Board board) {
+        final Board simulatedBoard = board.afterMove(move);
+
+        return !isCheck(player, simulatedBoard) && !isFlyingGeneral(simulatedBoard);
     }
 
     // Checks whether the two generals face each other directly on the 
@@ -121,8 +124,8 @@ public final class RuleEngineImpl implements RuleEngine {
         return selectedPieces;
     }
 
-    //Finds the position of the general belonging to the specified player,
-    //or null if it is not on the board (e.g. captured in a simulated position).
+    // Finds the position of the general belonging to the specified player,
+    // or null if it is not on the board (e.g. captured in a simulated position).
     private Position findGeneralPosition(final Board board, final Predicate<Piece> owner) {
         for (final Piece piece : board.getPieces()) {
             if (piece.getType() == PieceType.GENERAL && owner.test(piece)) {

@@ -54,12 +54,12 @@ public final class GameLoaderImpl implements GameLoader {
         this.storeFile = new File(userHome, FILE_NAME);
     }
 
-    //for testing purpose  è package private
+    // package private, used during the testing process to point the loader at 
+    // a temporary file instead of the real one
     GameLoaderImpl(final File storeFile) {
-    this.storeFile = storeFile;
+        this.storeFile = storeFile;
     }
 
-    //da modificare col e row -> in base costruttore
     @Override
     public void store(final GameModel gameModel) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(storeFile, StandardCharsets.UTF_8))) {
@@ -128,7 +128,7 @@ public final class GameLoaderImpl implements GameLoader {
         return storeFile.exists() && storeFile.length() > 0;
     }
 
-    //returns the player of the given color from the list of players
+    // returns the player of the given color from the list of players
     private Player getPlayer(final List<Player> players, final Color color) {
         for (final Player player : players) {
             if (player.getColor() == color) {
@@ -138,7 +138,7 @@ public final class GameLoaderImpl implements GameLoader {
         throw new IllegalStateException("Player " + color + " not found");
     }
 
-    //converts the main fields of a Piece into a string
+    // converts the main fields of a Piece into a string
     private String pieceToLine(final Piece piece) {
         return piece.getType().name() 
                     + SEPARATOR + piece.getOwner().getColor().name()
@@ -146,7 +146,7 @@ public final class GameLoaderImpl implements GameLoader {
                     + SEPARATOR + piece.getPosition().getRow();
     }
 
-    //reads the next line and rejects an unexpected end of file
+    // reads the next line and rejects an unexpected end of file
     private String safeReadLine(final BufferedReader reader) throws IOException {
         final String line = reader.readLine();
         if (line == null) {
@@ -156,6 +156,7 @@ public final class GameLoaderImpl implements GameLoader {
         return line;
     }
 
+    // parses a piece description line (TYPE,COLOR,X,Y) into a StoredPiece
     private StoredPiece parsePiece(final String line) {
         final String[] fields = line.split(SEPARATOR);
         if (fields.length != PIECE_FIELDS) {
