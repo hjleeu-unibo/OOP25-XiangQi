@@ -62,7 +62,7 @@ public abstract class AbstractPiece implements Piece {
     public abstract List<Move> getMoves(Board board);
 
     @Override
-    public abstract Boolean isDefensor();
+    public abstract boolean isDefensor();
 
     @Override
     public final int getInitialValue() {

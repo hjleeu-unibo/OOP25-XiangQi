@@ -266,7 +266,7 @@ public final class MoveCalculatorImpl implements MoveCalculator {
         int positionalValue = 0;
 
         for (final Piece p : board.getPieces()) {
-            if (!p.getOwner().equals(currentPlayer) && p.getType().equals(PieceType.GENERAL)) {
+            if (!p.getOwner().equals(currentPlayer) && p.getType() == PieceType.GENERAL) {
                 enemyGeneral = p;
                 break;
             }
@@ -274,9 +274,9 @@ public final class MoveCalculatorImpl implements MoveCalculator {
 
         switch (piece.getType()) {
             case SOLDIER:
-                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
+                if (currentPlayerColor == Color.RED && piece.getPosition().getRow() <= RED_RIVER_ROW) {
                     positionalValue = SOLDIER_OVER_RIVER;
-                } else if (currentPlayerColor.equals(Color.BLACK)
+                } else if (currentPlayerColor == Color.BLACK
                             && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
                     positionalValue = SOLDIER_OVER_RIVER;
                 } else {
@@ -304,9 +304,9 @@ public final class MoveCalculatorImpl implements MoveCalculator {
                 }
                 break;
             case HORSE:
-                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() <= RED_RIVER_ROW) {
+                if (currentPlayerColor == Color.RED && piece.getPosition().getRow() <= RED_RIVER_ROW) {
                     positionalValue = HORSE_OVER_RIVER;
-                } else if (currentPlayerColor.equals(Color.BLACK)
+                } else if (currentPlayerColor == Color.BLACK
                             && piece.getPosition().getRow() >= BLACK_RIVER_ROW) {
                     positionalValue = HORSE_OVER_RIVER;
                 } else {
@@ -317,9 +317,9 @@ public final class MoveCalculatorImpl implements MoveCalculator {
                 break;
             case ELEPHANT:
             case ADVISOR:
-                if (currentPlayerColor.equals(Color.RED) && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
+                if (currentPlayerColor == Color.RED && piece.getPosition().getRow() != RED_BOTTOM_ROW) {
                     positionalValue = ELE_ADV_OUT_BOTTOM;
-                } else if (currentPlayerColor.equals(Color.BLACK)
+                } else if (currentPlayerColor == Color.BLACK
                             && piece.getPosition().getRow() != BLACK_BOTTOM_ROW) {
                     positionalValue = ELE_ADV_OUT_BOTTOM;
                 } else {

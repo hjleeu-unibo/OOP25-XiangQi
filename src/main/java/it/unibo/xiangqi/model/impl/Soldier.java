@@ -57,7 +57,7 @@ public final class Soldier extends AbstractPiece {
     }
 
     @Override
-    public Boolean isDefensor() {
+    public boolean isDefensor() {
         return false;
     }
 }

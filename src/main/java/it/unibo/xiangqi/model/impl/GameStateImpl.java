@@ -2,6 +2,7 @@ package it.unibo.xiangqi.model.impl;
 
 import java.util.Objects;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.GameState;
 import it.unibo.xiangqi.model.api.Move;
@@ -28,6 +29,7 @@ public class GameStateImpl implements GameState {
      * @param currentPlayer the player whose turn it is
      * @throws NullPointerException if any argument is {@code null}
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public GameStateImpl(final Board board, final Player player1, final Player player2, final Player currentPlayer) {
         Objects.requireNonNull(board);
         Objects.requireNonNull(player1);
@@ -43,6 +45,7 @@ public class GameStateImpl implements GameState {
     /**
      * {@inheritDoc}
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     @Override
     public Board getBoard() {
         return this.board;

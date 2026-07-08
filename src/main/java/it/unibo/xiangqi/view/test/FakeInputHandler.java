@@ -1,13 +1,13 @@
 package it.unibo.xiangqi.view.test;
 
 import java.util.List;
-import java.util.Objects;
 
 import it.unibo.xiangqi.common.api.GameModeType;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.model.api.Position;
 import it.unibo.xiangqi.view.api.GameView;
+import it.unibo.xiangqi.view.impl.GameViewImpl;
 
 /**
  * Simulation of the InputHandler class.
@@ -27,7 +27,7 @@ public final class FakeInputHandler implements InputHandler {
      * @param view the view of the game
      */
     public FakeInputHandler(final GameView view) {
-        this.view = Objects.requireNonNull(view);
+        this.view = new GameViewImpl();
     }
 
     @Override
@@ -48,7 +48,7 @@ public final class FakeInputHandler implements InputHandler {
 
     @Override
     public void onExit() {
-        System.out.println("onExit");
+
     }
 
     @Override
