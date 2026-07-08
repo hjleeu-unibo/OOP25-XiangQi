@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.xiangqi.controller.api.InputHandler;
 import it.unibo.xiangqi.model.api.Position;
 
@@ -24,9 +25,10 @@ public class CellListener implements ActionListener {
      * @param boardPanel the board panel that owns the cell
      * @param position the position represented by the cell
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public CellListener(final BoardPanel boardPanel, final Position position) {
         this.boardPanel = Objects.requireNonNull(boardPanel);
-        this.position = Objects.requireNonNull(position);
+        this.position = new Position(position.getRow(), position.getCol());
     }
 
     /**

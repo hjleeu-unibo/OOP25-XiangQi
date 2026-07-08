@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Move;
 import it.unibo.xiangqi.common.api.Notification;
@@ -37,7 +38,7 @@ import it.unibo.xiangqi.view.api.GameView;
  * <p>This class is part of the view implementation and handles the Swing
  * components used to display the game.</p>
  */
-public class BoardPanel extends JPanel {
+public final class BoardPanel extends JPanel {
     private static final long serialVersionUID = 1L; /* Because this class implements Serializable. */
 
     private static final int ROWS = 10;
@@ -137,6 +138,7 @@ public class BoardPanel extends JPanel {
      * @param board the new board configuration to display
      * @throws NullPointerException if board is null
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public void updateBoard(final Board board) {
         if (board != null) {
             this.currentBoard = Objects.requireNonNull(board);

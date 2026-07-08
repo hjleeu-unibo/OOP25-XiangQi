@@ -198,7 +198,7 @@ public class GameViewImpl implements GameView {
     public void showExpiredTime(final Player player) {
         boardPanel.showExpiredTime(player);
         Color enemyColor = Color.RED;
-        if (player.getColor().equals(Color.RED)) {
+        if (player.getColor() == Color.RED) {
             enemyColor = Color.BLACK;
         }
         showWinner(enemyColor);

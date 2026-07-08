@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Implementation of the game controller.
  *
@@ -44,6 +46,7 @@ public final class GameControllerImpl implements GameController {
      * @param gameLoader the loader managing save and load of the game state
      * @param gameTimer the timer tracking turn and game time
      */
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public GameControllerImpl(final GameModel gameModel,
                               final GameView gameView,
                               final RuleEngine ruleEngine,

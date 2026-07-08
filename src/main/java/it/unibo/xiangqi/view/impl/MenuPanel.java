@@ -22,7 +22,7 @@ import it.unibo.xiangqi.view.api.GameView;
  * and resuming a previous game. It also manages the background image and
  * forwards user actions to the assigned {@link InputHandler}.</p>
  */
-public class MenuPanel extends JPanel {
+public final class MenuPanel extends JPanel {
     private static final long serialVersionUID = 1L; /* Because this class implements Serializable. */
 
     private static final int VERTICAL_STRUCT_SIZE_1 = 10;

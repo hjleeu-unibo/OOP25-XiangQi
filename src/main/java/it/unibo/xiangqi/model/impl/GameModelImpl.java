@@ -1,7 +1,8 @@
 package it.unibo.xiangqi.model.impl;
 
 import java.util.List;
-import java.util.Objects;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.GameModeType;
@@ -37,8 +38,8 @@ public final class GameModelImpl implements GameModel {
      * @param players list of players
      */
     public GameModelImpl(final Board board, final List<Player> players) {
-        this.board = Objects.requireNonNull(board);
-        this.players = Objects.requireNonNull(players);
+        this.board = new BoardImpl(board.getPieces());
+        this.players = List.copyOf(players);
         this.currentPlayer = players.get(0); // red starts always at first
         this.status = GameStatus.NOT_STARTED;
     }
@@ -115,6 +116,7 @@ public final class GameModelImpl implements GameModel {
         return piece.getPosition().equals(move.getTo());
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     @Override
     public Board getBoard() {
         return this.board;

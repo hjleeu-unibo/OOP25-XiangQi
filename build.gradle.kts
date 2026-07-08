@@ -26,6 +26,8 @@ dependencies {
     // Mockito
     testImplementation("org.mockito:mockito-core:5.15.2")
     testImplementation("org.mockito:mockito-junit-jupiter:5.15.2")
+
+    compileOnly("com.github.spotbugs:spotbugs-annotations:4.9.7")
 }
 
 tasks.test {
