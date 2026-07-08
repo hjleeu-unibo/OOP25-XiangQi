@@ -24,7 +24,7 @@ public final class RuleEngineImpl implements RuleEngine {
     public boolean isCheck(final Player player, final Board board) {
         final Position generalPosition = findGeneralPosition(board, p -> p.getOwner().equals(player));
 
-        // MoveCalculatorImpl evaluates legal moves on simulated boards  where
+        // MoveCalculatorImpl evaluates legal moves on simulated boards where
         // a general may already have been captured; without this guard that would NPE here.
         if (generalPosition == null) {
             return false;
