@@ -62,7 +62,7 @@ public final class General extends AbstractPiece {
     }
 
     @Override
-    public Boolean isDefensor() {
+    public boolean isDefensor() {
         return false;
     }
 }

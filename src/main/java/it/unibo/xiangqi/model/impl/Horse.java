@@ -60,7 +60,7 @@ public final class Horse extends AbstractPiece {
     }
 
     @Override
-    public Boolean isDefensor() {
+    public boolean isDefensor() {
         return false;
     }
 }

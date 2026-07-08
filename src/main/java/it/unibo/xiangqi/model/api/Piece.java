@@ -50,7 +50,7 @@ public interface Piece {
      * 
      * @return if the piece is a defensor piece
      */
-    Boolean isDefensor();
+    boolean isDefensor();
 
     /**
      * Returns the strategic value of this piece, used by the AI scoring system.

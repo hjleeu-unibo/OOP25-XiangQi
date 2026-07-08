@@ -10,7 +10,7 @@ import it.unibo.xiangqi.model.api.Player;
 public final class PlayerImpl implements Player {
 
     private final Color color;
-    private final Boolean isHuman;
+    private final boolean isHuman;
 
     /**
      * Constructor.

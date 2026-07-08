@@ -54,7 +54,7 @@ public final class Chariot extends AbstractPiece {
     }
 
     @Override
-    public Boolean isDefensor() {
+    public boolean isDefensor() {
         return false;
     }
 }

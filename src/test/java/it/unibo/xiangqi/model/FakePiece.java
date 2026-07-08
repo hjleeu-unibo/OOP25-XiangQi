@@ -80,7 +80,7 @@ public final class FakePiece implements Piece {
     }
 
     @Override
-    public Boolean isDefensor() {
+    public boolean isDefensor() {
         throw new UnsupportedOperationException("Unimplemented method 'isDefensor'");
     }
 
