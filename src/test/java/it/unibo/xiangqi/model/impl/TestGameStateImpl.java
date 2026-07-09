@@ -20,25 +20,25 @@ import it.unibo.xiangqi.common.api.PieceType;
 /**
  * Test class for GameStateImpl.
  */
-public class TestGameStateImpl {
+final class TestGameStateImpl {
     @Test
-    void testApplyTurnAndSwitchTurn(){
+    void testApplyTurnAndSwitchTurn() {
         /* Arrange: create two players and a board containing a single piece. */
-        Player blackPlayer = new FakePlayer(Color.BLACK); 
-        Player redPlayer = new FakePlayer(Color.RED);
-        Board board = new BoardImpl(List.of(new FakePiece(PieceType.ADVISOR, redPlayer, new Position(0, 0)))); 
+        final Player blackPlayer = new FakePlayer(Color.BLACK); 
+        final Player redPlayer = new FakePlayer(Color.RED);
+        final Board board = new BoardImpl(List.of(new FakePiece(PieceType.ADVISOR, redPlayer, new Position(0, 0)))); 
         /* Define the move that will be applied. */
-        Move move = new Move(new Position(0, 0), new Position(1, 1)); 
+        final Move move = new Move(new Position(0, 0), new Position(1, 1)); 
         /* Act: apply the move to obtain the next game state. */
-        GameState gameState1 = GameState.createGameState(board, List.of(redPlayer, blackPlayer), redPlayer); 
-        GameState gameState2 = gameState1.applyTurn(move); 
+        final GameState gameState1 = GameState.createGameState(board, List.of(redPlayer, blackPlayer), redPlayer); 
+        final GameState gameState2 = gameState1.applyTurn(move); 
         /* Assert: verify that the piece has been moved correctly. */
-        Piece piece = gameState2.getBoard().getPieces().get(0); 
+        final Piece piece = gameState2.getBoard().getPieces().get(0); 
         assertEquals(piece.getPosition(), new Position(1, 1)); 
         assertEquals(piece.getType(), PieceType.ADVISOR); 
         assertEquals(piece.getOwner(), redPlayer);
         /* Assert: verify that the turn has been switched to the other player. */
-        Player newPlayer = gameState2.getCurrentPlayer(); 
+        final Player newPlayer = gameState2.getCurrentPlayer(); 
         assertEquals(newPlayer, blackPlayer);
     }
 }
