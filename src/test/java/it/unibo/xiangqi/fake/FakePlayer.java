@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.view.test;
+package it.unibo.xiangqi.fake;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.model.api.Player;

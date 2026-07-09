@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.view.test;
+package it.unibo.xiangqi.fake;
 
 import java.util.List;
 

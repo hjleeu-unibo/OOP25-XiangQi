@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.model;
+package it.unibo.xiangqi.model.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 
 import it.unibo.xiangqi.common.api.Color;
 import it.unibo.xiangqi.common.api.PieceType;
+import it.unibo.xiangqi.fake.FakePiece;
 import it.unibo.xiangqi.model.api.Board;
 import it.unibo.xiangqi.model.api.Player;
 import it.unibo.xiangqi.model.api.Position;
-import it.unibo.xiangqi.model.impl.PlayerImpl;
 import it.unibo.xiangqi.model.api.Piece;
 
 /**

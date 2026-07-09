@@ -1,4 +1,4 @@
-package it.unibo.xiangqi.model;
+package it.unibo.xiangqi.fake;
 
 import java.util.List;
 import java.util.Objects;
