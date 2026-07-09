@@ -21,7 +21,7 @@ public final class Horse extends AbstractPiece {
         {-2, +1}, {-2, -1}, // up 2
         {+2, +1}, {+2, -1}, // down 2
         {+1, +2}, {-1, +2}, // right 2
-        {+1, +2}, {-1, -2}, // left 2
+        {+1, -2}, {-1, -2}, // left 2
     };
 
     /**
