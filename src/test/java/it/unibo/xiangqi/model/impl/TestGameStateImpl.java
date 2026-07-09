@@ -22,7 +22,7 @@ import it.unibo.xiangqi.common.api.PieceType;
  */
 public class TestGameStateImpl {
     @Test
-    void testApplyTurn(){
+    void testApplyTurnAndSwitchTurn(){
         /* Arrange: create two players and a board containing a single piece. */
         Player blackPlayer = new FakePlayer(Color.BLACK); 
         Player redPlayer = new FakePlayer(Color.RED);
